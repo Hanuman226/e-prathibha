@@ -4,7 +4,7 @@ export default function Footer() {
   const date=new Date();
   console.log(date);
   return (
-    <Wrapper fluid className="bg-dark text-white p-3">
+    <Wrapper>
           <p>Copyright &copy; {currentYear}</p>
           <p>Date and Time</p>
           <p>Powered by: Error Technologies</p>
@@ -14,9 +14,10 @@ export default function Footer() {
 
 
 const Wrapper = styled.footer`
-margin-top:auto;
+grid-area: footer;
 display:flex;
 justify-content:space-between;
+align-items:center;
 background:black;
 color:white;
 padding:1rem;
