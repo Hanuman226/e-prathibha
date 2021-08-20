@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components';
-import FreeCard from "../components/cards/FreeCard";
-import PremiumCard from "../components/cards/PremiumCard";
-import PracticeCard from "../components/cards/PracticeCard";
-import UtilCards from "../components/cards/UtilCards";
+import FreeCard from "../Components/cards/FreeCard";
+import PremiumCard from "../Components/cards/PremiumCard";
+import PracticeCard from "../Components/cards/PracticeCard";
+import UtilCards from "../Components/cards/UtilCards";
 import data from "../data";
-import ExamStats from "../components/ExamStats";
-import MonthWiseChart from "../components/charts/MonthWiseChart";
-import ExamWiseChart from "../components/charts/ExamWiseChart";
+import ExamStats from "../Components/ExamStats";
+import MonthWiseChart from "../Components/charts/MonthWiseChart";
+import ExamWiseChart from "../Components/charts/ExamWiseChart";
 export default function HomeScreen() {
     return (
         <Wrapper>

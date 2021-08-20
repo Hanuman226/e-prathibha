@@ -1,9 +1,9 @@
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import styled from "styled-components";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Sidebar from "./components/Sidebar";
+import Header from "./Components/Header";
+import Footer from "./Components/Footer";
+import Sidebar from "./Components/Sidebar";
 import HomeScreen from "./screens/HomeScreen";
 function App() {
   return (
