@@ -21,16 +21,16 @@ const Wrapper = styled.nav`
   align-items: center;
   background: black;
   color: white;
-  padding: 0 2rem;
+  padding: 0 0.625rem;
 `;
 
 const Logo = styled.img`
-  height: 5rem;
-  width: 17.5rem;
+  height: 3.125rem;
+  width: 10.9375rem;
 `;
 
 const Profile = styled.div`
-font-size: 2rem;
+font-size: 1.25rem;
 cursor: pointer;
 /* padding-right: 3rem; */
 `;

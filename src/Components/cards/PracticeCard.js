@@ -1,97 +1,104 @@
-import React from "react";
 import styled from "styled-components";
-import icon3 from "../../Icons/3.png"
+import useModal from "../../Hooks/useModal";
+import icon3 from "../../Icons/3.png";
+import Modal from "../Modal";
 export default function Card(props) {
+  const [show,toggle]=useModal();
   return (
     <Wrapper>
       <CardIcon>
-       <img src={icon3} alt=""/>
+        <img src={icon3} alt="" />
       </CardIcon>
       <Description>
-        <h3>Practice Session</h3>
+        <h4>Practice Session</h4>
         <ul>
-           <li>Category wise exams (NCERT, UPSC, Other UPSC).</li>
-           <li>Attempt subject wise exams.</li>
-           <li>Can attempt only 20 question per exam.</li>
+          <li>Category wise exams (NCERT, UPSC, Other UPSC).</li>
+          <li>Attempt subject wise exams.</li>
+          <li>Can attempt only 20 question per exam.</li>
         </ul>
       </Description>
-      <Footer><a href="/">start now</a></Footer>
+      <Footer>
+        <button onClick={toggle}>start now</button>
+      </Footer>
+      <Modal show={show} toggle={toggle}  title={"Practice Session"} link="/free-previous-papers">
+        <ModalContent>
+          <h4>Practice Yourself</h4>
+          <p>Get random questions of all difficulty levels.</p>
+          <ul>
+            <li>Category wise exams (NCERT, UPSC, Other UPSC).</li>
+            <li>Attempt subject wise exams.</li>
+            <li>Can attempt only 20 question per exam.</li>
+          </ul>
+        </ModalContent>
+      </Modal>
     </Wrapper>
   );
 }
 
-
-
+const ModalContent = styled.div`
+  & ul {
+    list-style: upper-alpha;
+  }
+`;
 const Wrapper = styled.div`
   position: relative;
-  width: 40rem;
-  padding: 3.5rem 1rem 1rem 1rem; 
-  margin: 1rem;
+  width: 100%;
+  height: 100%;
+  padding: 2.1875rem 0.625rem 0.625rem 0.625rem;
   display: grid;
-  grid-template-areas: "icon desc" "footer footer";
-  grid-template-columns: 8.5rem 1fr;
-  grid-template-rows: 1fr 4rem;
-  background-color:white;
-  border-radius: 1rem;
-  box-shadow: 0 0 3rem 0.5rem hsl(0deg 0% 0% / 20%);
+  grid-template-areas: "icon desc" ". . " "footer footer";
+  grid-template-columns: 5.3125rem 1fr;
+  grid-template-rows: 1fr 1.875rem 2.5rem;
+  border-radius: 0.625rem;
+  box-shadow: 0 0 1.875rem 0.3125rem hsl(0deg 0% 0% / 20%);
 `;
 
 const CardIcon = styled.div`
   grid-area: icon;
-  height: 8rem;
-  width: 8rem;
+  height: 5rem;
+  width: 5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius:1rem;
+  border-radius: 0.625rem;
   background: hsl(222deg 100% 89%);
 `;
 const Description = styled.div`
   grid-area: desc;
-  & h3 {
+  & h4 {
     text-decoration: underline;
-    padding-bottom: 1rem;
     text-transform: uppercase;
   }
   & ul {
     list-style: upper-alpha;
   }
-
-  & li {
-    margin-left: 5rem;
-    padding-bottom: 1rem;
-    font-size: 1.4rem;
-  }
+  
 `;
 
 const Footer = styled.div`
-grid-area: footer;
-display: flex;
-width:100%;
-justify-content: flex-end;
-align-items:center;
-
-& a{
-    text-decoration:none;
-  height: 4rem;
-  width: 10rem;
-  border-radius: 1rem;
-  border: none;
-  text-transform: uppercase;
-  padding: 1rem;
+  grid-area: footer;
   display: flex;
-  justify-content: center;
+  width: 100%;
+  justify-content: flex-end;
   align-items: center;
-  font-size: 1.3rem;
-  user-select: none;
-  background-color: black;
-  color: white;
-  cursor: pointer;
-  box-shadow: 0 0 0.5rem 0.2rem hsl(0deg 0% 0% / 40%);
-}
 
-& a:active{
+  & button {
+    height: 2.5rem;
+    width: 6.25rem;
+    border-radius: 0.625rem;
+    border: none;
+    text-transform: uppercase;
+    padding: 0.625rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 0.3125rem 0.125rem hsl(0deg 0% 0% / 40%);
+    outline: none;
+  }
+
+  & button:active {
     box-shadow: none;
-}
+  }
 `;
-

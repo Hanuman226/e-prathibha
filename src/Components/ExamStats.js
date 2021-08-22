@@ -11,28 +11,24 @@ export default function ExamStats() {
 }
 
 const Wrapper = styled.div`
-  width: 40rem;
-  height:25rem;
-  padding: 1rem; 
-  margin: 1rem;
-  background-color:white;
-  border-radius: 1rem;
-  box-shadow: 0 0 3rem 0.5rem hsl(0deg 0% 0% / 20%);
+  width: 100%;
+  font-weight: bold;
+  align-self:flex-start;
+  padding: 0.625rem; 
+  border-radius: 0.625rem;
+  box-shadow: 0 0 1.875rem 0.3125rem hsl(0deg 0% 0% / 20%);
 `
 
 const Title= styled.p`
-padding: 1rem;
-font-size: 2rem;
-color:black;
+text-transform: uppercase;
 &::after{
     content: "";
     display: block;
-    padding:0.5rem;
-    border-bottom: 2px solid lightgray;
+    padding:0.3125rem;
+    border-bottom: 1.2px solid lightgray;
 }
 `
 const Text=styled.p`
-padding: 1rem;
 &:last-child::after{
     border-bottom:none;
     padding:0;
@@ -40,8 +36,7 @@ padding: 1rem;
 &::after{
     content: "";
     display: block;
-    padding:0.5rem;
-    border-bottom: 2px solid lightgray;
+    border-bottom: 1.2px solid lightgray;
 }
 
 & span{

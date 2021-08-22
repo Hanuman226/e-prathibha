@@ -70,12 +70,11 @@ export default function MonthWiseChart(){
 
 const ChartWrapper=styled.div`
  grid-column-end: span 2;
-  padding: 1rem; 
-  margin: 1rem;
-  background-color:white;
-  border-radius: 1rem;
-  box-shadow: 0 0 3rem 0.5rem hsl(0deg 0% 0% / 20%);
-  @media (max-width:786px){
+ width:100%;
+  padding: 0.625rem; 
+  border-radius: 0.625rem;
+  box-shadow: 0 0 1.875rem 0.3125rem hsl(0deg 0% 0% / 20%);
+  @media (max-width:991px){
     grid-column-end: span 1;
   }
 `

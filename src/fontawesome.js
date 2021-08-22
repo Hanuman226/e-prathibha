@@ -13,6 +13,7 @@ import {
   faTrophy,
   faUser,
   faCaretDown,
+  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -28,5 +29,6 @@ library.add(
   faQuestionCircle,
   faUser,
   faStar,
-  faCaretDown
+  faCaretDown,
+  faTimes
 );

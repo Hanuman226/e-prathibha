@@ -76,7 +76,7 @@ const Wrapper = styled.aside`
   left: 0;
   bottom: 0;
   height: 100%;
-  width: 4rem;
+  width: 2.5rem;
   background-color: black;
   display: flex;
   align-items: center;
@@ -91,6 +91,7 @@ const Icons = styled.ul`
   align-items: center;
   height: 80%;
   color: white;
+  padding-left: 0;
 `;
 
 const IconWrapper = styled.li`
@@ -101,8 +102,8 @@ const IconWrapper = styled.li`
     align-items: center;
     color: white;
     white-space: nowrap;
-    height: 4rem;
-    width: 4rem;
+    height: 2.5rem;
+    width: 2.5rem;
     transition: all ease-out 120ms;
     &:hover {
       background-color: #313443;
@@ -121,10 +122,10 @@ const IconWrapper = styled.li`
     justify-content: center;
     align-items: center;
     position: absolute;
-    left: 4rem;
+    left: 2.5rem;
     background-color: black;
-    height: 4rem;
-    width: 13rem;
+    height: 2.5rem;
+    width: 9rem;
     visibility: hidden;
     opacity: 0;
   }

@@ -9,10 +9,10 @@ export default function Card(props) {
         <img src={icon} alt=""/>
       </CardIcon>
       <Description>
-        <h3>{title}</h3>
+        <h4>{title}</h4>
        <p>{desc}</p>
       </Description>
-      <Footer><a href={cta}>view now</a></Footer>
+      <Footer><button>view now</button></Footer>
     </Wrapper>
   );
 }
@@ -20,39 +20,33 @@ export default function Card(props) {
 
 
 const Wrapper = styled.div`
-  width: 40rem;
-  padding: 3.5rem 1rem 1rem 1rem; 
-  margin: 1rem;
+  width: 100%;
+  height: 100%;
+  padding: 2.1875rem 0.625rem 0.625rem 0.625rem;
   display: grid;
   grid-template-areas: "icon desc" ". ." "footer footer";
-  grid-template-columns: 8.5rem 1fr;
-  grid-template-rows: 1fr 3rem 4rem;
-  background-color:white;
-  border-radius: 1rem;
-  box-shadow: 0 0 3rem 0.5rem hsl(0deg 0% 0% / 20%);
+  grid-template-columns: 5.3125rem 1fr;
+  grid-template-rows: 1fr 1.875rem 2.5rem;
+  border-radius: 0.625rem;
+  box-shadow: 0 0 1.875rem 0.3125rem hsl(0deg 0% 0% / 20%);
 `;
 
 const CardIcon = styled.div`
   grid-area: icon;
-  height: 8rem;
-  width: 8rem;
+  height: 5rem;
+  width: 5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius:1rem;
+  border-radius:0.625rem;
   background: hsl(222deg 100% 89%);
 `;
 const Description = styled.div`
   grid-area: desc;
-  & h3 {
+  & h4 {
     text-decoration: underline;
-    padding-bottom: 1rem;
     text-transform: uppercase;
   }
-  & p {
-    font-size:1.4rem;
-  }
-
 `;
 
 const Footer = styled.div`
@@ -62,26 +56,24 @@ width:100%;
 justify-content: flex-end;
 align-items:center;
 
-& a{
-    text-decoration:none;
-  height: 4rem;
-  width: 10rem;
-  border-radius: 1rem;
-  border: none;
-  text-transform: uppercase;
-  padding: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.3rem;
-  user-select: none;
-  background-color: black;
-  color: white;
-  cursor: pointer;
-  box-shadow: 0 0 0.5rem 0.2rem hsl(0deg 0% 0% / 40%);
+
+& button{
+  height: 2.5rem;
+    width: 6.25rem;
+    border-radius: 0.625rem;
+    border: none;
+    text-transform: uppercase;
+    padding: 0.625rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 0.3125rem 0.125rem hsl(0deg 0% 0% / 40%);
+    outline: none;
 }
 
-& a:active{
+& button:active{
     box-shadow: none;
 }
 `;
