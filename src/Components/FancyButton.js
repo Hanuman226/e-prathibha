@@ -1,9 +1,9 @@
 import styled from "styled-components"
 
 export default function FancyButton(props) {
-  const {children}=props;
+  const {children,disabled}=props;
     return (
-        <Button onClick={props.onClick}> {children}</Button>
+        <Button disabled={disabled} onClick={props.onClick}> {children}</Button>
     )
 }
 
@@ -17,13 +17,12 @@ const Button=styled.button`
     padding: 0.625rem;
     font-size: 0.75rem;
     font-weight: bold;
-    background-color: black;
+    background-color: ${props=>props.disabled?"gray":"black"};
     color: white;
     cursor: pointer;
-    box-shadow: 0 0 0.3125rem 0.125rem hsl(0deg 0% 0% / 40%);
+    box-shadow:${props=>props.disabled?"none": "0 0 0.3125rem 0.125rem hsl(0deg 0% 0% / 40%)"};
     outline: none;
-  
-
+  transition:all 0.3s;
   &:active {
     box-shadow: none;
   }

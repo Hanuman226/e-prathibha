@@ -7,7 +7,8 @@ import Footer from "./Components/Footer";
 import Sidebar from "./Components/Sidebar";
 import HomeScreen from "./screens/HomeScreen";
 import ExamsList from "./Components/ExamsList";
-import ExamRules from "./Components/cards/ExamRules";
+import ExamRules from "./Components/ExamRules";
+import ExamScreen from "./Components/ExamScreen";
 function App() {
   return (
     <>
@@ -20,6 +21,7 @@ function App() {
               <Route exact path="/" component={HomeScreen} />
               <Route exact path="/free-previous-papers" component={ExamsList} />
               <Route exact path="/free-previous-papers/exam-rules" component={ExamRules} />
+              <Route exact path="/free-previous-papers/exam" component={ExamScreen} />
               <Route path="*" render={()=><h1>Under Construction</h1>} />
             </Switch>
           </MainContent>

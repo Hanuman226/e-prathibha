@@ -14,6 +14,7 @@ import {
   faUser,
   faCaretDown,
   faTimes,
+  faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -30,5 +31,6 @@ library.add(
   faUser,
   faStar,
   faCaretDown,
-  faTimes
+  faTimes,
+  faArrowLeft
 );

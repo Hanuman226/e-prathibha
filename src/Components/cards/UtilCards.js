@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 export default function Card(props) {
-    const {title,desc,cta,icon}=props.data;
+    const {title,desc,icon}=props.data;
   return (
     <Wrapper>
       <CardIcon>

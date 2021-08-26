@@ -1,8 +1,15 @@
+import { useEffect } from "react";
 import { Container } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { freeExamList } from "../actions/examActions";
 import cup from "../Icons/cup.png";
 export default function ExamsList() {
+  const dispatch=useDispatch();
+  useEffect(()=>{
+    dispatch(freeExamList());
+  },[dispatch]);
   return (
     <Container fluid className="text-muted text-center">
       <section className="text-muted text-center">
@@ -119,5 +126,8 @@ const ListItem = styled.li`
     color: white;
     text-decoration: none;
     box-shadow: 0 0 1.875rem 0.3125rem hsl(0deg 0% 0% / 20%);
+  }
+  & a:active{
+    box-shadow:none;
   }
 `;
