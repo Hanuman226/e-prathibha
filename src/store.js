@@ -22,7 +22,9 @@ const store = createStore(
 );
 export default store;
 
-if (store.getState().userSignin.userInfo === null) store.dispatch(signin());
+if (store.getState().userSignin.userInfo === null) {
+  store.dispatch(signin());
+}
 
 // setTimeout(()=>store.dispatch(freeExamList()),3000);
 

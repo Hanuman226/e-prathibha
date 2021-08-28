@@ -15,17 +15,17 @@ const freeExamList = () => async (dispatch, getState) => {
       userSignin: { userInfo },
     } = getState();
     const { data } = await api.post(
-      "/test_free_exam",{},
+      "/test_free_exam",
+      {},
       {
-
-        'headers': {
-          'tokenu': userInfo.Token,
-          'Id': userInfo.Id,
-          'server_key': "3w99V63pW7tJ7vavGXtCKo8cp",
+        headers: {
+          tokenu: userInfo.Token,
+          Id: userInfo.Id,
+          server_key: "3w99V63pW7tJ7vavGXtCKo8cp",
         },
-    }
+      }
     );
-   
+
     console.log(data);
     dispatch({ type: FREE_EXAM_LIST_SUCCESS, payload: data });
   } catch (error) {
