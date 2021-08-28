@@ -1,4 +1,4 @@
-import Axios from "axios";
+import api from "../axios.config";
 import Cookie from "js-cookie";
 import {
   USER_SIGNIN_REQUEST,
@@ -12,12 +12,12 @@ const signin = (email, password) => async (dispatch) => {
     let formData = new FormData();
     formData.append("email", "scientificfacts226@gmail.com");
     formData.append("password", "scientific123");
-    const { data } = await Axios.post(
+    const { data } = await api.post(
       "https://e-prathibha.com/apis/login",
       formData
     );
     dispatch({ type: USER_SIGNIN_SUCCESS, payload: data.data });
-    Cookie.set("userInfo", data.data, { expires: 7 });
+    Cookie.set("userInfo", JSON.stringify(data.data), { expires: 7 });
   } catch (error) {
     dispatch({ type: USER_SIGNIN_FAIL, payload: error.message });
   }

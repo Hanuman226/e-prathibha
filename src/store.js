@@ -5,10 +5,13 @@ import { signin } from "./actions/userActions";
 import { examListReducer } from "./reducers/examReducers";
 import { userSigninReducer } from "./reducers/userReducers";
 
-const userInfo = Cookie.get("userInfo") || null;
+const userInfo = Cookie.get("userInfo")
+  ? JSON.parse(Cookie.get("userInfo"))
+  : null;
+
 const initialState = {
   userSignin: { userInfo },
-  freeExamList: {},
+  freeExamList: "",
 };
 const reducer = combineReducers({
   userSignin: userSigninReducer,

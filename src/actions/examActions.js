@@ -1,13 +1,10 @@
-import axios from "axios";
+import api from "../axios.config";
 import {
   FREE_EXAM_LIST_FAIL,
   FREE_EXAM_LIST_REQUEST,
   FREE_EXAM_LIST_SUCCESS,
 } from "../constants/examContants";
 
-const api = axios.create({
-  baseURL: `https://www.errortechnologies.com/quizdemo/apis`,
-});
 const freeExamList = () => async (dispatch, getState) => {
   dispatch({ type: FREE_EXAM_LIST_REQUEST });
   try {
@@ -26,8 +23,7 @@ const freeExamList = () => async (dispatch, getState) => {
       }
     );
 
-    console.log(data);
-    dispatch({ type: FREE_EXAM_LIST_SUCCESS, payload: data });
+    dispatch({ type: FREE_EXAM_LIST_SUCCESS, payload: data.data });
   } catch (error) {
     dispatch({ type: FREE_EXAM_LIST_FAIL, payload: error.message });
   }

@@ -20,7 +20,7 @@ function App() {
             <Switch>
               <Route exact path="/" component={HomeScreen} />
               <Route exact path="/free-previous-papers" component={ExamsList} />
-              <Route exact path="/free-previous-papers/exam-rules" component={ExamRules} />
+              <Route exact path="/free-previous-papers/:examid/exam-rules" component={ExamRules} />
               <Route exact path="/free-previous-papers/exam" component={ExamScreen} />
               <Route path="*" render={()=><h1>Under Construction</h1>} />
             </Switch>
