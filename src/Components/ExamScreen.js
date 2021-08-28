@@ -1,6 +1,6 @@
 import { Col, Form, Row } from "react-bootstrap";
 import styled from "styled-components";
-import CountDownTimer from "./exams/CountDownTimer";
+// import CountDownTimer from "./exams/CountDownTimer";
 
 export default function ExamScreen() {
     return (
@@ -56,7 +56,7 @@ export default function ExamScreen() {
               </Footer>
          </LeftPanel>
          <RightPanel>
-           <CountDownTimer/>
+           {/* <CountDownTimer/> */}
          </RightPanel>
      </Wrapper>
     );

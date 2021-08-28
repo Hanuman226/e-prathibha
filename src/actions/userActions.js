@@ -14,7 +14,7 @@ import {
         formData.append('password', 'scientific123');
           const {data} = await Axios.post('https://e-prathibha.com/apis/login',formData);
           dispatch({type:USER_SIGNIN_SUCCESS,payload:data.data});
-          Cookie.set('userInfo', JSON.stringify(data.data),{ expires: 7 });
+          Cookie.set('userInfo',data.data,{ expires: 7 });
       }
       catch(error){
           dispatch({type:USER_SIGNIN_FAIL,payload:error.message});

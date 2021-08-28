@@ -25,18 +25,7 @@ const freeExamList = () => async (dispatch, getState) => {
         },
     }
     );
-    // const {data} = await axios(
-    //   {
-    //     url:"https://www.errortechnologies.com/quizdemo/apis/test_free_exam",
-    //     method: "post",
-    //     headers: {
-    //       tokenu: userInfo.Token,
-    //       Id: userInfo.Id,
-    //       server_key: "3w99V63pW7tJ7vavGXtCKo8cp",
-    //     },
-    //   }
-    // );
-
+   
     console.log(data);
     dispatch({ type: FREE_EXAM_LIST_SUCCESS, payload: data });
   } catch (error) {

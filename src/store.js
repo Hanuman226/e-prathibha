@@ -1,14 +1,14 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
-import Cookie from 'js-cookie';
+import Cookie from "js-cookie";
 import { signin } from "./actions/userActions";
 import { examListReducer } from "./reducers/examReducers";
 import { userSigninReducer } from "./reducers/userReducers";
 
-const userInfo = JSON.parse(Cookie.get('userInfo')) || null;
+const userInfo = Cookie.get("userInfo") || null;
 const initialState = {
   userSignin: { userInfo },
-  freeExamList: {  },
+  freeExamList: {},
 };
 const reducer = combineReducers({
   userSignin: userSigninReducer,
@@ -22,11 +22,9 @@ const store = createStore(
 );
 export default store;
 
-if(store.getState().userSignin.userInfo===null)
-store.dispatch(signin());
+if (store.getState().userSignin.userInfo === null) store.dispatch(signin());
 
 // setTimeout(()=>store.dispatch(freeExamList()),3000);
-
 
 // import { configureStore } from '@reduxjs/toolkit'
 // import userReducer, { fetchUser, userLogout } from "./userSlice";
@@ -41,4 +39,3 @@ store.dispatch(signin());
 // store.dispatch(fetchUser());
 
 // setTimeout(()=>store.dispatch(userLogout()),4000);
-
