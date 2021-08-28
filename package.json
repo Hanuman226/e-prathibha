@@ -27,8 +27,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "heroku-prebuild": "npm i -f",
-    "heroku-postbuild": "npm run build"
+  
   },
   "engines": {
     "node": "14.15.0"
