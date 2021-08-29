@@ -2,22 +2,22 @@ import React from "react";
 import styled from "styled-components";
 
 export default function Card(props) {
-    const {title,desc,icon}=props.data;
+  const { title, desc, icon } = props.data;
   return (
     <Wrapper>
       <CardIcon>
-        <img src={icon} alt=""/>
+        <img src={icon} alt="" />
       </CardIcon>
       <Description>
         <h4>{title}</h4>
-       <p>{desc}</p>
+        <p>{desc}</p>
       </Description>
-      <Footer><button>view now</button></Footer>
+      <Footer>
+        <button>view now</button>
+      </Footer>
     </Wrapper>
   );
 }
-
-
 
 const Wrapper = styled.div`
   width: 100%;
@@ -38,7 +38,7 @@ const CardIcon = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius:0.625rem;
+  border-radius: 0.625rem;
   background: hsl(222deg 100% 89%);
 `;
 const Description = styled.div`
@@ -50,15 +50,14 @@ const Description = styled.div`
 `;
 
 const Footer = styled.div`
-grid-area: footer;
-display: flex;
-width:100%;
-justify-content: flex-end;
-align-items:center;
+  grid-area: footer;
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  align-items: center;
 
-
-& button{
-  height: 2.5rem;
+  & button {
+    height: 2.5rem;
     width: 6.25rem;
     border-radius: 0.625rem;
     border: none;
@@ -71,10 +70,9 @@ align-items:center;
     cursor: pointer;
     box-shadow: 0 0 0.3125rem 0.125rem hsl(0deg 0% 0% / 40%);
     outline: none;
-}
+  }
 
-& button:active{
+  & button:active {
     box-shadow: none;
-}
+  }
 `;
-

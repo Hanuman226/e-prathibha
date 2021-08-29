@@ -8,6 +8,7 @@ import {
 const freeExamList = () => async (dispatch, getState) => {
   dispatch({ type: FREE_EXAM_LIST_REQUEST });
   try {
+    let serverKey = process.env.REACT_APP_SERVER_KEY;
     const {
       userSignin: { userInfo },
     } = getState();
@@ -18,11 +19,10 @@ const freeExamList = () => async (dispatch, getState) => {
         headers: {
           tokenu: userInfo.Token,
           Id: userInfo.Id,
-          server_key: "3w99V63pW7tJ7vavGXtCKo8cp",
+          server_key: serverKey,
         },
       }
     );
-
     dispatch({ type: FREE_EXAM_LIST_SUCCESS, payload: data.data });
   } catch (error) {
     dispatch({ type: FREE_EXAM_LIST_FAIL, payload: error.message });

@@ -18,5 +18,4 @@ function userSigninReducer(state = {}, action) {
   }
 }
 
-
-export {userSigninReducer};
+export { userSigninReducer };

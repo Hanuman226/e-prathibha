@@ -1,13 +1,13 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
-import Cookie from "js-cookie";
 import { signin } from "./actions/userActions";
 import { examListReducer } from "./reducers/examReducers";
 import { userSigninReducer } from "./reducers/userReducers";
 
-const userInfo = Cookie.get("userInfo")
-  ? JSON.parse(Cookie.get("userInfo"))
-  : null;
+var userInfo = null;
+if (localStorage.getItem("userInfo")) {
+  userInfo = JSON.parse(localStorage.getItem("userInfo"));
+}
 
 const initialState = {
   userSignin: { userInfo },
