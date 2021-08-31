@@ -8,91 +8,72 @@ import cup from "../Icons/cup.png";
 export default function ExamsList() {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.freeExamList);
-  useEffect(() => {
-    if (data === "") dispatch(freeExamList());
-  }, [dispatch, data]);
+  const { loading, examsList, error } = data;
 
-  if (data.loading === false) {
-    var {
-      freeExamList: { pending, exams },
-    } = data;
-    var [section1, section2, section3] = exams;
-    var { "Old question papers UPSC Civils (Pre)": civils } = section1;
-    var { "Limited UPSC other than Civils": upsc } = section2;
-    var { "Limited NCERT": ncert } = section3;
+  useEffect(() => {
+    dispatch(freeExamList());
+  }, []);
+
+  if (examsList === undefined) {
+    return <h1>Loading...</h1>;
   }
-  return data.loading === true ? (
-    <h1>Loading...</h1>
-  ) : (
+  const { pending, exams } = examsList;
+  const [section1, section2, section3] = exams;
+  const { "Old question papers UPSC Civils (Pre)": civils } = section1;
+  const { "Limited UPSC other than Civils": upsc } = section2;
+  const { "Limited NCERT": ncert } = section3;
+  const headings = [
+    `(3 Years Old Question Paper Civil services (Prelims))`,
+    `Limited UPSC Old Question Papers ( CDS, Geo Scientists(Pre), CISF,
+  CAPF, NDA, Engineering Services (Pre) and SO)`,
+    ` Limited questions from Basics of School NCERT ( 6th to 10th Class)`,
+  ];
+  const sections = [
+    {
+      section: civils,
+      attempted: section1.attempted,
+      total: section1.total,
+      heading: headings[0],
+    },
+    {
+      section: upsc,
+      attempted: section2.attempted,
+      total: section2.total,
+      heading: headings[1],
+    },
+    {
+      section: ncert,
+      attempted: section3.attempted,
+      total: section3.total,
+      heading: headings[2],
+    },
+  ];
+
+  return (
     <Container fluid className="text-muted text-center">
       <h2 className="text-dark">PRATHIBHA UPSC Civils Pre-APP</h2>
-      <section className="text-muted text-center">
-        <h4>3 Years Previous Papers</h4>
-        <h5>(3 Years Old Question Paper Civil services (Prelims))</h5>
-        {data.loading === false && (
+      <h4>3 Years Previous Papers</h4>
+      {sections.map(({ section, attempted, total, heading }, index) => (
+        <section className="text-muted text-center" key={index}>
+          <h5>{heading}</h5>
           <h5>
-            ({section1.attempted} / {section1.total} Attempted)
+            ({attempted} / {total} Attempted)
           </h5>
-        )}
-        <List>
-          {data.loading === false &&
-            civils.map(({ Exam, ...rest }, index) => (
+          <List>
+            {section.map(({ Exam }) => (
               <ListItem key={Exam.id}>
-                <Link to={`/free-previous-papers/${Exam.id}/exam-rules`}>
+                <Link
+                  to={`/free-previous-papers/instruction/${Exam.name}/${Exam.id}`}
+                >
                   {Exam.name}
                   <br />
                   Upsc prelims paper 1
                 </Link>
               </ListItem>
             ))}
-        </List>
-      </section>
-
-      <section>
-        <h5>
-          Limited UPSC Old Question Papers ( CDS, Geo Scientists(Pre), CISF,
-          CAPF, NDA, Engineering Services (Pre) and SO)
-        </h5>
-        {data.loading === false && (
-          <h5>
-            ({section2.attempted} / {section2.total} Attempted)
-          </h5>
-        )}
-        <List>
-          {data.loading === false &&
-            upsc.map(({ Exam, ...rest }, index) => (
-              <ListItem key={Exam.id}>
-                <Link to={`/free-previous-papers/${Exam.id}/exam-rules`}>
-                  {Exam.name}
-                  <br />
-                  Upsc prelims paper 1
-                </Link>
-              </ListItem>
-            ))}
-        </List>
-      </section>
-      <section>
-        <h5>
-          Limited questions from Basics of School NCERT ( 6th to 10th Class)
-        </h5>
-        {data.loading === false && (
-          <h5>
-            ({section3.attempted} / {section3.total} Attempted)
-          </h5>
-        )}
-        <List>
-          {data.loading === false &&
-            ncert.map(({ Exam, ...rest }, index) => (
-              <ListItem key={Exam.id}>
-                <Link to={`/free-previous-papers/${Exam.id}/exam-rules`}>
-                  {Exam.name}
-                  <br />
-                  Upsc prelims paper 1
-                </Link>
-              </ListItem>
-            ))}
-        </List>
-      </section>
+          </List>
+        </section>
+      ))}
       <p>*click on year to start your exam.</p>
       <img src={cup} alt="cup" className="img-fluid" width="400" height="400" />
     </Container>

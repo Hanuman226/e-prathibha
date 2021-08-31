@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import { signin } from "./actions/userActions";
-import { examListReducer } from "./reducers/examReducers";
+import { examListReducer, startExamReducer } from "./reducers/examReducers";
 import { userSigninReducer } from "./reducers/userReducers";
 
 var userInfo = null;
@@ -11,11 +11,11 @@ if (localStorage.getItem("userInfo")) {
 
 const initialState = {
   userSignin: { userInfo },
-  freeExamList: "",
 };
 const reducer = combineReducers({
   userSignin: userSigninReducer,
   freeExamList: examListReducer,
+  startExam: startExamReducer,
 });
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(

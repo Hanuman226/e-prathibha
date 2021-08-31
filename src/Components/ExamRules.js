@@ -1,19 +1,22 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import {Card, Container, Form } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { Card, Container, Form } from "react-bootstrap";
+import { useHistory, useParams } from "react-router-dom";
 import styled from "styled-components";
 export default function ExamRules() {
-  const history =useHistory();
-const [checked,setChecked]=useState(false);
- 
+  const history = useHistory();
+  const [checked, setChecked] = useState(false);
+  let { examname, examid } = useParams();
   return (
     <Wrapper className="d-flex flex-column justify-content-center">
       <Container>
-      <BackButton onClick={()=>history.goBack()}><FontAwesomeIcon icon={['fas','arrow-left']}/><span className="ps-2">Back</span></BackButton>
-      <Card>
-        <Card.Header as="h5">Instructions of 2018</Card.Header>
-        <Card.Body>
+        <BackButton onClick={() => history.goBack()}>
+          <FontAwesomeIcon icon={["fas", "arrow-left"]} />
+          <span className="ps-2">Back</span>
+        </BackButton>
+        <Card>
+          <Card.Header as="h5">Instructions of {examname}</Card.Header>
+          <Card.Body>
             <ul>
               <li>
                 This test contains 120 items (questions). Each item comprises
@@ -25,10 +28,10 @@ const [checked,setChecked]=useState(false);
               <li>All items carry equal marks.</li>
               <li>Penalty for wrong Answers :</li>
             </ul>
-              <p>
-                THERE WILL BE PENALTY FOR WRONG ANSWERS MARKED BY A CANDIDATE IN
-                THE OBJECTIVE TYPE QUESTION PAPERS.
-              </p>
+            <p>
+              THERE WILL BE PENALTY FOR WRONG ANSWERS MARKED BY A CANDIDATE IN
+              THE OBJECTIVE TYPE QUESTION PAPERS.
+            </p>
             <ul>
               <li>
                 There are four alternatives for the answer to every question.
@@ -47,41 +50,53 @@ const [checked,setChecked]=useState(false);
                 candidate, there will be no penalty for that question.
               </li>
             </ul>
-          <Form.Group  className="mb-3" controlId="formBasicCheckbox" >
-    <Form.Check onChange={()=> setChecked(!checked)} checked={checked}  type="checkbox" label="I am ready to begin" />
-  </Form.Group>
-          <Button disabled={!checked} variant="primary" onClick={()=>{checked && history.push("/free-previous-papers/exam")}}>start exam</Button>
-        </Card.Body>
-      </Card> 
+            <Form.Group className="mb-3" controlId="formBasicCheckbox">
+              <Form.Check
+                onChange={() => setChecked(!checked)}
+                checked={checked}
+                type="checkbox"
+                label="I am ready to begin"
+              />
+            </Form.Group>
+            <Button
+              disabled={!checked}
+              variant="primary"
+              onClick={() => {
+                checked && history.push(`/free-previous-papers/exam/${examid}`);
+              }}
+            >
+              start exam
+            </Button>
+          </Card.Body>
+        </Card>
       </Container>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
-height:100%;
-width:100%;
+  height: 100%;
+  width: 100%;
   & ul {
     list-style: num;
   }
 `;
 
-
-const BackButton=styled.button`
-margin-bottom:1rem;
- height: 2.5rem;
-    width: 6.25rem;
-    border-radius: 0.625rem;
-    border: none;
-    text-transform: uppercase;
-    padding: 0.625rem;
-    font-size: 0.75rem;
-    font-weight: bold;
-    background-color: black;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 0 0.3125rem 0.125rem hsl(0deg 0% 0% / 40%);
-    outline: none;
+const BackButton = styled.button`
+  margin-bottom: 1rem;
+  height: 2.5rem;
+  width: 6.25rem;
+  border-radius: 0.625rem;
+  border: none;
+  text-transform: uppercase;
+  padding: 0.625rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 0 0.3125rem 0.125rem hsl(0deg 0% 0% / 40%);
+  outline: none;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -89,27 +104,27 @@ margin-bottom:1rem;
   &:active {
     box-shadow: none;
   }
-`
+`;
 
-const Button=styled.a`
+const Button = styled.a`
   height: 2.5rem;
-    width: 6.25rem;
-    border-radius: 0.625rem;
-    border: none;
-    text-decoration:none;
-    color:white !important;
-    user-select: none;
-    text-transform: uppercase;
-    padding: 0.625rem;
-    font-size: 0.75rem;
-    font-weight: bold;
-    background-color: ${props=>props.disabled?"gray":"black"};
-    cursor:${props=>props.disabled?"default":"pointer"};
-    box-shadow:${props=>props.disabled?"none": "0 0 0.3125rem 0.125rem hsl(0deg 0% 0% / 40%)"};
-    outline: none;
-  transition:all 0.25s;
+  width: 6.25rem;
+  border-radius: 0.625rem;
+  border: none;
+  text-decoration: none;
+  color: white !important;
+  user-select: none;
+  text-transform: uppercase;
+  padding: 0.625rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  background-color: ${(props) => (props.disabled ? "gray" : "black")};
+  cursor: ${(props) => (props.disabled ? "default" : "pointer")};
+  box-shadow: ${(props) =>
+    props.disabled ? "none" : "0 0 0.3125rem 0.125rem hsl(0deg 0% 0% / 40%)"};
+  outline: none;
+  transition: all 0.2s;
   &:active {
     box-shadow: none;
   }
 `;
-

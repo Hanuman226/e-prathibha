@@ -1,56 +1,77 @@
+import { useEffect, useState } from "react";
 import { Col, Form, Row } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import { startExam } from "../actions/examActions";
 import CountDownTimer from "./exams/CountDownTimer";
 import QuestionPalette from "./exams/QuestionPalette";
 
 export default function ExamScreen() {
+  const [quesNo, setQuesNo] = useState(0);
+  const { examid } = useParams();
+  const dispatch = useDispatch();
+  const examInfo = useSelector((state) => state.startExam);
+  const { loading, examData, error } = examInfo;
+
+  useEffect(() => {
+    dispatch(startExam(examid));
+  }, []);
+
+  if (examData === undefined) {
+    return <h1>Loading...</h1>;
+  }
+
+  const { ExamStat, Question, Exam } = examData.exam[quesNo];
+  const {
+    question: { above, table, below },
+    option1,
+    option2,
+    option3,
+    option4,
+    marks,
+    negative_marks,
+  } = Question;
+
+  const options = [option1, option2, option3, option4];
+
   return (
     <Wrapper>
       <LeftPanel>
         <Header>
-          <Text>Question No.6</Text>
+          <Text>Question No. {quesNo + 1}</Text>
           <div>
             <Text color="hsl(120deg 100% 35%)">
-              Right Mark: <span>2.00</span>
+              Right Mark: <span>{marks}</span>
             </Text>
             <Text color="hsl(0deg 100% 50%)">
-              Negative Mark: <span>0.66</span>
+              Negative Mark: <span>{negative_marks}</span>
             </Text>
           </div>
         </Header>
         <Body>
-          <p className="text-dark">
-            The Narasimhan Committee for Financial sector Reforms has suggested
-            reduction in?
-          </p>
+          <div dangerouslySetInnerHTML={{ __html: above }}></div>
+          {table && <div dangerouslySetInnerHTML={{ __html: table }}></div>}
+          {below && <div dangerouslySetInnerHTML={{ __html: below }}></div>}
           <HorizontalBreak />
           <fieldset>
             <Form.Group as={Row} className="mb-3">
               <Col sm={10}>
-                <Form.Check
-                  type="radio"
-                  label="SLR, CRR and Priority Financing"
-                  name="formHorizontalRadios"
-                  id="formHorizontalRadios1"
-                />
-                <Form.Check
-                  type="radio"
-                  label="CRR, Priority Sector Financing and Fianancing to capital goods sector"
-                  name="formHorizontalRadios"
-                  id="formHorizontalRadios2"
-                />
-                <Form.Check
-                  type="radio"
-                  label="SLR and CRR"
-                  name="formHorizontalRadios"
-                  id="formHorizontalRadios3"
-                />
-                <Form.Check
-                  type="radio"
-                  label="SLR and FInancing to capital goods sector"
-                  name="formHorizontalRadios"
-                  id="formHorizontalRadios4"
-                />
+                {options.map((option, index) => (
+                  <div className="form-check" key={option + index}>
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="flexRadioDefault"
+                      id={"option" + index}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor={"option" + index}
+                      dangerouslySetInnerHTML={{ __html: option }}
+                    ></label>
+                  </div>
+                ))}
               </Col>
             </Form.Group>
           </fieldset>
@@ -79,13 +100,15 @@ export default function ExamScreen() {
           <Button
             bgColor="hsl(120deg 100% 25%)"
             bgHoverColor="hsl(120deg 100% 35%)"
+            onClick={() => setQuesNo((prev) => prev + 1)}
           >
             Save & Next
           </Button>
         </Footer>
       </LeftPanel>
       <RightPanel>
-        <CountDownTimer examTime={70} />
+        {/* <CountDownTimer examTime={parseInt(examData.time, 10)} /> */}
+        <CountDownTimer examTime={parseInt(15, 10)} />
         <QuestionPalette />
       </RightPanel>
     </Wrapper>
@@ -106,7 +129,7 @@ const Wrapper = styled.div`
 `;
 
 const HorizontalBreak = styled.hr`
-  height: 1px;
+  height: 1.5px;
   background-color: silver;
 `;
 
