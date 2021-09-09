@@ -3,26 +3,39 @@ import { Col, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { startExam } from "../actions/examActions";
+import {
+  markReviewQuestion,
+  resetAnswer,
+  saveQuestion,
+  startExam,
+  bookmarkQuestion,
+  unBookmarkQuestion,
+  submitExam,
+} from "../api/examThunk";
+import useModal from "../Hooks/useModal";
 import CountDownTimer from "./exams/CountDownTimer";
+import QuestionFilter from "./exams/QuestionFilter";
 import QuestionPalette from "./exams/QuestionPalette";
+import CustomModal from "./Modal";
 
 export default function ExamScreen() {
+  const [show, toggle] = useModal();
   const [quesNo, setQuesNo] = useState(0);
   const { examid } = useParams();
   const dispatch = useDispatch();
-  const examInfo = useSelector((state) => state.startExam);
-  const { loading, examData, error } = examInfo;
+  const payload = useSelector((state) => state.exam.examsData);
 
   useEffect(() => {
     dispatch(startExam(examid));
-  }, []);
+  }, [examid]);
 
-  if (examData === undefined) {
+  if (!payload.exam.length) {
     return <h1>Loading...</h1>;
   }
 
-  const { ExamStat, Question, Exam } = examData.exam[quesNo];
+  const { ExamStat, Question } = payload.exam[quesNo];
+  let { option_selected, ques_no, exam_id, exam_result_id, bookmark, review } =
+    ExamStat;
   const {
     question: { above, table, below },
     option1,
@@ -35,83 +48,225 @@ export default function ExamScreen() {
 
   const options = [option1, option2, option3, option4];
 
+  const saveAndNext = () => {
+    let qdata = {
+      data: { Exam: { lang: "1", option_selected: option_selected } },
+      examId: examid,
+      qId: ques_no,
+    };
+
+    dispatch(saveQuestion(qdata));
+    setQuesNo((prev) => prev + 1);
+  };
+
+  const changeQues = (e) => {
+    let qno = e.target.value;
+    setQuesNo(qno - 1);
+  };
+
   return (
-    <Wrapper>
-      <LeftPanel>
-        <Header>
-          <Text>Question No. {quesNo + 1}</Text>
-          <div>
-            <Text color="hsl(120deg 100% 35%)">
-              Right Mark: <span>{marks}</span>
-            </Text>
-            <Text color="hsl(0deg 100% 50%)">
-              Negative Mark: <span>{negative_marks}</span>
-            </Text>
+    payload && (
+      <Wrapper>
+        <LeftPanel>
+          <Header>
+            <Text>Question No. {ques_no}</Text>
+            <div>
+              <Text color="hsl(120deg 100% 35%)">
+                Right Mark: <span>{marks}</span>
+              </Text>
+              <Text color="hsl(0deg 100% 50%)">
+                Negative Mark: <span>{negative_marks}</span>
+              </Text>
+            </div>
+          </Header>
+          <Body>
+            <div dangerouslySetInnerHTML={{ __html: above }}></div>
+            {table && <div dangerouslySetInnerHTML={{ __html: table }}></div>}
+            {below && <div dangerouslySetInnerHTML={{ __html: below }}></div>}
+            <HorizontalBreak />
+            <fieldset>
+              <Form.Group as={Row} className="mb-3">
+                <Col sm={10}>
+                  {options.map((option, index) => (
+                    <div className="form-check" key={option + index}>
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name="flexRadioDefault"
+                        value={index + 1}
+                        id={"option" + index}
+                        defaultChecked={
+                          option_selected === null
+                            ? false
+                            : parseInt(option_selected, 10) === index + 1
+                            ? true
+                            : false
+                        }
+                        onChange={(e) => {
+                          option_selected = e.target.value;
+                        }}
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor={"option" + index}
+                        dangerouslySetInnerHTML={{ __html: option }}
+                      ></label>
+                    </div>
+                  ))}
+                </Col>
+              </Form.Group>
+            </fieldset>
+          </Body>
+          <Footer>
+            <div>
+              <Button
+                onClick={() => {
+                  dispatch(
+                    markReviewQuestion({
+                      examId: examid,
+                      qId: ques_no,
+                    })
+                  );
+                  setQuesNo((prev) => prev + 1);
+                }}
+                bgColor="hsl(300deg 100% 25%)"
+                bgHoverColor="hsl(300deg 100% 35%)"
+              >
+                {!review
+                  ? `Mark for Review & Next`
+                  : `UnMark for Review & Next`}
+              </Button>
+              <Button
+                onClick={() =>
+                  dispatch(
+                    resetAnswer({
+                      examId: examid,
+                      qId: ques_no,
+                    })
+                  )
+                }
+                bgColor="hsl(0deg 100% 40%)"
+                bgHoverColor="hsl(0deg 100% 50%)"
+              >
+                Clear Response
+              </Button>
+              <Button
+                onClick={() =>
+                  dispatch(
+                    bookmarkQuestion({
+                      examId: examid,
+                      qId: ques_no,
+                    })
+                  )
+                }
+                bgColor="hsl(39deg 100% 40%)"
+                bgHoverColor="hsl(39deg 100% 50%)"
+              >
+                Bookmark
+              </Button>
+            </div>
+            <Button
+              bgColor="hsl(120deg 100% 25%)"
+              bgHoverColor="hsl(120deg 100% 35%)"
+              onClick={() => saveAndNext()}
+            >
+              Save & Next
+            </Button>
+          </Footer>
+        </LeftPanel>
+        <RightPanel>
+          <CountDownTimer
+            examTime={parseInt(Date.now() + payload.time * 1000, 10)}
+          />
+          <QuestionPalette setQues={changeQues} length={payload.exam.length} />
+          <QuestionFilter />
+          <div className="d-flex fle-wrap justify-content-between">
+            <Button
+              bgColor="hsl(0 0% 0%)"
+              bgHoverColor="hsl(0 0% 25%)"
+              onClick={toggle}
+            >
+              Question Paper
+            </Button>
+            <Button bgColor="hsl(0 0% 0%)" bgHoverColor="hsl(0 0% 25%)">
+              Instructions
+            </Button>
+            <Button bgColor="hsl(0 0% 0%)" bgHoverColor="hsl(0 0% 25%)">
+              Profile
+            </Button>
+            <Button
+              bgColor="hsl(0 0% 0%)"
+              bgHoverColor="hsl(0 0% 25%)"
+              onClick={() => dispatch(submitExam({ exam_id, exam_result_id }))}
+            >
+              Submit
+            </Button>
           </div>
-        </Header>
-        <Body>
-          <div dangerouslySetInnerHTML={{ __html: above }}></div>
-          {table && <div dangerouslySetInnerHTML={{ __html: table }}></div>}
-          {below && <div dangerouslySetInnerHTML={{ __html: below }}></div>}
-          <HorizontalBreak />
-          <fieldset>
-            <Form.Group as={Row} className="mb-3">
-              <Col sm={10}>
-                {options.map((option, index) => (
-                  <div className="form-check" key={option + index}>
-                    <input
-                      className="form-check-input"
-                      type="radio"
-                      name="flexRadioDefault"
-                      id={"option" + index}
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor={"option" + index}
-                      dangerouslySetInnerHTML={{ __html: option }}
-                    ></label>
-                  </div>
-                ))}
-              </Col>
-            </Form.Group>
-          </fieldset>
-        </Body>
-        <Footer>
-          <div>
-            <Button
-              bgColor="hsl(300deg 100% 25%)"
-              bgHoverColor="hsl(300deg 100% 35%)"
-            >
-              Mark for Review & Next
-            </Button>
-            <Button
-              bgColor="hsl(0deg 100% 40%)"
-              bgHoverColor="hsl(0deg 100% 50%)"
-            >
-              Clear Response
-            </Button>
-            <Button
-              bgColor="hsl(39deg 100% 40%)"
-              bgHoverColor="hsl(39deg 100% 50%)"
-            >
-              Bookmark
-            </Button>
-          </div>
-          <Button
-            bgColor="hsl(120deg 100% 25%)"
-            bgHoverColor="hsl(120deg 100% 35%)"
-            onClick={() => setQuesNo((prev) => prev + 1)}
-          >
-            Save & Next
-          </Button>
-        </Footer>
-      </LeftPanel>
-      <RightPanel>
-        {/* <CountDownTimer examTime={parseInt(examData.time, 10)} /> */}
-        <CountDownTimer examTime={parseInt(15, 10)} />
-        <QuestionPalette />
-      </RightPanel>
-    </Wrapper>
+        </RightPanel>
+
+        <CustomModal
+          show={show}
+          toggle={toggle}
+          title={"Question Paper"}
+          size="xl"
+        >
+          {payload.exam.map((item) => {
+            const { ExamStat, Question } = item;
+            let { option_selected, ques_no } = ExamStat;
+            let {
+              question: { above, table, below },
+              option1,
+              option2,
+              option3,
+              option4,
+            } = Question;
+
+            const options = [option1, option2, option3, option4];
+            return (
+              <div key={ques_no + option_selected}>
+                <p className="fw-bold">Question No.{ques_no}</p>
+                <div dangerouslySetInnerHTML={{ __html: above }}></div>
+                {table && (
+                  <div dangerouslySetInnerHTML={{ __html: table }}></div>
+                )}
+                {below && (
+                  <div dangerouslySetInnerHTML={{ __html: below }}></div>
+                )}
+                <HorizontalBreak />
+                <fieldset>
+                  <Form.Group as={Row} className="mb-3">
+                    <Col sm={10}>
+                      {options.map((option, index) => (
+                        <div className="form-check" key={option + index}>
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            name={"options" + ques_no}
+                            value={index + 1}
+                            checked={
+                              option_selected === null
+                                ? false
+                                : parseInt(option_selected, 10) === index + 1
+                                ? true
+                                : false
+                            }
+                            disabled={true}
+                          />
+                          <label
+                            className="form-check-label"
+                            dangerouslySetInnerHTML={{ __html: option }}
+                          ></label>
+                        </div>
+                      ))}
+                    </Col>
+                  </Form.Group>
+                </fieldset>
+              </div>
+            );
+          })}
+        </CustomModal>
+      </Wrapper>
+    )
   );
 }
 
@@ -177,8 +332,12 @@ const LeftPanel = styled.div`
   box-shadow: 0 0 1.875rem 0.3125rem hsl(0deg 0% 0% / 20%);
 `;
 const RightPanel = styled.div`
-  background-color: hsl(300deg 100% 25%);
+  background-color: hsl(191deg 19% 65%);
   box-shadow: 0 0 1.875rem 0.3125rem hsl(0deg 0% 0% / 20%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.5rem;
 `;
 
 const Header = styled.div`

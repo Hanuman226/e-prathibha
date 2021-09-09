@@ -4,7 +4,7 @@ import useModal from "../../Hooks/useModal";
 import icon1 from "../../Icons/1.png";
 import Modal from "../Modal";
 export default function Card({ progress }) {
-  const [show,toggle]=useModal();
+  const [show, toggle] = useModal();
   return (
     <Wrapper>
       <Label>
@@ -31,8 +31,13 @@ export default function Card({ progress }) {
       <Footer>
         <button onClick={toggle}>start now</button>
       </Footer>
-      <Modal show={show} toggle={toggle} title={'Explore For Free'}  link="/free-previous-papers">
-         <ModalContent>
+      <Modal
+        show={show}
+        toggle={toggle}
+        title={"Explore For Free"}
+        link="/free-previous-papers"
+      >
+        <ModalContent>
           <h4>Free Previous Papers Practice</h4>
           <p>
             UPSC is Unpredictable. But we can help you in a very small way to
@@ -107,7 +112,6 @@ const Description = styled.div`
   & ul {
     list-style: upper-alpha;
   }
- 
 `;
 const ProgressBar = styled.div`
   grid-area: bar;
@@ -191,4 +195,3 @@ const Label = styled.div`
     text-transform: uppercase;
   }
 `;
-

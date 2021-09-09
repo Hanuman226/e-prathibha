@@ -1,45 +1,78 @@
 import { useEffect, useState } from "react";
+import dayjs from "dayjs";
 import styled from "styled-components";
 
+const defaultRemainingTime = {
+  seconds: "00",
+  minutes: "00",
+  hours: "00",
+  days: "00",
+};
+
+function getRemainingTimeUntilMsTimestamp(timestampMs) {
+  const timestampDayjs = dayjs(timestampMs);
+  const nowDayjs = dayjs();
+  if (timestampDayjs.isBefore(nowDayjs)) {
+    return {
+      seconds: "00",
+      minutes: "00",
+      hours: "00",
+      days: "00",
+    };
+  }
+  return {
+    seconds: getRemainingSeconds(nowDayjs, timestampDayjs),
+    minutes: getRemainingMinutes(nowDayjs, timestampDayjs),
+    hours: getRemainingHours(nowDayjs, timestampDayjs),
+    days: getRemainingDays(nowDayjs, timestampDayjs),
+  };
+}
+
+function getRemainingSeconds(nowDayjs, timestampDayjs) {
+  const seconds = timestampDayjs.diff(nowDayjs, "seconds") % 60;
+  return padWithZeros(seconds, 2);
+}
+
+function getRemainingMinutes(nowDayjs, timestampDayjs) {
+  const minutes = timestampDayjs.diff(nowDayjs, "minutes") % 60;
+  return padWithZeros(minutes, 2);
+}
+
+function getRemainingHours(nowDayjs, timestampDayjs) {
+  const hours = timestampDayjs.diff(nowDayjs, "hours") % 24;
+  return padWithZeros(hours, 2);
+}
+
+function getRemainingDays(nowDayjs, timestampDayjs) {
+  const days = timestampDayjs.diff(nowDayjs, "days");
+  return days.toString();
+}
+
+function padWithZeros(number, minLength) {
+  const numberString = number.toString();
+  if (numberString.length >= minLength) return numberString;
+  return "0".repeat(minLength - numberString.length) + numberString;
+}
+
 export default function CountDownTimer({ examTime }) {
-  const [seconds, setSeconds] = useState(examTime);
-  const [timeLeft, setTimeLeft] = useState({
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  const padZero = (num) => {
-    if (num.toString().length === 1) return num.toString().padStart(2, 0);
-    return num;
-  };
-  const secondsToHMS = (value) => {
-    const sec = parseInt(value, 10);
-    let hours = Math.floor(sec / 3600);
-    let minutes = Math.floor((sec - hours * 3600) / 60);
-    let seconds = sec - hours * 3600 - minutes * 60;
-    return setTimeLeft({
-      hours: hours,
-      minutes: minutes,
-      seconds: padZero(seconds),
-    });
-  };
-
+  const [remainingTime, setRemainingTime] = useState(defaultRemainingTime);
   useEffect(() => {
-    if (seconds !== 0) setTimeout(() => setSeconds(seconds - 1), 1000);
-    secondsToHMS(seconds);
-    if (seconds === 0) clearTimeout();
-  }, [seconds]);
+    const intervalId = setInterval(() => {
+      updateRemainingTime(examTime);
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, [examTime]);
 
+  function updateRemainingTime(countdown) {
+    setRemainingTime(getRemainingTimeUntilMsTimestamp(countdown));
+  }
   return (
     <Wrapper
-      hours={timeLeft.hours}
-      minutes={timeLeft.minutes}
-      seconds={timeLeft.seconds}
+      hours={remainingTime.hours}
+      minutes={remainingTime.minutes}
+      seconds={remainingTime.seconds}
     >
-      {seconds !== 0
-        ? `${timeLeft.hours} H : ${timeLeft.minutes} M : ${timeLeft.seconds} S`
-        : "Timed Out !"}
+      {`${remainingTime.hours} H : ${remainingTime.minutes} M : ${remainingTime.seconds} S`}
     </Wrapper>
   );
 }
@@ -56,5 +89,5 @@ const Wrapper = styled.div`
 
   color: ${(props) => props.hours === 0 && props.minutes < 10 && "yellow"};
   color: ${(props) => props.hours === 0 && props.minutes === 0 && "red"};
-  transition: color 0.2s;
+  transition: color 0.1s;
 `;

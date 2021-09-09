@@ -3,21 +3,21 @@ import { Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { freeExamList } from "../actions/examActions";
+import { freeExamList } from "../api/examThunk";
 import cup from "../Icons/cup.png";
 export default function ExamsList() {
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.freeExamList);
-  const { loading, examsList, error } = data;
-
+  const { exams } = useSelector((state) => state.exam.examsList);
+  // const { loading, payload, error } = data;
   useEffect(() => {
     dispatch(freeExamList());
   }, []);
 
-  if (examsList === undefined) {
+  if (!exams.length) {
     return <h1>Loading...</h1>;
   }
-  const { pending, exams } = examsList;
+
+  // const { pending, exams } = payload;
   const [section1, section2, section3] = exams;
   const { "Old question papers UPSC Civils (Pre)": civils } = section1;
   const { "Limited UPSC other than Civils": upsc } = section2;
@@ -75,7 +75,7 @@ export default function ExamsList() {
         </section>
       ))}
       <p>*click on year to start your exam.</p>
-      <img src={cup} alt="cup" className="img-fluid" width="400" height="400" />
+      <img src={cup} alt="cup" className="img-fluid" width="350" height="350" />
     </Container>
   );
 }

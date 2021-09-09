@@ -9,14 +9,15 @@ import HomeScreen from "./screens/HomeScreen";
 import ExamsList from "./Components/ExamsList";
 import ExamRules from "./Components/ExamRules";
 import ExamScreen from "./Components/ExamScreen";
+import { ErrorBoundary } from "./ErrorBoundary";
 function App() {
   return (
-    <>
-      <Router>
-        <Sidebar />
-        <Container>
-          <Header />
-          <MainContent>
+    <Router>
+      <Sidebar />
+      <Container>
+        <Header />
+        <MainContent>
+          <ErrorBoundary>
             <Switch>
               <Route exact path="/" component={HomeScreen} />
               <Route exact path="/free-previous-papers" component={ExamsList} />
@@ -32,11 +33,11 @@ function App() {
               />
               <Route path="*" render={() => <h1>Under Construction</h1>} />
             </Switch>
-          </MainContent>
-          <Footer />
-        </Container>
-      </Router>
-    </>
+          </ErrorBoundary>
+        </MainContent>
+        <Footer />
+      </Container>
+    </Router>
   );
 }
 
