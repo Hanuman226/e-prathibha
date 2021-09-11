@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { keyframes } from "styled-components";
 import useModal from "../../Hooks/useModal";
 import icon1 from "../../Icons/1.png";
-import Modal from "../Modal";
+import CustomModal from "../../Components/CustomModal";
 export default function Card({ progress }) {
   const [show, toggle] = useModal();
   return (
@@ -31,7 +31,7 @@ export default function Card({ progress }) {
       <Footer>
         <button onClick={toggle}>start now</button>
       </Footer>
-      <Modal
+      <CustomModal
         show={show}
         toggle={toggle}
         title={"Explore For Free"}
@@ -63,7 +63,7 @@ export default function Card({ progress }) {
             </li>
           </ul>
         </ModalContent>
-      </Modal>
+      </CustomModal>
     </Wrapper>
   );
 }

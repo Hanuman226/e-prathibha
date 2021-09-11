@@ -1,10 +1,9 @@
 import styled from "styled-components";
 
 export default function FancyButton(props) {
-  const { children, disabled } = props;
+  const { children, disabled, value = "" } = props;
   return (
-    <Button disabled={disabled} onClick={props.onClick}>
-      {" "}
+    <Button value={value} disabled={disabled} onClick={props.onClick}>
       {children}
     </Button>
   );
@@ -12,7 +11,6 @@ export default function FancyButton(props) {
 
 const Button = styled.button`
   height: 2.5rem;
-  width: 6.25rem;
   border-radius: 0.625rem;
   border: none;
   text-transform: uppercase;

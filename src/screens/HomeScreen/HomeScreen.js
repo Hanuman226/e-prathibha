@@ -1,13 +1,12 @@
-import React from "react";
 import styled from "styled-components";
-import FreeCard from "../Components/cards/FreeCard";
-import PremiumCard from "../Components/cards/PremiumCard";
-import PracticeCard from "../Components/cards/PracticeCard";
-import UtilCards from "../Components/cards/UtilCards";
-import data from "../data";
-import ExamStats from "../Components/ExamStats";
-import MonthWiseChart from "../Components/charts/MonthWiseChart";
-import ExamWiseChart from "../Components/charts/ExamWiseChart";
+import FreeCard from "./FreeCard";
+import PremiumCard from "./PremiumCard";
+import PracticeCard from "./PracticeCard";
+import UtilCards from "./UtilCards";
+import data from "../../data";
+import ExamStats from "./ExamStats";
+import MonthWiseChart from "../../Components/charts/MonthWiseChart";
+import ExamWiseChart from "../../Components/charts/ExamWiseChart";
 export default function HomeScreen() {
   return (
     <Wrapper>
@@ -26,11 +25,11 @@ export default function HomeScreen() {
 
 const Wrapper = styled.div`
   display: grid;
-  place-items:center;
+  place-items: center;
   gap: 1.25rem;
-  grid-auto-flow:dense;
+  grid-auto-flow: dense;
   grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
-  @media (max-width:1024px){
+  @media (max-width: 1024px) {
     grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
   }
 `;

@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { keyframes } from "styled-components";
 import useModal from "../../Hooks/useModal";
 import icon2 from "../../Icons/2.png";
-import Modal from "../Modal";
+import CustomModal from "../../Components/CustomModal";
 export default function Card(props) {
   const { progress, expiryDate } = props;
   const [show,toggle]=useModal();
@@ -31,7 +31,7 @@ export default function Card(props) {
         <p>Expires on : {expiryDate}</p>
         <button onClick={toggle}>start now</button>
       </Footer>
-      <Modal show={show} toggle={toggle} title={"PREMIUM"} link="/free-previous-papers">
+      <CustomModal show={show} toggle={toggle} title={"PREMIUM"} link="/free-previous-papers">
         <ModalContent>
           <h4>Study a Little Deeper</h4>
           <p>
@@ -57,7 +57,7 @@ export default function Card(props) {
             <li>Comprehensive Basics of School NCERT ( 6th to 10th Class)</li>
           </ul>
         </ModalContent>
-      </Modal>
+      </CustomModal>
     </Wrapper>
   );
 }

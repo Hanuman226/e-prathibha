@@ -5,8 +5,11 @@ import review_answer from "../../Icons/review_answer.png";
 import not_answered from "../../Icons/not_answered.png";
 import review_question from "../../Icons/review.png";
 import { useSelector } from "react-redux";
-
 export default function QuestionFilter(props) {
+  const handleFilter = (e) => {
+    props.filterSelected(e);
+  };
+
   const payload = useSelector((state) => state.exam.examsData);
   if (!payload.exam.length) {
     return <h1>Loading...</h1>;
@@ -21,28 +24,49 @@ export default function QuestionFilter(props) {
       <Legend>
         <div>
           <div>
-            <Button src={answered}>1</Button>
+            <Button src={answered} value="answered" onClick={handleFilter}>
+              1
+            </Button>
             <p>Answered</p>
           </div>
           <div>
-            <Button src={not_answered}>2</Button>
+            <Button
+              src={not_answered}
+              value="not_answered"
+              onClick={handleFilter}
+            >
+              2
+            </Button>
             <p>Not Answered</p>
           </div>
         </div>
         <div>
           <div className="px-5">
-            <Button src={review_question}>3</Button>
+            <Button src={review_question} value="marked" onClick={handleFilter}>
+              3
+            </Button>
             <p>Marked</p>
           </div>
           <div className="px-5">
-            <Button color="black" src={not_visited}>
+            <Button
+              color="black"
+              src={not_visited}
+              value="not_visited"
+              onClick={handleFilter}
+            >
               4
             </Button>
             <p>Not Visited</p>
           </div>
         </div>
         <div>
-          <Button src={review_answer}>5</Button>
+          <Button
+            src={review_answer}
+            value="mark_answer"
+            onClick={handleFilter}
+          >
+            5
+          </Button>
           <p>Answered & Marked For Review</p>
         </div>
       </Legend>
@@ -50,13 +74,14 @@ export default function QuestionFilter(props) {
       <select
         className="form-select form-select-sm mb-3"
         aria-label=".form-select-sm example"
+        onChange={handleFilter}
       >
-        <option defaultValue>All</option>
-        <option value="1">Answered</option>
-        <option value="2">Not Answered</option>
-        <option value="3">Marked</option>
-        <option value="4">Not Visited</option>
-        <option value="5">Answered & Marked For Review</option>
+        <option value="all">All</option>
+        <option value="answered">Answered</option>
+        <option value="not_answered">Not Answered</option>
+        <option value="marked">Marked</option>
+        <option value="not_visited">Not Visited</option>
+        <option value="mark_answer">Answered & Marked For Review</option>
       </select>
     </Wrapper>
   );

@@ -6,19 +6,27 @@ import not_answered from "../../Icons/not_answered.png";
 import review_question from "../../Icons/review.png";
 import bookmark_answer from "../../Icons/bookmark_answer.png";
 import bookmark_question from "../../Icons/bookmark.png";
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import { styledScrollBar } from "../../Components/StyledComponents";
+import { questionOpened } from "../../api/examSlice";
 export default function QuestionPalette(props) {
-  const { setQues, length } = props;
+  const { setQues, filterOption } = props;
+  const dispatch = useDispatch();
   const payload = useSelector((state) => state.exam.examsData);
   if (!payload.exam.length) {
     return <h1>Loading...</h1>;
   }
+  console.log({ filterOption });
+  const handleClick = (e) => {
+    setQues(e);
+    filterOption !== "not_visited" &&
+      dispatch(questionOpened({ qId: e.target.value }));
+  };
 
   function buttonSrc(i) {
-    let src = not_visited;
+    let src;
     const { ExamStat } = payload.exam[i];
-    let { answered, bookmark, review } = ExamStat;
+    let { answered, bookmark, review, opened } = ExamStat;
     if (bookmark && answered === "1") {
       src = bookmark_answer;
     } else if (review && answered === "1") {
@@ -29,6 +37,8 @@ export default function QuestionPalette(props) {
       src = review_question;
     } else if (answered === "1") {
       src = answered_question;
+    } else if (opened === true) {
+      src = not_answered;
     } else {
       src = not_visited;
     }
@@ -36,19 +46,27 @@ export default function QuestionPalette(props) {
   }
 
   let buttons = [];
-
-  for (var i = 1; i <= length; i++)
+  const noOfQuestions = payload.exam.length;
+  for (var i = 1; i <= noOfQuestions; i++) {
+    const { ExamStat } = payload.exam[i - 1];
+    let { answered, review, opened, bookmark } = ExamStat;
     buttons.push(
       <Button
         key={"quesNo" + i}
         color="black"
         value={i}
-        onClick={(e) => setQues(e)}
+        onClick={handleClick}
         src={buttonSrc(i - 1)}
+        filterOption={filterOption}
+        answered={answered}
+        review={review}
+        opened={opened}
+        bookmark={bookmark}
       >
         {i}
       </Button>
     );
+  }
 
   return (
     <Wrapper>
@@ -58,7 +76,7 @@ export default function QuestionPalette(props) {
   );
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled(styledScrollBar)`
   height: 15rem;
   overflow-y: scroll;
   background-color: lightblue;
@@ -70,7 +88,6 @@ const Wrapper = styled.div`
 
 const Button = styled.button`
   font-weight: bold;
-  /* text-decoration: none; */
   white-space: nowrap;
   cursor: pointer;
   width: 2rem;
@@ -80,4 +97,28 @@ const Button = styled.button`
   border: none;
   background: url(${(props) => props.src}) no-repeat center;
   color: ${(props) => (props.color ? props.color : "white")};
+  visibility: ${({ filterOption, answered, review, opened, bookmark }) =>
+    filterOption === "all"
+      ? "visible"
+      : filterOption === "answered" && answered === "1" && !review && !bookmark
+      ? "visible"
+      : filterOption === "marked" && answered === "0" && (review || bookmark)
+      ? "visible"
+      : filterOption === "mark_answer" &&
+        answered === "1" &&
+        (review || bookmark)
+      ? "visible"
+      : filterOption === "not_answered" &&
+        opened === true &&
+        !review &&
+        answered === "0" &&
+        !bookmark
+      ? "visible"
+      : filterOption === "not_visited" &&
+        !review &&
+        opened === "0" &&
+        answered === "0" &&
+        !bookmark
+      ? "visible"
+      : "hidden"};
 `;

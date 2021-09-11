@@ -6,7 +6,6 @@ const defaultRemainingTime = {
   seconds: "00",
   minutes: "00",
   hours: "00",
-  days: "00",
 };
 
 function getRemainingTimeUntilMsTimestamp(timestampMs) {
@@ -17,14 +16,12 @@ function getRemainingTimeUntilMsTimestamp(timestampMs) {
       seconds: "00",
       minutes: "00",
       hours: "00",
-      days: "00",
     };
   }
   return {
     seconds: getRemainingSeconds(nowDayjs, timestampDayjs),
     minutes: getRemainingMinutes(nowDayjs, timestampDayjs),
     hours: getRemainingHours(nowDayjs, timestampDayjs),
-    days: getRemainingDays(nowDayjs, timestampDayjs),
   };
 }
 
@@ -41,11 +38,6 @@ function getRemainingMinutes(nowDayjs, timestampDayjs) {
 function getRemainingHours(nowDayjs, timestampDayjs) {
   const hours = timestampDayjs.diff(nowDayjs, "hours") % 24;
   return padWithZeros(hours, 2);
-}
-
-function getRemainingDays(nowDayjs, timestampDayjs) {
-  const days = timestampDayjs.diff(nowDayjs, "days");
-  return days.toString();
 }
 
 function padWithZeros(number, minLength) {
@@ -87,7 +79,7 @@ const Wrapper = styled.div`
   font-weight: bold;
   color: white;
 
-  color: ${(props) => props.hours === 0 && props.minutes < 10 && "yellow"};
-  color: ${(props) => props.hours === 0 && props.minutes === 0 && "red"};
+  color: ${(props) => props.hours === "00" && props.minutes < 10 && "yellow"};
+  color: ${(props) => props.hours === "00" && props.minutes === "00" && "red"};
   transition: color 0.1s;
 `;

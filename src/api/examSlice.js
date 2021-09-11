@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   bookmarkQuestion,
+  finishExam,
   freeExamList,
   markReviewQuestion,
   resetAnswer,
@@ -19,15 +20,16 @@ const initialState = {
   markReviewQuestion: "",
   resetAnswer: "",
   submitExam: "",
+  finishExam: "",
 };
 
 const examSlice = createSlice({
   name: "exam",
   initialState,
   reducers: {
-    updateExamsData: (state, action) => {
-      const { qId, option_selected } = action.payload;
-      state.examsData.exam[qId - 1].ExamStat.option_selected = option_selected;
+    questionOpened: (state, action) => {
+      const { qId } = action.payload;
+      state.examsData.exam[qId - 1].ExamStat.opened = true;
     },
   },
   extraReducers: (builder) => {
@@ -70,8 +72,11 @@ const examSlice = createSlice({
     builder.addCase(submitExam.fulfilled, (state, action) => {
       state.submitExam = action.payload;
     });
+    builder.addCase(finishExam.fulfilled, (state, action) => {
+      state.finishExam = action.payload;
+    });
   },
 });
+export const { questionOpened } = examSlice.actions;
 
-export const { updateExamsData } = examSlice.actions;
 export default examSlice.reducer;

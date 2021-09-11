@@ -1,18 +1,20 @@
-import "./App.css";
+// import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import styled from "styled-components";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
 import Sidebar from "./Components/Sidebar";
-import HomeScreen from "./screens/HomeScreen";
+import HomeScreen from "./screens/HomeScreen/HomeScreen";
 import ExamsList from "./Components/ExamsList";
 import ExamRules from "./Components/ExamRules";
-import ExamScreen from "./Components/ExamScreen";
+import ExamScreen from "./screens/ExamScreen/ExamScreen";
 import { ErrorBoundary } from "./ErrorBoundary";
+import GlobalStyle from "./globalStyles";
 function App() {
   return (
     <Router>
+      <GlobalStyle/>
       <Sidebar />
       <Container>
         <Header />

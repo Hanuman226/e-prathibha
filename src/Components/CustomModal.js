@@ -4,13 +4,7 @@ import FancyButton from "./FancyButton";
 export default function CustomModal(props) {
   const { children, title, show, toggle, link, size } = props;
   return (
-    <Modal
-      show={show}
-      onHide={toggle}
-      // backdrop="static"
-      keyboard={false}
-      size={size}
-    >
+    <Modal show={show} onHide={toggle} size={size}>
       <Modal.Header closeButton>
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>

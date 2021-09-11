@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import useModal from "../../Hooks/useModal";
 import icon3 from "../../Icons/3.png";
-import Modal from "../Modal";
+import CustomModal from "../../Components/CustomModal";
 export default function Card(props) {
   const [show,toggle]=useModal();
   return (
@@ -20,7 +20,7 @@ export default function Card(props) {
       <Footer>
         <button onClick={toggle}>start now</button>
       </Footer>
-      <Modal show={show} toggle={toggle}  title={"Practice Session"} link="/free-previous-papers">
+      <CustomModal show={show} toggle={toggle}  title={"Practice Session"} link="/free-previous-papers">
         <ModalContent>
           <h4>Practice Yourself</h4>
           <p>Get random questions of all difficulty levels.</p>
@@ -30,7 +30,7 @@ export default function Card(props) {
             <li>Can attempt only 20 question per exam.</li>
           </ul>
         </ModalContent>
-      </Modal>
+      </CustomModal>
     </Wrapper>
   );
 }

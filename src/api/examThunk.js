@@ -60,7 +60,7 @@ export const saveQuestion = createAsyncThunk(
       data: {
         Exam: { option_selected },
       },
-      qId
+      qId,
     } = body;
     try {
       let serverKey = process.env.REACT_APP_SERVER_KEY;
@@ -146,7 +146,7 @@ export const markReviewQuestion = createAsyncThunk(
       const {
         user: { userInfo },
       } = getState();
-     await api.post(
+      await api.post(
         "/mark_review",
         { examId, qId },
         {
@@ -173,7 +173,7 @@ export const resetAnswer = createAsyncThunk(
       const {
         user: { userInfo },
       } = getState();
-   await api.post(
+      const { data } = await api.post(
         "/reset_ans",
         { examId, qId },
         {
@@ -203,6 +203,33 @@ export const submitExam = createAsyncThunk(
       const { data } = await api.post(
         "/submit",
         { examId, examresultId },
+        {
+          headers: {
+            tokenu: userInfo.Token,
+            Id: userInfo.Id,
+            server_key: serverKey,
+          },
+        }
+      );
+      return data.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const finishExam = createAsyncThunk(
+  "exam/finishExam",
+  async ({ examId, qno }, { getState, rejectWithValue }) => {
+    try {
+      let serverKey = process.env.REACT_APP_SERVER_KEY;
+      const {
+        user: { userInfo },
+      } = getState();
+      const { data } = await api.post(
+        "/finishExam",
+        { examId, qno },
         {
           headers: {
             tokenu: userInfo.Token,

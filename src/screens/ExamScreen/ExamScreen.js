@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -9,21 +9,31 @@ import {
   saveQuestion,
   startExam,
   bookmarkQuestion,
-  unBookmarkQuestion,
   submitExam,
-} from "../api/examThunk";
-import useModal from "../Hooks/useModal";
-import CountDownTimer from "./exams/CountDownTimer";
-import QuestionFilter from "./exams/QuestionFilter";
-import QuestionPalette from "./exams/QuestionPalette";
-import CustomModal from "./Modal";
+} from "../../api/examThunk";
+import useModal from "../../Hooks/useModal";
+import CountDownTimer from "../../Components/CountDownTimer";
+import QuestionFilter from "./QuestionFilter";
+import QuestionPalette from "./QuestionPalette";
+import {
+  HorizontalBreak,
+  styledScrollBar,
+} from "../../Components/StyledComponents";
+import FinishExamModal from "./FinishExamModal";
+import QuestionPaperModal from "./QuestionPaperModal";
 
 export default function ExamScreen() {
-  const [show, toggle] = useModal();
+  const [show1, toggle1] = useModal();
+  const [show2, toggle2] = useModal();
   const [quesNo, setQuesNo] = useState(0);
+  const [filterOption, setFilterOption] = useState("all");
   const { examid } = useParams();
   const dispatch = useDispatch();
   const payload = useSelector((state) => state.exam.examsData);
+  const memoizedTime = useMemo(
+    () => Date.now() + payload.time * 1000,
+    [payload.time]
+  );
 
   useEffect(() => {
     dispatch(startExam(examid));
@@ -34,7 +44,7 @@ export default function ExamScreen() {
   }
 
   const { ExamStat, Question } = payload.exam[quesNo];
-  let { option_selected, ques_no, exam_id, exam_result_id, bookmark, review } =
+  let { option_selected, ques_no, exam_id, exam_result_id, review, answered } =
     ExamStat;
   const {
     question: { above, table, below },
@@ -54,18 +64,63 @@ export default function ExamScreen() {
       examId: examid,
       qId: ques_no,
     };
+    option_selected !== null && dispatch(saveQuestion(qdata));
+    payload.exam.length !== Number(ques_no) && setQuesNo((prev) => prev + 1);
+  };
 
-    dispatch(saveQuestion(qdata));
-    setQuesNo((prev) => prev + 1);
+  const markAndNext = () => {
+    let qdata = {
+      data: { Exam: { lang: "1", option_selected: option_selected } },
+      examId: examid,
+      qId: ques_no,
+    };
+    dispatch(
+      markReviewQuestion({
+        examId: examid,
+        qId: ques_no,
+      })
+    );
+    option_selected !== null && dispatch(saveQuestion(qdata));
+    payload.exam.length !== Number(ques_no) && setQuesNo((prev) => prev + 1);
+  };
+
+  const bookmarkAndNext = () => {
+    let qdata = {
+      data: { Exam: { lang: "1", option_selected: option_selected } },
+      examId: examid,
+      qId: ques_no,
+    };
+    dispatch(
+      bookmarkQuestion({
+        examId: examid,
+        qId: ques_no,
+      })
+    );
+    option_selected !== null && dispatch(saveQuestion(qdata));
+    payload.exam.length !== Number(ques_no) && setQuesNo((prev) => prev + 1);
+  };
+
+  const clearResponse = () => {
+    dispatch(
+      resetAnswer({
+        examId: examid,
+        qId: ques_no,
+      })
+    );
+    payload.exam.length !== Number(ques_no) && setQuesNo((prev) => prev + 1);
   };
 
   const changeQues = (e) => {
-    let qno = e.target.value;
+    let qno = e.target.value || 1;
     setQuesNo(qno - 1);
   };
 
+  const filterSelected = (e) => {
+    setFilterOption(e.target.value);
+  };
+
   return (
-    payload && (
+    payload.exam.length > 0 && (
       <Wrapper>
         <LeftPanel>
           <Header>
@@ -96,7 +151,7 @@ export default function ExamScreen() {
                         value={index + 1}
                         id={"option" + index}
                         defaultChecked={
-                          option_selected === null
+                          option_selected === null && answered === "0"
                             ? false
                             : parseInt(option_selected, 10) === index + 1
                             ? true
@@ -120,15 +175,7 @@ export default function ExamScreen() {
           <Footer>
             <div>
               <Button
-                onClick={() => {
-                  dispatch(
-                    markReviewQuestion({
-                      examId: examid,
-                      qId: ques_no,
-                    })
-                  );
-                  setQuesNo((prev) => prev + 1);
-                }}
+                onClick={markAndNext}
                 bgColor="hsl(300deg 100% 25%)"
                 bgHoverColor="hsl(300deg 100% 35%)"
               >
@@ -137,28 +184,14 @@ export default function ExamScreen() {
                   : `UnMark for Review & Next`}
               </Button>
               <Button
-                onClick={() =>
-                  dispatch(
-                    resetAnswer({
-                      examId: examid,
-                      qId: ques_no,
-                    })
-                  )
-                }
+                onClick={clearResponse}
                 bgColor="hsl(0deg 100% 40%)"
                 bgHoverColor="hsl(0deg 100% 50%)"
               >
                 Clear Response
               </Button>
               <Button
-                onClick={() =>
-                  dispatch(
-                    bookmarkQuestion({
-                      examId: examid,
-                      qId: ques_no,
-                    })
-                  )
-                }
+                onClick={bookmarkAndNext}
                 bgColor="hsl(39deg 100% 40%)"
                 bgHoverColor="hsl(39deg 100% 50%)"
               >
@@ -175,16 +208,14 @@ export default function ExamScreen() {
           </Footer>
         </LeftPanel>
         <RightPanel>
-          <CountDownTimer
-            examTime={parseInt(Date.now() + payload.time * 1000, 10)}
-          />
-          <QuestionPalette setQues={changeQues} length={payload.exam.length} />
-          <QuestionFilter />
+          <CountDownTimer examTime={memoizedTime} />
+          <QuestionPalette setQues={changeQues} filterOption={filterOption} />
+          <QuestionFilter filterSelected={filterSelected} />
           <div className="d-flex fle-wrap justify-content-between">
             <Button
               bgColor="hsl(0 0% 0%)"
               bgHoverColor="hsl(0 0% 25%)"
-              onClick={toggle}
+              onClick={toggle1}
             >
               Question Paper
             </Button>
@@ -197,74 +228,26 @@ export default function ExamScreen() {
             <Button
               bgColor="hsl(0 0% 0%)"
               bgHoverColor="hsl(0 0% 25%)"
-              onClick={() => dispatch(submitExam({ exam_id, exam_result_id }))}
+              onClick={() => {
+                dispatch(
+                  submitExam({ examId: exam_id, examresultId: exam_result_id })
+                );
+                toggle2();
+              }}
             >
               Submit
             </Button>
           </div>
         </RightPanel>
 
-        <CustomModal
-          show={show}
-          toggle={toggle}
-          title={"Question Paper"}
-          size="xl"
-        >
-          {payload.exam.map((item) => {
-            const { ExamStat, Question } = item;
-            let { option_selected, ques_no } = ExamStat;
-            let {
-              question: { above, table, below },
-              option1,
-              option2,
-              option3,
-              option4,
-            } = Question;
-
-            const options = [option1, option2, option3, option4];
-            return (
-              <div key={ques_no + option_selected}>
-                <p className="fw-bold">Question No.{ques_no}</p>
-                <div dangerouslySetInnerHTML={{ __html: above }}></div>
-                {table && (
-                  <div dangerouslySetInnerHTML={{ __html: table }}></div>
-                )}
-                {below && (
-                  <div dangerouslySetInnerHTML={{ __html: below }}></div>
-                )}
-                <HorizontalBreak />
-                <fieldset>
-                  <Form.Group as={Row} className="mb-3">
-                    <Col sm={10}>
-                      {options.map((option, index) => (
-                        <div className="form-check" key={option + index}>
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            name={"options" + ques_no}
-                            value={index + 1}
-                            checked={
-                              option_selected === null
-                                ? false
-                                : parseInt(option_selected, 10) === index + 1
-                                ? true
-                                : false
-                            }
-                            disabled={true}
-                          />
-                          <label
-                            className="form-check-label"
-                            dangerouslySetInnerHTML={{ __html: option }}
-                          ></label>
-                        </div>
-                      ))}
-                    </Col>
-                  </Form.Group>
-                </fieldset>
-              </div>
-            );
-          })}
-        </CustomModal>
+        <QuestionPaperModal show={show1} toggle={toggle1} />
+        <FinishExamModal
+          setQues={changeQues}
+          show={show2}
+          toggle={toggle2}
+          examId={exam_id}
+          qno={payload.exam.length}
+        />
       </Wrapper>
     )
   );
@@ -283,10 +266,10 @@ const Wrapper = styled.div`
   }
 `;
 
-const HorizontalBreak = styled.hr`
-  height: 1.5px;
-  background-color: silver;
-`;
+// const HorizontalBreak = styled.hr`
+//   height: 1.5px;
+//   background-color: silver;
+// `;
 
 const Text = styled.p`
   margin-bottom: 0;
@@ -356,32 +339,11 @@ const Header = styled.div`
     justify-content: space-between;
   }
 `;
-const Body = styled.div`
+const Body = styled(styledScrollBar)`
   height: 70vh;
   overflow-y: scroll;
   overflow-x: hidden;
   padding: 1rem;
-
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  /* Track */
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    box-shadow: inset 0 0 2px grey;
-  }
-
-  /* Handle */
-  &::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 0.3rem;
-  }
-
-  /* Handle on hover */
-  &::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
 `;
 const Footer = styled.div`
   margin-top: auto;
