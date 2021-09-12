@@ -9,18 +9,25 @@ import bookmark_question from "../../Icons/bookmark.png";
 import { useDispatch, useSelector } from "react-redux";
 import { styledScrollBar } from "../../Components/StyledComponents";
 import { questionOpened } from "../../api/examSlice";
+import { attemptTime } from "../../api/examThunk";
 export default function QuestionPalette(props) {
-  const { setQues, filterOption } = props;
+  const { setQues, filterOption, examId } = props;
   const dispatch = useDispatch();
   const payload = useSelector((state) => state.exam.examsData);
   if (!payload.exam.length) {
     return <h1>Loading...</h1>;
   }
-  console.log({ filterOption });
   const handleClick = (e) => {
     setQues(e);
     filterOption !== "not_visited" &&
       dispatch(questionOpened({ qId: e.target.value }));
+    dispatch(
+      attemptTime({
+        examId: examId,
+        qId: e.target.value,
+        currQues: e.target.value,
+      })
+    );
   };
 
   function buttonSrc(i) {
@@ -37,7 +44,7 @@ export default function QuestionPalette(props) {
       src = review_question;
     } else if (answered === "1") {
       src = answered_question;
-    } else if (opened === true) {
+    } else if (opened === "1") {
       src = not_answered;
     } else {
       src = not_visited;
@@ -45,33 +52,27 @@ export default function QuestionPalette(props) {
     return src;
   }
 
-  let buttons = [];
-  const noOfQuestions = payload.exam.length;
-  for (var i = 1; i <= noOfQuestions; i++) {
-    const { ExamStat } = payload.exam[i - 1];
-    let { answered, review, opened, bookmark } = ExamStat;
-    buttons.push(
-      <Button
-        key={"quesNo" + i}
-        color="black"
-        value={i}
-        onClick={handleClick}
-        src={buttonSrc(i - 1)}
-        filterOption={filterOption}
-        answered={answered}
-        review={review}
-        opened={opened}
-        bookmark={bookmark}
-      >
-        {i}
-      </Button>
-    );
-  }
-
   return (
     <Wrapper>
       <p>Question Palette :</p>
-      {buttons.map((button) => button)}
+      {payload.exam.map((item, index) => {
+        const { answered, review, opened, bookmark, ques_no } = item.ExamStat;
+        return (
+          <Button
+            key={"quesNo" + index}
+            value={ques_no}
+            onClick={handleClick}
+            src={buttonSrc(index)}
+            filterOption={filterOption}
+            answered={answered}
+            review={review}
+            opened={opened}
+            bookmark={bookmark}
+          >
+            {ques_no}
+          </Button>
+        );
+      })}
     </Wrapper>
   );
 }
@@ -96,8 +97,11 @@ const Button = styled.button`
   float: left;
   border: none;
   background: url(${(props) => props.src}) no-repeat center;
-  color: ${(props) => (props.color ? props.color : "white")};
-  visibility: ${({ filterOption, answered, review, opened, bookmark }) =>
+  color: ${({ answered, review, opened, bookmark }) =>
+    !review && opened === "0" && answered === "0" && !bookmark
+      ? "black"
+      : "white"};
+  /* visibility: ${({ filterOption, answered, review, opened, bookmark }) =>
     filterOption === "all"
       ? "visible"
       : filterOption === "answered" && answered === "1" && !review && !bookmark
@@ -120,5 +124,29 @@ const Button = styled.button`
         answered === "0" &&
         !bookmark
       ? "visible"
-      : "hidden"};
+      : "hidden"}; */
+  display: ${({ filterOption, answered, review, opened, bookmark }) =>
+    filterOption === "all"
+      ? "block"
+      : filterOption === "answered" && answered === "1" && !review && !bookmark
+      ? "block"
+      : filterOption === "marked" && answered === "0" && (review || bookmark)
+      ? "block"
+      : filterOption === "mark_answer" &&
+        answered === "1" &&
+        (review || bookmark)
+      ? "block"
+      : filterOption === "not_answered" &&
+        opened === "1" &&
+        !review &&
+        answered === "0" &&
+        !bookmark
+      ? "block"
+      : filterOption === "not_visited" &&
+        !review &&
+        opened === "0" &&
+        answered === "0" &&
+        !bookmark
+      ? "block"
+      : "none"};
 `;

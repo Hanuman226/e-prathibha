@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  attemptTime,
   bookmarkQuestion,
   finishExam,
   freeExamList,
@@ -19,6 +20,7 @@ const initialState = {
   unBookmarkQuestion: "",
   markReviewQuestion: "",
   resetAnswer: "",
+  attemptTime: "",
   submitExam: "",
   finishExam: "",
 };
@@ -29,7 +31,7 @@ const examSlice = createSlice({
   reducers: {
     questionOpened: (state, action) => {
       const { qId } = action.payload;
-      state.examsData.exam[qId - 1].ExamStat.opened = true;
+      state.examsData.exam[qId - 1].ExamStat.opened = "1";
     },
   },
   extraReducers: (builder) => {
@@ -48,14 +50,12 @@ const examSlice = createSlice({
     builder.addCase(bookmarkQuestion.fulfilled, (state, action) => {
       const { qId } = action.payload;
       state.bookmarkQuestion = action.payload;
-      state.examsData.exam[qId - 1].ExamStat.bookmark =
-        !state.examsData.exam[qId - 1].ExamStat.bookmark;
+      state.examsData.exam[qId - 1].ExamStat.bookmark = true;
     });
     builder.addCase(unBookmarkQuestion.fulfilled, (state, action) => {
       const { qId } = action.payload;
       state.unBookmarkQuestion = action.payload;
-      state.examsData.exam[qId - 1].ExamStat.bookmark =
-        !state.examsData.exam[qId - 1].ExamStat.bookmark;
+      state.examsData.exam[qId - 1].ExamStat.bookmark = false;
     });
     builder.addCase(markReviewQuestion.fulfilled, (state, action) => {
       const { qId } = action.payload;
@@ -68,6 +68,9 @@ const examSlice = createSlice({
       state.resetAnswer = action.payload;
       state.examsData.exam[qId - 1].ExamStat.option_selected = null;
       state.examsData.exam[qId - 1].ExamStat.answered = "0";
+    });
+    builder.addCase(attemptTime.fulfilled, (state, action) => {
+      state.attemptTime = action.payload;
     });
     builder.addCase(submitExam.fulfilled, (state, action) => {
       state.submitExam = action.payload;

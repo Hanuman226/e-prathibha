@@ -173,7 +173,7 @@ export const resetAnswer = createAsyncThunk(
       const {
         user: { userInfo },
       } = getState();
-      const { data } = await api.post(
+      await api.post(
         "/reset_ans",
         { examId, qId },
         {
@@ -185,6 +185,33 @@ export const resetAnswer = createAsyncThunk(
         }
       );
       return { examId, qId };
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.msg);
+    }
+  }
+);
+
+export const attemptTime = createAsyncThunk(
+  "exam/attemptTime",
+  async ({ examId, qId, currQues }, { getState, rejectWithValue }) => {
+    try {
+      let serverKey = process.env.REACT_APP_SERVER_KEY;
+      const {
+        user: { userInfo },
+      } = getState();
+      const { data } = await api.post(
+        "/attemt_time",
+        { examId, qId, currQues },
+        {
+          headers: {
+            tokenu: userInfo.Token,
+            Id: userInfo.Id,
+            server_key: serverKey,
+          },
+        }
+      );
+      return data.data;
     } catch (error) {
       console.log(error);
       return rejectWithValue(error.msg);

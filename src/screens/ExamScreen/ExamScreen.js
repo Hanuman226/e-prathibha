@@ -10,6 +10,7 @@ import {
   startExam,
   bookmarkQuestion,
   submitExam,
+  attemptTime,
 } from "../../api/examThunk";
 import useModal from "../../Hooks/useModal";
 import CountDownTimer from "../../Components/CountDownTimer";
@@ -21,11 +22,13 @@ import {
 } from "../../Components/StyledComponents";
 import FinishExamModal from "./FinishExamModal";
 import QuestionPaperModal from "./QuestionPaperModal";
+import { questionOpened } from "../../api/examSlice";
 
 export default function ExamScreen() {
   const [show1, toggle1] = useModal();
   const [show2, toggle2] = useModal();
   const [quesNo, setQuesNo] = useState(0);
+  // const [currQuesNo, setCurrQuesNo] = useState(1);
   const [filterOption, setFilterOption] = useState("all");
   const { examid } = useParams();
   const dispatch = useDispatch();
@@ -65,6 +68,16 @@ export default function ExamScreen() {
       qId: ques_no,
     };
     option_selected !== null && dispatch(saveQuestion(qdata));
+    option_selected === null && dispatch(questionOpened({ qId: ques_no }));
+    // if (ques_no === 1 || ques_no === payload.exam.length) {
+    //   dispatch(
+    //     attemptTime({ examId: exam_id, qId: ques_no, currQues: ques_no })
+    //   );
+    // } else {
+    //   dispatch(
+    //     attemptTime({ examId: exam_id, qId: ques_no, currQues: currQuesNo })
+    //   );
+    // }
     payload.exam.length !== Number(ques_no) && setQuesNo((prev) => prev + 1);
   };
 
@@ -101,12 +114,13 @@ export default function ExamScreen() {
   };
 
   const clearResponse = () => {
-    dispatch(
-      resetAnswer({
-        examId: examid,
-        qId: ques_no,
-      })
-    );
+    option_selected !== null &&
+      dispatch(
+        resetAnswer({
+          examId: examid,
+          qId: ques_no,
+        })
+      );
     payload.exam.length !== Number(ques_no) && setQuesNo((prev) => prev + 1);
   };
 
@@ -208,8 +222,17 @@ export default function ExamScreen() {
           </Footer>
         </LeftPanel>
         <RightPanel>
-          <CountDownTimer examTime={memoizedTime} />
-          <QuestionPalette setQues={changeQues} filterOption={filterOption} />
+          <CountDownTimer
+            examTime={memoizedTime}
+            examId={exam_id}
+            examresultId={exam_result_id}
+            qno={payload.exam.length}
+          />
+          <QuestionPalette
+            setQues={changeQues}
+            filterOption={filterOption}
+            examId={exam_id}
+          />
           <QuestionFilter filterSelected={filterSelected} />
           <div className="d-flex fle-wrap justify-content-between">
             <Button

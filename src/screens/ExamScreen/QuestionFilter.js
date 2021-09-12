@@ -5,19 +5,57 @@ import review_answer from "../../Icons/review_answer.png";
 import not_answered from "../../Icons/not_answered.png";
 import review_question from "../../Icons/review.png";
 import { useSelector } from "react-redux";
+import { useState } from "react";
 export default function QuestionFilter(props) {
+  const [selected, setSelected] = useState("all");
   const handleFilter = (e) => {
     props.filterSelected(e);
+    setSelected(e.target.value);
   };
 
   const payload = useSelector((state) => state.exam.examsData);
   if (!payload.exam.length) {
     return <h1>Loading...</h1>;
   }
-  const { ExamStat } = payload.exam[0];
-  let { option_selected, ques_no, bookmark, review } = ExamStat;
+  // const { ExamStat } = payload.exam[0];
+  const answeredCount = payload.exam.filter(
+    ({ ExamStat }) =>
+      ExamStat.answered === "1" && !ExamStat.bookmark && !ExamStat.review
+  );
+  console.log({ answeredCount: answeredCount.length });
 
-  console.log({ option_selected, ques_no, bookmark, review });
+  const markedCount = payload.exam.filter(
+    ({ ExamStat }) =>
+      (ExamStat.review || ExamStat.bookmark) && ExamStat.answered === "0"
+  );
+  console.log({ markedCount: markedCount.length });
+
+  const markAndAnswerCount = payload.exam.filter(
+    ({ ExamStat }) =>
+      (ExamStat.review || ExamStat.bookmark) && ExamStat.answered === "1"
+  );
+  console.log({ markAndAnswerCount: markAndAnswerCount.length });
+
+  const notAnsweredCount = payload.exam.filter(
+    ({ ExamStat }) =>
+      ExamStat.answered === "0" &&
+      ExamStat.opened === "1" &&
+      !ExamStat.review &&
+      !ExamStat.bookmark
+  );
+  console.log({ notAnsweredCount: notAnsweredCount.length });
+
+  const notVisitedCount = payload.exam.filter(
+    ({ ExamStat }) =>
+      ExamStat.opened === "0" &&
+      ExamStat.answered === "0" &&
+      !ExamStat.review &&
+      !ExamStat.bookmark
+  );
+  console.log({ notVisitedCount: notVisitedCount.length });
+  // let { option_selected, ques_no, bookmark, review } = ExamStat;
+
+  // console.log({ option_selected, ques_no, bookmark, review });
   return (
     <Wrapper>
       <p>Legend:</p>
@@ -25,7 +63,7 @@ export default function QuestionFilter(props) {
         <div>
           <div>
             <Button src={answered} value="answered" onClick={handleFilter}>
-              1
+              {answeredCount.length}
             </Button>
             <p>Answered</p>
           </div>
@@ -35,7 +73,7 @@ export default function QuestionFilter(props) {
               value="not_answered"
               onClick={handleFilter}
             >
-              2
+              {notAnsweredCount.length}
             </Button>
             <p>Not Answered</p>
           </div>
@@ -43,7 +81,7 @@ export default function QuestionFilter(props) {
         <div>
           <div className="px-5">
             <Button src={review_question} value="marked" onClick={handleFilter}>
-              3
+              {markedCount.length}
             </Button>
             <p>Marked</p>
           </div>
@@ -54,7 +92,7 @@ export default function QuestionFilter(props) {
               value="not_visited"
               onClick={handleFilter}
             >
-              4
+              {notVisitedCount.length}
             </Button>
             <p>Not Visited</p>
           </div>
@@ -65,13 +103,14 @@ export default function QuestionFilter(props) {
             value="mark_answer"
             onClick={handleFilter}
           >
-            5
+            {markAndAnswerCount.length}
           </Button>
           <p>Answered & Marked For Review</p>
         </div>
       </Legend>
       <p>Filter:</p>
       <select
+        value={selected}
         className="form-select form-select-sm mb-3"
         aria-label=".form-select-sm example"
         onChange={handleFilter}

@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { finishExam, submitExam } from "../api/examThunk";
+import { useHistory } from "react-router";
 
 const defaultRemainingTime = {
-  seconds: "00",
-  minutes: "00",
-  hours: "00",
+  seconds: "0",
+  minutes: "0",
+  hours: "0",
 };
 
 function getRemainingTimeUntilMsTimestamp(timestampMs) {
@@ -46,8 +49,23 @@ function padWithZeros(number, minLength) {
   return "0".repeat(minLength - numberString.length) + numberString;
 }
 
-export default function CountDownTimer({ examTime }) {
+export default function CountDownTimer(props) {
+  const { examTime, examId, examresultId, qno } = props;
   const [remainingTime, setRemainingTime] = useState(defaultRemainingTime);
+  const dispatch = useDispatch();
+  const history = useHistory();
+  useEffect(() => {
+    if (
+      remainingTime.hours === "00" &&
+      remainingTime.minutes === "00" &&
+      remainingTime.seconds === "00"
+    ) {
+      // dispatch(submitExam({ examId, examresultId }));
+      dispatch(finishExam({ examId, qno }));
+      history.push("/");
+    }
+  }, [remainingTime]);
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       updateRemainingTime(examTime);

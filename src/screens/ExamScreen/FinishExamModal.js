@@ -72,7 +72,13 @@ export default function FinishExamModal(props) {
             <span className="ps-2">Finish Exam</span>
           </FancyButton>
         </Link>
-        <FancyButton value="1" onClick={(e) => setQues(e)}>
+        <FancyButton
+          value="1"
+          onClick={(e) => {
+            setQues(e);
+            toggle();
+          }}
+        >
           <FontAwesomeIcon icon={["fas", "arrow-left"]} />
           <span className="ps-2">Return To First Question</span>
         </FancyButton>
