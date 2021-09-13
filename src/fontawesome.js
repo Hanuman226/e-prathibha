@@ -16,6 +16,7 @@ import {
   faTimes,
   faArrowLeft,
   faLock,
+  faBell,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -36,5 +37,6 @@ library.add(
   faArrowLeft,
   faLock,
   faTimes,
-  faArrowLeft
+  faArrowLeft,
+  faBell
 );

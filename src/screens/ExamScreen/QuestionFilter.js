@@ -22,19 +22,19 @@ export default function QuestionFilter(props) {
     ({ ExamStat }) =>
       ExamStat.answered === "1" && !ExamStat.bookmark && !ExamStat.review
   );
-  console.log({ answeredCount: answeredCount.length });
+  // console.log({ answeredCount: answeredCount.length });
 
   const markedCount = payload.exam.filter(
     ({ ExamStat }) =>
       (ExamStat.review || ExamStat.bookmark) && ExamStat.answered === "0"
   );
-  console.log({ markedCount: markedCount.length });
+  // console.log({ markedCount: markedCount.length });
 
   const markAndAnswerCount = payload.exam.filter(
     ({ ExamStat }) =>
       (ExamStat.review || ExamStat.bookmark) && ExamStat.answered === "1"
   );
-  console.log({ markAndAnswerCount: markAndAnswerCount.length });
+  // console.log({ markAndAnswerCount: markAndAnswerCount.length });
 
   const notAnsweredCount = payload.exam.filter(
     ({ ExamStat }) =>
@@ -43,7 +43,7 @@ export default function QuestionFilter(props) {
       !ExamStat.review &&
       !ExamStat.bookmark
   );
-  console.log({ notAnsweredCount: notAnsweredCount.length });
+  // console.log({ notAnsweredCount: notAnsweredCount.length });
 
   const notVisitedCount = payload.exam.filter(
     ({ ExamStat }) =>
@@ -52,7 +52,7 @@ export default function QuestionFilter(props) {
       !ExamStat.review &&
       !ExamStat.bookmark
   );
-  console.log({ notVisitedCount: notVisitedCount.length });
+  // console.log({ notVisitedCount: notVisitedCount.length });
   // let { option_selected, ques_no, bookmark, review } = ExamStat;
 
   // console.log({ option_selected, ques_no, bookmark, review });

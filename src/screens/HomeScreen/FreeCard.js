@@ -1,10 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { keyframes } from "styled-components";
-import useModal from "../../Hooks/useModal";
 import icon1 from "../../Icons/1.png";
 import CustomModal from "../../Components/CustomModal";
+import useToggle from "../../Hooks/useToggle";
 export default function Card({ progress }) {
-  const [show, toggle] = useModal();
+  const [show, toggle] = useToggle();
   return (
     <Wrapper>
       <Label>

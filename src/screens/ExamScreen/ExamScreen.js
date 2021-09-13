@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -12,7 +12,6 @@ import {
   submitExam,
   attemptTime,
 } from "../../api/examThunk";
-import useModal from "../../Hooks/useModal";
 import CountDownTimer from "../../Components/CountDownTimer";
 import QuestionFilter from "./QuestionFilter";
 import QuestionPalette from "./QuestionPalette";
@@ -23,12 +22,20 @@ import {
 import FinishExamModal from "./FinishExamModal";
 import QuestionPaperModal from "./QuestionPaperModal";
 import { questionOpened } from "../../api/examSlice";
+import ProfileModal from "./ProfileModal";
+import InstructionsModal from "./InstructionsModal";
+import useToggle from "../../Hooks/useToggle";
+import CustomToast from "../../Components/CustomToast";
+import { faCommentsDollar } from "@fortawesome/free-solid-svg-icons";
 
 export default function ExamScreen() {
-  const [show1, toggle1] = useModal();
-  const [show2, toggle2] = useModal();
+  const [showQuestionPaper, toggleQuestionPaper] = useToggle();
+  const [showInstructions, toggleInstructions] = useToggle();
+  const [showProfile, toggleProfile] = useToggle();
+  const [showFinishExam, toggleFinishExam] = useToggle();
+  const [showAlert, toggleAlert] = useToggle();
   const [quesNo, setQuesNo] = useState(0);
-  // const [currQuesNo, setCurrQuesNo] = useState(1);
+  const currQuesNo = useRef(1);
   const [filterOption, setFilterOption] = useState("all");
   const { examid } = useParams();
   const dispatch = useDispatch();
@@ -40,15 +47,29 @@ export default function ExamScreen() {
 
   useEffect(() => {
     dispatch(startExam(examid));
+    dispatch(
+      attemptTime({
+        examId: examid,
+        qId: 1,
+        currQues: 1,
+      })
+    );
   }, [examid]);
 
   if (!payload.exam.length) {
     return <h1>Loading...</h1>;
   }
 
-  const { ExamStat, Question } = payload.exam[quesNo];
-  let { option_selected, ques_no, exam_id, exam_result_id, review, answered } =
-    ExamStat;
+  const { ExamStat, Question, Exam } = payload.exam[quesNo];
+  let {
+    option_selected,
+    ques_no,
+    exam_id,
+    exam_result_id,
+    student_id,
+    review,
+    answered,
+  } = ExamStat;
   const {
     question: { above, table, below },
     option1,
@@ -61,56 +82,79 @@ export default function ExamScreen() {
 
   const options = [option1, option2, option3, option4];
 
-  const saveAndNext = () => {
-    let qdata = {
+  const isLastQuestion = payload.exam.length === Number(ques_no);
+
+  const trackQuesAttemptTime = () => {
+    if (Math.abs(Number(ques_no) - currQuesNo.current) === 1) {
+      currQuesNo.current = Number(ques_no);
+    }
+
+    if (Number(ques_no) === 1) {
+      dispatch(
+        attemptTime({
+          examId: exam_id,
+          qId: Number(ques_no) + 1,
+          currQues: ques_no,
+        })
+      );
+    } else if (isLastQuestion) {
+      dispatch(
+        attemptTime({
+          examId: exam_id,
+          qId: ques_no,
+          currQues: ques_no,
+        })
+      );
+    } else {
+      dispatch(
+        attemptTime({
+          examId: exam_id,
+          qId: Number(ques_no) + 1,
+          currQues: currQuesNo.current,
+        })
+      );
+    }
+  };
+
+  const commonQuesTasks = () => {
+    const qdata = {
       data: { Exam: { lang: "1", option_selected: option_selected } },
       examId: examid,
       qId: ques_no,
     };
+
     option_selected !== null && dispatch(saveQuestion(qdata));
     option_selected === null && dispatch(questionOpened({ qId: ques_no }));
-    // if (ques_no === 1 || ques_no === payload.exam.length) {
-    //   dispatch(
-    //     attemptTime({ examId: exam_id, qId: ques_no, currQues: ques_no })
-    //   );
-    // } else {
-    //   dispatch(
-    //     attemptTime({ examId: exam_id, qId: ques_no, currQues: currQuesNo })
-    //   );
-    // }
-    payload.exam.length !== Number(ques_no) && setQuesNo((prev) => prev + 1);
+
+    !isLastQuestion && setQuesNo((prev) => prev + 1);
+    isLastQuestion && toggleAlert();
+  };
+
+  const saveAndNext = () => {
+    commonQuesTasks();
+    trackQuesAttemptTime();
   };
 
   const markAndNext = () => {
-    let qdata = {
-      data: { Exam: { lang: "1", option_selected: option_selected } },
-      examId: examid,
-      qId: ques_no,
-    };
     dispatch(
       markReviewQuestion({
         examId: examid,
         qId: ques_no,
       })
     );
-    option_selected !== null && dispatch(saveQuestion(qdata));
-    payload.exam.length !== Number(ques_no) && setQuesNo((prev) => prev + 1);
+    commonQuesTasks();
+    trackQuesAttemptTime();
   };
 
   const bookmarkAndNext = () => {
-    let qdata = {
-      data: { Exam: { lang: "1", option_selected: option_selected } },
-      examId: examid,
-      qId: ques_no,
-    };
     dispatch(
       bookmarkQuestion({
         examId: examid,
         qId: ques_no,
       })
     );
-    option_selected !== null && dispatch(saveQuestion(qdata));
-    payload.exam.length !== Number(ques_no) && setQuesNo((prev) => prev + 1);
+    commonQuesTasks();
+    trackQuesAttemptTime();
   };
 
   const clearResponse = () => {
@@ -121,12 +165,14 @@ export default function ExamScreen() {
           qId: ques_no,
         })
       );
-    payload.exam.length !== Number(ques_no) && setQuesNo((prev) => prev + 1);
+    trackQuesAttemptTime();
+    !isLastQuestion && setQuesNo((prev) => prev + 1);
   };
 
   const changeQues = (e) => {
     let qno = e.target.value || 1;
     setQuesNo(qno - 1);
+    currQuesNo.current = qno;
   };
 
   const filterSelected = (e) => {
@@ -232,20 +278,29 @@ export default function ExamScreen() {
             setQues={changeQues}
             filterOption={filterOption}
             examId={exam_id}
+            qno={ques_no}
           />
           <QuestionFilter filterSelected={filterSelected} />
           <div className="d-flex fle-wrap justify-content-between">
             <Button
               bgColor="hsl(0 0% 0%)"
               bgHoverColor="hsl(0 0% 25%)"
-              onClick={toggle1}
+              onClick={toggleQuestionPaper}
             >
               Question Paper
             </Button>
-            <Button bgColor="hsl(0 0% 0%)" bgHoverColor="hsl(0 0% 25%)">
+            <Button
+              bgColor="hsl(0 0% 0%)"
+              bgHoverColor="hsl(0 0% 25%)"
+              onClick={toggleInstructions}
+            >
               Instructions
             </Button>
-            <Button bgColor="hsl(0 0% 0%)" bgHoverColor="hsl(0 0% 25%)">
+            <Button
+              bgColor="hsl(0 0% 0%)"
+              bgHoverColor="hsl(0 0% 25%)"
+              onClick={toggleProfile}
+            >
               Profile
             </Button>
             <Button
@@ -255,7 +310,7 @@ export default function ExamScreen() {
                 dispatch(
                   submitExam({ examId: exam_id, examresultId: exam_result_id })
                 );
-                toggle2();
+                toggleFinishExam();
               }}
             >
               Submit
@@ -263,13 +318,31 @@ export default function ExamScreen() {
           </div>
         </RightPanel>
 
-        <QuestionPaperModal show={show1} toggle={toggle1} />
+        <QuestionPaperModal
+          show={showQuestionPaper}
+          toggle={toggleQuestionPaper}
+        />
+        <InstructionsModal
+          show={showInstructions}
+          toggle={toggleInstructions}
+          examName={Exam.name}
+        />
+        <ProfileModal
+          show={showProfile}
+          toggle={toggleProfile}
+          id={student_id}
+        />
         <FinishExamModal
           setQues={changeQues}
-          show={show2}
-          toggle={toggle2}
+          show={showFinishExam}
+          toggle={toggleFinishExam}
           examId={exam_id}
           qno={payload.exam.length}
+        />
+        <CustomToast
+          show={showAlert}
+          toggle={toggleAlert}
+          message={"You have reached the last question of test."}
         />
       </Wrapper>
     )
@@ -283,16 +356,10 @@ const Wrapper = styled.div`
   margin: 0 auto;
   height: 100%;
   width: 100%;
-  /* box-shadow: 0 0 1.875rem 0.3125rem hsl(0deg 0% 0% / 20%); */
   @media (max-width: 991px) {
     grid-template-columns: 1fr;
   }
 `;
-
-// const HorizontalBreak = styled.hr`
-//   height: 1.5px;
-//   background-color: silver;
-// `;
 
 const Text = styled.p`
   margin-bottom: 0;
@@ -305,8 +372,6 @@ const Text = styled.p`
 
 const Button = styled.button`
   height: 2.5rem;
-  /* width: 20rem; */
-  /* border-radius: 0.625rem; */
   border: none;
   text-transform: uppercase;
   padding: 0.625rem;
@@ -315,23 +380,15 @@ const Button = styled.button`
   background-color: ${(props) => (props.bgColor ? props.bgColor : "black")};
   color: white;
   cursor: pointer;
-  /* box-shadow:${(props) =>
-    props.disabled
-      ? "none"
-      : "0 0 0.3125rem 0.125rem hsl(0deg 0% 0% / 40%)"}; */
   outline: none;
   transition: all 0.2s;
   &:hover {
     background-color: ${(props) =>
       props.bgHoverColor ? props.bgHoverColor : "black"};
   }
-  /* &:active {
-    box-shadow: none;
-  } */
 `;
 
 const LeftPanel = styled.div`
-  /* background-color: red; */
   display: flex;
   flex-direction: column;
   height: 100%;

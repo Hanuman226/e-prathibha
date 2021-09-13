@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import useModal from "../../Hooks/useModal";
 import icon3 from "../../Icons/3.png";
 import CustomModal from "../../Components/CustomModal";
+import useToggle from "../../Hooks/useToggle";
 export default function Card(props) {
-  const [show,toggle]=useModal();
+  const [show, toggle] = useToggle();
   return (
     <Wrapper>
       <CardIcon>
@@ -20,7 +20,12 @@ export default function Card(props) {
       <Footer>
         <button onClick={toggle}>start now</button>
       </Footer>
-      <CustomModal show={show} toggle={toggle}  title={"Practice Session"} link="/free-previous-papers">
+      <CustomModal
+        show={show}
+        toggle={toggle}
+        title={"Practice Session"}
+        link="/free-previous-papers"
+      >
         <ModalContent>
           <h4>Practice Yourself</h4>
           <p>Get random questions of all difficulty levels.</p>
@@ -72,7 +77,6 @@ const Description = styled.div`
   & ul {
     list-style: upper-alpha;
   }
-  
 `;
 
 const Footer = styled.div`

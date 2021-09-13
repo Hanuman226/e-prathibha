@@ -73,7 +73,7 @@ export default function FinishExamModal(props) {
           </FancyButton>
         </Link>
         <FancyButton
-          value="1"
+          value={1}
           onClick={(e) => {
             setQues(e);
             toggle();

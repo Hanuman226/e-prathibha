@@ -1,11 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { keyframes } from "styled-components";
-import useModal from "../../Hooks/useModal";
 import icon2 from "../../Icons/2.png";
 import CustomModal from "../../Components/CustomModal";
+import useToggle from "../../Hooks/useToggle";
 export default function Card(props) {
   const { progress, expiryDate } = props;
-  const [show,toggle]=useModal();
+  const [show, toggle] = useToggle();
   return (
     <Wrapper>
       <Label>
@@ -31,7 +31,12 @@ export default function Card(props) {
         <p>Expires on : {expiryDate}</p>
         <button onClick={toggle}>start now</button>
       </Footer>
-      <CustomModal show={show} toggle={toggle} title={"PREMIUM"} link="/free-previous-papers">
+      <CustomModal
+        show={show}
+        toggle={toggle}
+        title={"PREMIUM"}
+        link="/free-previous-papers"
+      >
         <ModalContent>
           <h4>Study a Little Deeper</h4>
           <p>
@@ -109,7 +114,7 @@ const Description = styled.div`
   }
 `;
 const ProgressBar = styled.div`
- grid-area: bar;
+  grid-area: bar;
   height: 0.75rem;
   width: 100%;
   background-color: #0a0c0f;
@@ -147,7 +152,6 @@ const Footer = styled.div`
   width: 100%;
   justify-content: space-between;
   align-items: center;
- 
 
   & button {
     height: 2.5rem;

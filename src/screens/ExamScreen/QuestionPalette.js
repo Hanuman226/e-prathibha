@@ -11,7 +11,7 @@ import { styledScrollBar } from "../../Components/StyledComponents";
 import { questionOpened } from "../../api/examSlice";
 import { attemptTime } from "../../api/examThunk";
 export default function QuestionPalette(props) {
-  const { setQues, filterOption, examId } = props;
+  const { setQues, filterOption, examId, qno } = props;
   const dispatch = useDispatch();
   const payload = useSelector((state) => state.exam.examsData);
   if (!payload.exam.length) {
@@ -25,7 +25,7 @@ export default function QuestionPalette(props) {
       attemptTime({
         examId: examId,
         qId: e.target.value,
-        currQues: e.target.value,
+        currQues: qno,
       })
     );
   };

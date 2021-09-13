@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { getUserProfile } from "./userThunk";
 
 export const fetchUser = createAsyncThunk(
   "user/fetchUser",
@@ -26,6 +27,7 @@ if (localStorage.getItem("userInfo")) {
 }
 const initialState = {
   userInfo: userInfo,
+  profile: "",
   loading: false,
   error: null,
 };
@@ -49,6 +51,9 @@ const userSlice = createSlice({
     builder.addCase(fetchUser.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error;
+    });
+    builder.addCase(getUserProfile.fulfilled, (state, action) => {
+      state.profile = action.payload;
     });
   },
 });

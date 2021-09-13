@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export default function FancyButton(props) {
-  const { children, disabled, value = "" } = props;
+  const { children, disabled, value = 1 } = props;
   return (
     <Button value={value} disabled={disabled} onClick={props.onClick}>
       {children}
