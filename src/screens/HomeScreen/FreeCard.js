@@ -3,6 +3,7 @@ import styled, { keyframes } from "styled-components";
 import icon1 from "../../Icons/1.png";
 import CustomModal from "../../Components/CustomModal";
 import useToggle from "../../Hooks/useToggle";
+import { FancyButton } from "../../Components/StyledComponents";
 export default function Card({ progress }) {
   const [show, toggle] = useToggle();
   return (
@@ -29,13 +30,13 @@ export default function Card({ progress }) {
       </Description>
       <ProgressBar color={"red"} fill={progress} />
       <Footer>
-        <button onClick={toggle}>start now</button>
+        <FancyButton onClick={toggle}>start now</FancyButton>
       </Footer>
       <CustomModal
         show={show}
         toggle={toggle}
         title={"Explore For Free"}
-        link="/free-previous-papers"
+        link="/free_previous_papers"
       >
         <ModalContent>
           <h4>Free Previous Papers Practice</h4>
@@ -151,26 +152,6 @@ const Footer = styled.div`
   display: flex;
   width: 100%;
   justify-content: flex-end;
-
-  & button {
-    height: 2.5rem;
-    width: 6.25rem;
-    border-radius: 0.625rem;
-    border: none;
-    text-transform: uppercase;
-    padding: 0.625rem;
-    font-size: 0.75rem;
-    font-weight: bold;
-    background-color: black;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 0 0.3125rem 0.125rem hsl(0deg 0% 0% / 40%);
-    outline: none;
-  }
-
-  & button:active {
-    box-shadow: none;
-  }
 `;
 
 const Label = styled.div`

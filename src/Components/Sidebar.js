@@ -30,13 +30,13 @@ export default function Sidebar() {
           </NavLink>
         </IconWrapper>
         <IconWrapper>
-          <NavLink to="/all-bookmarks">
+          <NavLink to="/all_bookmarks">
             <FontAwesomeIcon icon={["fas", "bookmark"]} />
             <span>All Bookmarks</span>
           </NavLink>
         </IconWrapper>
         <IconWrapper>
-          <NavLink to="/incorrect-questions">
+          <NavLink to="/incorrect_questions">
             <FontAwesomeIcon icon={["fas", "times-circle"]} />
             <span>Incorrect Questions</span>
           </NavLink>
@@ -114,7 +114,7 @@ const IconWrapper = styled.li`
     }
   }
 
-  & a.active{
+  & a.active {
     background-color: #313443;
   }
   & a span {

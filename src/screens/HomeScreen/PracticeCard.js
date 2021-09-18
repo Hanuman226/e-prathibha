@@ -2,6 +2,7 @@ import styled from "styled-components";
 import icon3 from "../../Icons/3.png";
 import CustomModal from "../../Components/CustomModal";
 import useToggle from "../../Hooks/useToggle";
+import { FancyButton } from "../../Components/StyledComponents";
 export default function Card(props) {
   const [show, toggle] = useToggle();
   return (
@@ -18,13 +19,13 @@ export default function Card(props) {
         </ul>
       </Description>
       <Footer>
-        <button onClick={toggle}>start now</button>
+        <FancyButton onClick={toggle}>start now</FancyButton>
       </Footer>
       <CustomModal
         show={show}
         toggle={toggle}
         title={"Practice Session"}
-        link="/free-previous-papers"
+        link="/free_previous_papers"
       >
         <ModalContent>
           <h4>Practice Yourself</h4>
@@ -85,24 +86,4 @@ const Footer = styled.div`
   width: 100%;
   justify-content: flex-end;
   align-items: center;
-
-  & button {
-    height: 2.5rem;
-    width: 6.25rem;
-    border-radius: 0.625rem;
-    border: none;
-    text-transform: uppercase;
-    padding: 0.625rem;
-    font-size: 0.75rem;
-    font-weight: bold;
-    background-color: black;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 0 0.3125rem 0.125rem hsl(0deg 0% 0% / 40%);
-    outline: none;
-  }
-
-  & button:active {
-    box-shadow: none;
-  }
 `;

@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../axios.config";
 
 export const getUserProfile = createAsyncThunk(
-  "user/profile",
+  "user/getUserprofile",
   async ({ id }, { getState, rejectWithValue }) => {
     try {
       let serverKey = process.env.REACT_APP_SERVER_KEY;

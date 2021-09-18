@@ -1,8 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { FancyButton } from "../../Components/StyledComponents";
 
 export default function Card(props) {
-  const { title, desc, icon } = props.data;
+  const { title, desc, icon, cta } = props.data;
   return (
     <Wrapper>
       <CardIcon>
@@ -13,7 +15,9 @@ export default function Card(props) {
         <p>{desc}</p>
       </Description>
       <Footer>
-        <button>view now</button>
+        <FancyButton as={Link} to={cta}>
+          view now
+        </FancyButton>
       </Footer>
     </Wrapper>
   );
@@ -55,24 +59,4 @@ const Footer = styled.div`
   width: 100%;
   justify-content: flex-end;
   align-items: center;
-
-  & button {
-    height: 2.5rem;
-    width: 6.25rem;
-    border-radius: 0.625rem;
-    border: none;
-    text-transform: uppercase;
-    padding: 0.625rem;
-    font-size: 0.75rem;
-    font-weight: bold;
-    background-color: black;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 0 0.3125rem 0.125rem hsl(0deg 0% 0% / 40%);
-    outline: none;
-  }
-
-  & button:active {
-    box-shadow: none;
-  }
 `;

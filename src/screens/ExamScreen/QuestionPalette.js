@@ -7,7 +7,7 @@ import review_question from "../../Icons/review.png";
 import bookmark_answer from "../../Icons/bookmark_answer.png";
 import bookmark_question from "../../Icons/bookmark.png";
 import { useDispatch, useSelector } from "react-redux";
-import { styledScrollBar } from "../../Components/StyledComponents";
+import { StyledScrollBar } from "../../Components/StyledComponents";
 import { questionOpened } from "../../api/examSlice";
 import { attemptTime } from "../../api/examThunk";
 export default function QuestionPalette(props) {
@@ -77,7 +77,7 @@ export default function QuestionPalette(props) {
   );
 }
 
-const Wrapper = styled(styledScrollBar)`
+const Wrapper = styled(StyledScrollBar)`
   height: 15rem;
   overflow-y: scroll;
   background-color: lightblue;

@@ -38,10 +38,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer, { fetchUser } from "./userSlice";
 import examReducer from "./examSlice";
+import allbookmarkReducer from "./allBookmarkSlice";
+import InCorrectQuesReducer from "./InCorrectQuesSlice";
 const store = configureStore({
   reducer: {
     user: userReducer,
     exam: examReducer,
+    allBookmarks: allbookmarkReducer,
+    inCorrectQues: InCorrectQuesReducer,
   },
 });
 
@@ -50,3 +54,5 @@ export default store;
 if (store.getState().user.userInfo === null) {
   store.dispatch(fetchUser());
 }
+
+// store.dispatch(premiumExamList());

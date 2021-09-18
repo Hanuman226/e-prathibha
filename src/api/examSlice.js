@@ -2,9 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   attemptTime,
   bookmarkQuestion,
+  examResult,
   finishExam,
   freeExamList,
   markReviewQuestion,
+  premiumExamList,
   resetAnswer,
   saveQuestion,
   startExam,
@@ -13,7 +15,8 @@ import {
 } from "./examThunk";
 
 const initialState = {
-  examsList: { pending: null, exams: [] },
+  freeExamsList: { pending: null, exams: [] },
+  premiumExamsList: { pending: null, exams: [] },
   examsData: { time: null, exam: [] },
   saveQuestion: "",
   bookmarkQuestion: "",
@@ -23,6 +26,7 @@ const initialState = {
   attemptTime: "",
   submitExam: "",
   finishExam: "",
+  examResult: "",
 };
 
 const examSlice = createSlice({
@@ -36,7 +40,10 @@ const examSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(freeExamList.fulfilled, (state, action) => {
-      state.examsList = action.payload;
+      state.freeExamsList = action.payload;
+    });
+    builder.addCase(premiumExamList.fulfilled, (state, action) => {
+      state.premiumExamsList = action.payload;
     });
     builder.addCase(startExam.fulfilled, (state, action) => {
       state.examsData = action.payload;
@@ -77,6 +84,9 @@ const examSlice = createSlice({
     });
     builder.addCase(finishExam.fulfilled, (state, action) => {
       state.finishExam = action.payload;
+    });
+    builder.addCase(examResult.fulfilled, (state, action) => {
+      state.examResult = action.payload;
     });
   },
 });

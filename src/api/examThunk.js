@@ -1,9 +1,47 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../axios.config";
 
+// function getExamList(listName, url) {
+//   return createAsyncThunk(
+//     `exam/${listName}`,
+//     async ({}, { dispatch, getState, rejectWithValue }) => {
+//       try {
+//         let serverKey = process.env.REACT_APP_SERVER_KEY;
+//         const {
+//           user: { userInfo },
+//         } = getState();
+//         const { data } = await api.post(
+//           `${url}`,
+//           {},
+//           {
+//             headers: {
+//               tokenu: userInfo.Token,
+//               Id: userInfo.Id,
+//               server_key: serverKey,
+//             },
+//           }
+//         );
+//         return data.data;
+//       } catch (error) {
+//         return rejectWithValue(error.msg);
+//       }
+//     }
+//   );
+// }
+
+// export const freeExamList = getExamList({
+//   listName: "freeExamList",
+//   url: "/test_free_exam",
+// });
+
+// export const premiumExamList = getExamList({
+//   listName: "premiumExamList",
+//   url: "/premium_exam",
+// });
+
 export const freeExamList = createAsyncThunk(
   "exam/freeExamList",
-  async (appdata, { dispatch, getState, rejectWithValue }) => {
+  async (appdata, { getState, rejectWithValue }) => {
     try {
       let serverKey = process.env.REACT_APP_SERVER_KEY;
       const {
@@ -11,6 +49,32 @@ export const freeExamList = createAsyncThunk(
       } = getState();
       const { data } = await api.post(
         "/test_free_exam",
+        {},
+        {
+          headers: {
+            tokenu: userInfo.Token,
+            Id: userInfo.Id,
+            server_key: serverKey,
+          },
+        }
+      );
+      return data.data;
+    } catch (error) {
+      return rejectWithValue(error.msg);
+    }
+  }
+);
+
+export const premiumExamList = createAsyncThunk(
+  "exam/premiumExamList",
+  async (appdata, { getState, rejectWithValue }) => {
+    try {
+      let serverKey = process.env.REACT_APP_SERVER_KEY;
+      const {
+        user: { userInfo },
+      } = getState();
+      const { data } = await api.post(
+        "/premium_exam",
         {},
         {
           headers: {
@@ -257,6 +321,33 @@ export const finishExam = createAsyncThunk(
       const { data } = await api.post(
         "/finishExam",
         { examId, qno },
+        {
+          headers: {
+            tokenu: userInfo.Token,
+            Id: userInfo.Id,
+            server_key: serverKey,
+          },
+        }
+      );
+      return data.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const examResult = createAsyncThunk(
+  "exam/examResult",
+  async ({ id }, { getState, rejectWithValue }) => {
+    try {
+      let serverKey = process.env.REACT_APP_SERVER_KEY;
+      const {
+        user: { userInfo },
+      } = getState();
+      const { data } = await api.post(
+        "/exam_result",
+        { id },
         {
           headers: {
             tokenu: userInfo.Token,

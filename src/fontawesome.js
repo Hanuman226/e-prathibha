@@ -17,7 +17,9 @@ import {
   faArrowLeft,
   faLock,
   faBell,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
+import { faStar as faRegularStar } from "@fortawesome/free-regular-svg-icons";
 
 library.add(
   faHome,
@@ -38,5 +40,8 @@ library.add(
   faLock,
   faTimes,
   faArrowLeft,
-  faBell
+  faBell,
+  faPlus,
+  faStar,
+  faRegularStar
 );

@@ -3,6 +3,7 @@ import styled, { keyframes } from "styled-components";
 import icon2 from "../../Icons/2.png";
 import CustomModal from "../../Components/CustomModal";
 import useToggle from "../../Hooks/useToggle";
+import { FancyButton } from "../../Components/StyledComponents";
 export default function Card(props) {
   const { progress, expiryDate } = props;
   const [show, toggle] = useToggle();
@@ -29,13 +30,13 @@ export default function Card(props) {
       <ProgressBar color={"red"} fill={progress} />
       <Footer>
         <p>Expires on : {expiryDate}</p>
-        <button onClick={toggle}>start now</button>
+        <FancyButton onClick={toggle}>start now</FancyButton>
       </Footer>
       <CustomModal
         show={show}
         toggle={toggle}
         title={"PREMIUM"}
-        link="/free-previous-papers"
+        link="/premium_previous_papers"
       >
         <ModalContent>
           <h4>Study a Little Deeper</h4>

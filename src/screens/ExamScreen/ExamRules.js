@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Card, Container, Form } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { FancyButton } from "../../Components/StyledComponents";
 export default function ExamRules() {
   const history = useHistory();
   const [checked, setChecked] = useState(false);
@@ -58,15 +59,15 @@ export default function ExamRules() {
                 label="I am ready to begin"
               />
             </Form.Group>
-            <Button
+            <FancyButton
               disabled={!checked}
               variant="primary"
               onClick={() => {
-                checked && history.push(`/free-previous-papers/exam/${examid}`);
+                checked && history.push(`/start_exam/${examname}/${examid}`);
               }}
             >
               start exam
-            </Button>
+            </FancyButton>
           </Card.Body>
         </Card>
       </Container>
@@ -101,29 +102,6 @@ const BackButton = styled.button`
   justify-content: center;
   align-items: center;
 
-  &:active {
-    box-shadow: none;
-  }
-`;
-
-const Button = styled.a`
-  height: 2.5rem;
-  width: 6.25rem;
-  border-radius: 0.625rem;
-  border: none;
-  text-decoration: none;
-  color: white !important;
-  user-select: none;
-  text-transform: uppercase;
-  padding: 0.625rem;
-  font-size: 0.75rem;
-  font-weight: bold;
-  background-color: ${(props) => (props.disabled ? "gray" : "black")};
-  cursor: ${(props) => (props.disabled ? "default" : "pointer")};
-  box-shadow: ${(props) =>
-    props.disabled ? "none" : "0 0 0.3125rem 0.125rem hsl(0deg 0% 0% / 40%)"};
-  outline: none;
-  transition: all 0.2s;
   &:active {
     box-shadow: none;
   }

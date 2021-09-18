@@ -3,12 +3,11 @@ import { Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { freeExamList } from "../api/examThunk";
-import cup from "../Icons/cup.png";
-export default function ExamsList() {
+import { freeExamList } from "../../api/examThunk";
+import cup from "../../Icons/cup.png";
+export default function FreeExamsList() {
   const dispatch = useDispatch();
-  const { exams } = useSelector((state) => state.exam.examsList);
-  // const { loading, payload, error } = data;
+  const { exams } = useSelector((state) => state.exam.freeExamsList);
   useEffect(() => {
     dispatch(freeExamList());
   }, []);
@@ -17,7 +16,6 @@ export default function ExamsList() {
     return <h1>Loading...</h1>;
   }
 
-  // const { pending, exams } = payload;
   const [section1, section2, section3] = exams;
   const { "Old question papers UPSC Civils (Pre)": civils } = section1;
   const { "Limited UPSC other than Civils": upsc } = section2;
@@ -63,7 +61,7 @@ export default function ExamsList() {
             {section.map(({ Exam }) => (
               <ListItem key={Exam.id}>
                 <Link
-                  to={`/free-previous-papers/instruction/${Exam.name}/${Exam.id}`}
+                  to={`/free_previous_papers/instruction/${Exam.name}/${Exam.id}`}
                 >
                   {Exam.name}
                   <br />

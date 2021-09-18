@@ -1,10 +1,27 @@
 import { Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import FancyButton from "./FancyButton";
+import { FancyButton } from "./StyledComponents";
 export default function CustomModal(props) {
-  const { children, title, show, toggle, link, size } = props;
+  const {
+    children,
+    title,
+    show,
+    toggle,
+    link,
+    size,
+    onExit,
+    backdrop,
+    keyboard,
+  } = props;
   return (
-    <Modal show={show} onHide={toggle} size={size}>
+    <Modal
+      show={show}
+      onHide={toggle}
+      size={size}
+      onExit={onExit}
+      backdrop={backdrop}
+      keyboard={keyboard}
+    >
       <Modal.Header closeButton>
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
@@ -14,9 +31,9 @@ export default function CustomModal(props) {
           Close
         </Button>
         {link && (
-          <Link to={link}>
-            <FancyButton onClick={toggle}>start now</FancyButton>
-          </Link>
+          <FancyButton as={Link} to={link} onClick={toggle}>
+            start now
+          </FancyButton>
         )}
       </Modal.Footer>
     </Modal>

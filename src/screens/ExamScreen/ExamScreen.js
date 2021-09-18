@@ -17,7 +17,7 @@ import QuestionFilter from "./QuestionFilter";
 import QuestionPalette from "./QuestionPalette";
 import {
   HorizontalBreak,
-  styledScrollBar,
+  StyledScrollBar,
 } from "../../Components/StyledComponents";
 import FinishExamModal from "./FinishExamModal";
 import QuestionPaperModal from "./QuestionPaperModal";
@@ -26,7 +26,6 @@ import ProfileModal from "./ProfileModal";
 import InstructionsModal from "./InstructionsModal";
 import useToggle from "../../Hooks/useToggle";
 import CustomToast from "../../Components/CustomToast";
-import { faCommentsDollar } from "@fortawesome/free-solid-svg-icons";
 
 export default function ExamScreen() {
   const [showQuestionPaper, toggleQuestionPaper] = useToggle();
@@ -170,7 +169,8 @@ export default function ExamScreen() {
   };
 
   const changeQues = (e) => {
-    let qno = e.target.value || 1;
+    let qno = e.target.value;
+    console.log(e.target);
     setQuesNo(qno - 1);
     currQuesNo.current = qno;
   };
@@ -337,6 +337,7 @@ export default function ExamScreen() {
           show={showFinishExam}
           toggle={toggleFinishExam}
           examId={exam_id}
+          resultId={exam_result_id}
           qno={payload.exam.length}
         />
         <CustomToast
@@ -419,7 +420,7 @@ const Header = styled.div`
     justify-content: space-between;
   }
 `;
-const Body = styled(styledScrollBar)`
+const Body = styled(StyledScrollBar)`
   height: 70vh;
   overflow-y: scroll;
   overflow-x: hidden;

@@ -3,7 +3,6 @@ import { Button, Modal } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import FancyButton from "../../Components/FancyButton";
 import answered from "../../Icons/answered.png";
 import not_visited from "../../Icons/not_visited.png";
 import review_answer from "../../Icons/review_answer.png";
@@ -11,13 +10,17 @@ import not_answered from "../../Icons/not_answered.png";
 import review_question from "../../Icons/review.png";
 import bookmark from "../../Icons/bookmark.png";
 import { finishExam } from "../../api/examThunk";
+import { FancyButton } from "../../Components/StyledComponents";
+import { useHistory } from "react-router";
 export default function FinishExamModal(props) {
-  const { show, toggle, setQues, examId, qno } = props;
+  const { show, toggle, setQues, examId, qno, resultId } = props;
   const submitData = useSelector((state) => state.exam.submitExam);
   const dispatch = useDispatch();
+  // const history = useHistory();
   const handleFinishExam = () => {
     dispatch(finishExam({ examId, qno }));
     toggle();
+    // history.push(`/exam_result/${resultId}`);
   };
   return (
     <Modal show={show} onHide={toggle} centered>
@@ -66,12 +69,10 @@ export default function FinishExamModal(props) {
         </Legend>
       </Modal.Body>
       <Modal.Footer className="d-flex justify-content-between">
-        <Link to="/">
-          <FancyButton onClick={handleFinishExam}>
-            <FontAwesomeIcon icon={["fas", "lock"]} />
-            <span className="ps-2">Finish Exam</span>
-          </FancyButton>
-        </Link>
+        <FancyButton as={Link} to={`/form`} onClick={handleFinishExam}>
+          <FontAwesomeIcon icon={["fas", "lock"]} />
+          <span className="ps-2">Finish Exam</span>
+        </FancyButton>
         <FancyButton
           value={1}
           onClick={(e) => {
@@ -79,8 +80,12 @@ export default function FinishExamModal(props) {
             toggle();
           }}
         >
-          <FontAwesomeIcon icon={["fas", "arrow-left"]} />
-          <span className="ps-2">Return To First Question</span>
+          <FontAwesomeIcon
+            icon={["fas", "arrow-left"]}
+            size="2x"
+            className="pe-2"
+          />
+          Return To First Question
         </FancyButton>
         <Button
           variant="secondary"

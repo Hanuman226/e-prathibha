@@ -112,7 +112,7 @@ export default function QuestionFilter(props) {
       <select
         value={selected}
         className="form-select form-select-sm mb-3"
-        aria-label=".form-select-sm example"
+        aria-label="filter questions"
         onChange={handleFilter}
       >
         <option value="all">All</option>
