@@ -18,8 +18,13 @@ export const FancyButton = styled.button`
   padding: 0.625rem;
   font-size: 0.75rem;
   font-weight: bold;
-  background-color: ${(props) => (props.disabled ? "gray" : "black")};
   color: white;
+  background-color: ${(props) => (props.disabled ? "gray" : "black")};
+  background-color: ${(props) => (props.tab ? "white" : "")};
+  background-color: ${(props) => (props.active ? "black" : "")};
+  color: ${(props) => (props.tab ? "black" : "")};
+  border: ${(props) => (props.tab ? "solid 0.5px black" : "")};
+  color: ${(props) => (props.active ? "white" : "")};
   cursor: pointer;
   box-shadow: ${(props) =>
     props.disabled ? "none" : "0 0 0.3125rem 0.125rem hsl(0deg 0% 0% / 40%)"};
@@ -28,11 +33,16 @@ export const FancyButton = styled.button`
   &:active {
     box-shadow: none;
   }
+  &:hover {
+    background-color: ${(props) => (props.tab ? "black" : "")};
+    color: ${(props) => (props.tab ? "white" : "")};
+  }
 `;
 
 export const StyledScrollBar = styled.div`
   &::-webkit-scrollbar {
     width: 10px;
+    height: 10px;
   }
 
   /* Track */

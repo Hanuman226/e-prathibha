@@ -29,6 +29,7 @@ html::-webkit-scrollbar-thumb:hover {
 body {
   height: 100vh;
   user-select: none;
+  /* overflow-x: hidden; */
 }
 
 #root {

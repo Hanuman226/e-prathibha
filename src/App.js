@@ -16,6 +16,7 @@ import ExamFeedbackForm from "./screens/ExamScreen/ExamFeedbackForm";
 import ExamResult from "./screens/ExamScreen/ExamResult";
 import AllBookmarkScreen from "./screens/AllBookmarkScreen/AllBookmarkScreen";
 import InCorrectQuesScreen from "./screens/InCorrectQuesScreen/InCorrectQuesScreen";
+import SummaryScreen from "./screens/SummaryScreen/SummaryScreen";
 function App() {
   return (
     <Router>
@@ -59,6 +60,7 @@ function App() {
                 path="/incorrect_questions"
                 component={InCorrectQuesScreen}
               />
+              <Route exact path="/summary" component={SummaryScreen} />
 
               <Route path="*" render={() => <h1>Under Construction</h1>} />
             </Switch>
@@ -76,12 +78,14 @@ const Container = styled.div`
   grid-template-columns: 2.5rem 1fr;
   grid-template-rows: 3.75rem auto 3.125rem;
   height: 100%;
+  /* overflow-x: hidden; */
 `;
 
 const MainContent = styled.main`
   grid-area: main-content;
   /* background-color: lightgray; */
   padding: 2vw;
+  /* overflow-x: hidden; */
 `;
 
 export default App;

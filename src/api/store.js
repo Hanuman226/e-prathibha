@@ -40,12 +40,14 @@ import userReducer, { fetchUser } from "./userSlice";
 import examReducer from "./examSlice";
 import allbookmarkReducer from "./allBookmarkSlice";
 import InCorrectQuesReducer from "./InCorrectQuesSlice";
+import summaryReducer from "./summarySlice";
 const store = configureStore({
   reducer: {
     user: userReducer,
     exam: examReducer,
     allBookmarks: allbookmarkReducer,
     inCorrectQues: InCorrectQuesReducer,
+    summary: summaryReducer,
   },
 });
 
