@@ -2,9 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   attemptTime,
   bookmarkQuestion,
+  createPracticeExam,
   examResult,
   finishExam,
   freeExamList,
+  getPracticeSessionSubjects,
   markReviewQuestion,
   premiumExamList,
   resetAnswer,
@@ -27,6 +29,8 @@ const initialState = {
   submitExam: "",
   finishExam: "",
   examResult: "",
+  practiceSessionSubjects: [],
+  createPracticeExam: {},
 };
 
 const examSlice = createSlice({
@@ -36,6 +40,9 @@ const examSlice = createSlice({
     questionOpened: (state, action) => {
       const { qId } = action.payload;
       state.examsData.exam[qId - 1].ExamStat.opened = "1";
+    },
+    resetExam: (state) => {
+      return initialState;
     },
   },
   extraReducers: (builder) => {
@@ -88,8 +95,15 @@ const examSlice = createSlice({
     builder.addCase(examResult.fulfilled, (state, action) => {
       state.examResult = action.payload;
     });
+    builder.addCase(getPracticeSessionSubjects.fulfilled, (state, action) => {
+      state.practiceSessionSubjects = action.payload;
+    });
+    builder.addCase(createPracticeExam.fulfilled, (state, action) => {
+      state.createPracticeExam = action.payload;
+    });
   },
 });
-export const { questionOpened } = examSlice.actions;
+
+export const { questionOpened, resetExam } = examSlice.actions;
 
 export default examSlice.reducer;

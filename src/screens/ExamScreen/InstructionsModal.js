@@ -3,6 +3,7 @@ import CustomModal from "../../Components/CustomModal";
 
 export default function InstructionsModal(props) {
   const { show, toggle, examName } = props;
+  const questionsCount = examName.startsWith("practice") ? 20 : 120;
   return (
     <CustomModal
       show={show}
@@ -14,11 +15,11 @@ export default function InstructionsModal(props) {
         <Card.Body>
           <ul style={{ listStyle: "decimal" }}>
             <li>
-              This test contains 120 items (questions). Each item comprises four
-              responses (answers). You will select the response which you want
-              to mark. In case, you feel that there is more than one correct
-              response, mark the response which you consider the best. In any
-              case, choose ONLY ONE response for each item.
+              This test contains {questionsCount} items (questions). Each item
+              comprises four responses (answers). You will select the response
+              which you want to mark. In case, you feel that there is more than
+              one correct response, mark the response which you consider the
+              best. In any case, choose ONLY ONE response for each item.
             </li>
             <li>All items carry equal marks.</li>
             <li>Penalty for wrong Answers :</li>

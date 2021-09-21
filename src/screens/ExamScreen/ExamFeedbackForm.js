@@ -1,17 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import {
-  Card,
-  Col,
-  Container,
-  FloatingLabel,
-  Form,
-  Row,
-} from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Card, Col, Container, Form, Row } from "react-bootstrap";
+import { Link, useParams } from "react-router-dom";
 import { FancyButton, Wrapper } from "../../Components/StyledComponents";
 
 export default function ExamFeedbackForm() {
+  const { exam_name, exam_result_id } = useParams();
   const feedbackQuestions = [
     {
       ques: "1.The test instructions were",
@@ -77,11 +71,18 @@ export default function ExamFeedbackForm() {
               </Form.Group>
             </Col>
             <div className="d-flex">
-              <FancyButton as={Link} to="/exam_result">
+              <FancyButton
+                as={Link}
+                to={`/exam_result/${exam_name}/${exam_result_id}`}
+              >
                 <FontAwesomeIcon icon={["fas", "plus"]} className="me-2" />
                 Submit
               </FancyButton>
-              <FancyButton as={Link} to="/exam_result" className="ms-4">
+              <FancyButton
+                as={Link}
+                to={`/exam_result/${exam_name}/${exam_result_id}`}
+                className="ms-4"
+              >
                 <FontAwesomeIcon icon={["fas", "times"]} className="me-2" />
                 close
               </FancyButton>

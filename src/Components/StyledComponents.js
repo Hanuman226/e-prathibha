@@ -4,6 +4,13 @@ export const Wrapper = styled.div`
   padding: 0.625rem;
   border-radius: 0.625rem;
   box-shadow: 0 0 1.875rem 0.3125rem hsl(0deg 0% 0% / 12%);
+  /* width: 20vw; */
+`;
+
+export const TableWrapper = styled.div`
+  width: 100%;
+  max-width: 90vw;
+  margin: 0 auto;
 `;
 
 export const FancyButton = styled.button`
@@ -42,7 +49,7 @@ export const FancyButton = styled.button`
 export const StyledScrollBar = styled.div`
   &::-webkit-scrollbar {
     width: 10px;
-    height: 10px;
+    height: 15px;
   }
 
   /* Track */
@@ -60,6 +67,33 @@ export const StyledScrollBar = styled.div`
   /* Handle on hover */
   &::-webkit-scrollbar-thumb:hover {
     background: hsl(0deg 0% 10% / 40%);
+  }
+`;
+
+export const StyledSelect = styled.select`
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    box-shadow: inset 0 0 2px grey;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: hsl(0deg 0% 10% / 20%);
+    border-radius: 0.3rem;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: hsl(0deg 0% 10% / 40%);
+  }
+
+  &:focus {
+    box-shadow: none;
   }
 `;
 

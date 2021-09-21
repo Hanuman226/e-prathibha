@@ -25,7 +25,7 @@ export default function Card(props) {
         show={show}
         toggle={toggle}
         title={"Practice Session"}
-        link="/free_previous_papers"
+        link="/practice_session"
       >
         <ModalContent>
           <h4>Practice Yourself</h4>

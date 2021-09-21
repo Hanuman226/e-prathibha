@@ -60,15 +60,9 @@ export default function ExamScreen() {
   }
 
   const { ExamStat, Question, Exam } = payload.exam[quesNo];
-  let {
-    option_selected,
-    ques_no,
-    exam_id,
-    exam_result_id,
-    student_id,
-    review,
-    answered,
-  } = ExamStat;
+  const { ques_no, exam_id, exam_result_id, student_id, review, answered } =
+    ExamStat;
+  let { option_selected } = ExamStat;
   const {
     question: { above, table, below },
     option1,
@@ -173,6 +167,7 @@ export default function ExamScreen() {
     console.log(e.target);
     setQuesNo(qno - 1);
     currQuesNo.current = qno;
+    console.log({ qno: qno });
   };
 
   const filterSelected = (e) => {
@@ -185,6 +180,7 @@ export default function ExamScreen() {
         <LeftPanel>
           <Header>
             <Text>Question No. {ques_no}</Text>
+            <Text>{Question.exam_name}</Text>
             <div>
               <Text color="hsl(120deg 100% 35%)">
                 Right Mark: <span>{marks}</span>
@@ -338,6 +334,7 @@ export default function ExamScreen() {
           toggle={toggleFinishExam}
           examId={exam_id}
           resultId={exam_result_id}
+          examName={Exam.name}
           qno={payload.exam.length}
         />
         <CustomToast

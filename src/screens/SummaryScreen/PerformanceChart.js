@@ -2,37 +2,28 @@ import { useEffect, useRef } from "react";
 import Chart from "react-apexcharts";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { getTimeGraph } from "../../api/summaryThunk";
+import { getPerformanceGraph } from "../../api/summaryThunk";
 import { StyledScrollBar } from "../../Components/StyledComponents";
 
-export default function TimeManagementChart({ subjectId = "" }) {
-  const {
-    time = [],
-    avg = [],
-    exams = {},
-  } = useSelector((state) => state.summary.timeGraph);
-  const chartRef = useRef();
+export default function PerformanceChart({ subjectId = "", difficulty = "" }) {
+  const { exams = [], counts = [] } = useSelector(
+    (state) => state.summary.performanceGraph
+  );
   const dispatch = useDispatch();
+
+  const chartRef = useRef();
   useEffect(() => {
-    dispatch(getTimeGraph({ subject: subjectId }));
-  }, [subjectId]);
-  if (!time.length) {
+    dispatch(getPerformanceGraph({ subject: subjectId, diff: difficulty }));
+  }, [subjectId, difficulty]);
+
+  if (!exams.length) {
     return <h3>Loading...</h3>;
   }
+
   const series = [
     {
-      name: "Average Difficulty Level",
-      data: avg,
-      type: "line",
-    },
-    {
-      name: "Average Time Taken (sec)",
-      data: time.map((a) => Number(a)),
-      type: "line",
-    },
-    {
-      name: `Average Time for each question (1 min 12 sec)`,
-      data: new Array(time.length).fill(72),
+      name: "Correct %",
+      data: counts,
       type: "line",
     },
   ];
@@ -40,7 +31,7 @@ export default function TimeManagementChart({ subjectId = "" }) {
   const options = {
     chart: {
       height: 400,
-      // width: 2000,
+      width: "100%",
       type: "line",
       stacked: false,
       zoom: {
@@ -56,7 +47,7 @@ export default function TimeManagementChart({ subjectId = "" }) {
       curve: "smooth",
     },
     title: {
-      text: "Exam Wise Performance",
+      text: "Subject Wise Performance",
       align: "left",
     },
     grid: {
@@ -71,9 +62,9 @@ export default function TimeManagementChart({ subjectId = "" }) {
         rotate: -45,
         rotateAlways: true,
       },
-      // title: {
-      //   text: "Month",
-      // },
+      title: {
+        text: "Exams",
+      },
     },
     yaxis: [
       {
@@ -82,40 +73,13 @@ export default function TimeManagementChart({ subjectId = "" }) {
             return parseInt(value, 10);
           },
         },
-        seriesName: "Average Difficulty Level",
-        opposite: true,
         title: {
-          text: "Average Difficulty Level",
+          text: "Correct %",
         },
-      },
-      {
-        labels: {
-          formatter: function (value) {
-            return parseInt(value, 10);
-          },
-        },
+        forceNiceScale: true,
         min: 0,
-        // max: 120,
-        tickAmount: 2,
-        seriesName: "Average Time Taken",
-        title: {
-          text: "Average Time Taken (sec)",
-        },
-      },
-      {
-        labels: {
-          formatter: function (value) {
-            return parseInt(value, 10);
-          },
-        },
-        min: 0,
-        // max: 120,
-        tickAmount: 2,
-        show: false,
-        seriesName: "Average Time Taken",
-        title: {
-          text: "Average Time Taken",
-        },
+        max: 100,
+        tickAmount: 9,
       },
     ],
     markers: {
@@ -129,7 +93,8 @@ export default function TimeManagementChart({ subjectId = "" }) {
     },
     legend: {
       show: true,
-      offsetY: 20,
+      showForSingleSeries: true,
+      //   offsetY: 50,
       itemMargin: {
         vertical: 20,
       },
@@ -137,7 +102,7 @@ export default function TimeManagementChart({ subjectId = "" }) {
     tooltip: {
       y: {
         formatter: function (value) {
-          return value.toFixed(2);
+          return value.toFixed(2) + "%";
         },
       },
     },
@@ -164,6 +129,7 @@ export default function TimeManagementChart({ subjectId = "" }) {
 
 const ChartWrapper = styled(StyledScrollBar)`
   width: 90vw;
+  min-width: 90vw;
   padding: 0.625rem;
   border-radius: 0.625rem;
   overflow-x: scroll;

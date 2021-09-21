@@ -2,37 +2,29 @@ import { useEffect, useRef } from "react";
 import Chart from "react-apexcharts";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { getTimeGraph } from "../../api/summaryThunk";
+import { getSummaryGraph } from "../../api/summaryThunk";
 import { StyledScrollBar } from "../../Components/StyledComponents";
 
-export default function TimeManagementChart({ subjectId = "" }) {
-  const {
-    time = [],
-    avg = [],
-    exams = {},
-  } = useSelector((state) => state.summary.timeGraph);
-  const chartRef = useRef();
+export default function ProgressSummaryChart({ subjectId = "" }) {
+  const summaryGraph = useSelector((state) => state.summary.summaryGraph);
   const dispatch = useDispatch();
+  const chartRef = useRef();
   useEffect(() => {
-    dispatch(getTimeGraph({ subject: subjectId }));
+    dispatch(getSummaryGraph({ subject: subjectId }));
   }, [subjectId]);
-  if (!time.length) {
+  if (!summaryGraph.length) {
     return <h3>Loading...</h3>;
   }
+
   const series = [
     {
       name: "Average Difficulty Level",
-      data: avg,
+      data: summaryGraph[2],
       type: "line",
     },
     {
-      name: "Average Time Taken (sec)",
-      data: time.map((a) => Number(a)),
-      type: "line",
-    },
-    {
-      name: `Average Time for each question (1 min 12 sec)`,
-      data: new Array(time.length).fill(72),
+      name: "Correct %",
+      data: summaryGraph[0],
       type: "line",
     },
   ];
@@ -40,7 +32,6 @@ export default function TimeManagementChart({ subjectId = "" }) {
   const options = {
     chart: {
       height: 400,
-      // width: 2000,
       type: "line",
       stacked: false,
       zoom: {
@@ -50,7 +41,6 @@ export default function TimeManagementChart({ subjectId = "" }) {
     },
     dataLabels: {
       enabled: false,
-      // formatter: undefined,
     },
     stroke: {
       curve: "smooth",
@@ -66,7 +56,7 @@ export default function TimeManagementChart({ subjectId = "" }) {
       },
     },
     xaxis: {
-      categories: exams,
+      categories: summaryGraph[1],
       labels: {
         rotate: -45,
         rotateAlways: true,
@@ -97,24 +87,9 @@ export default function TimeManagementChart({ subjectId = "" }) {
         min: 0,
         // max: 120,
         tickAmount: 2,
-        seriesName: "Average Time Taken",
+        seriesName: "Correct %",
         title: {
-          text: "Average Time Taken (sec)",
-        },
-      },
-      {
-        labels: {
-          formatter: function (value) {
-            return parseInt(value, 10);
-          },
-        },
-        min: 0,
-        // max: 120,
-        tickAmount: 2,
-        show: false,
-        seriesName: "Average Time Taken",
-        title: {
-          text: "Average Time Taken",
+          text: "Correct %",
         },
       },
     ],
@@ -142,8 +117,7 @@ export default function TimeManagementChart({ subjectId = "" }) {
       },
     },
   };
-  let graphWidth = exams.length * 100;
-
+  let graphWidth = summaryGraph[1].length * 100;
   if (chartRef.current !== undefined) {
     if (graphWidth < chartRef.current.clientWidth) {
       graphWidth = "100%";

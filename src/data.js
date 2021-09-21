@@ -18,7 +18,7 @@ const data = {
     summaryCard: {
       title: "performance summary",
       desc: "Access your performance by progress summary and time management graphs.",
-      cta: "/",
+      cta: "/summary",
       icon: icon6,
     },
   },

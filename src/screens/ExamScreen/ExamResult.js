@@ -1,17 +1,17 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect } from "react";
 import { Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
 import { examResult } from "../../api/examThunk";
 import ColumnChart from "../../Components/charts/ColumnChart";
-import { Wrapper } from "../../Components/StyledComponents";
+import { FancyButton, Wrapper } from "../../Components/StyledComponents";
 export default function ExamResult() {
-  const examResultId = useSelector(
-    (state) => state.exam.examsData.exam[0].ExamStat.exam_result_id
-  );
+  const { exam_result_id } = useParams();
   const dispatch = useDispatch();
   const payload = useSelector((state) => state.exam.examResult);
   useEffect(() => {
-    dispatch(examResult({ id: examResultId }));
+    dispatch(examResult({ id: exam_result_id }));
   }, []);
 
   if (payload === "") {
@@ -69,6 +69,16 @@ export default function ExamResult() {
       />
       <h3 className="py-3">Exam Wise Performance</h3>
       <ColumnChart shadow={true} chartData={[tot, correct]} />
+      <div className="d-flex justify-content-center">
+        <FancyButton as={Link} to="/summary" className="w-50 mt-5 mb-1">
+          <FontAwesomeIcon
+            icon={["fas", "chart-bar"]}
+            className="pe-2"
+            size="3x"
+          />
+          Overall Summary
+        </FancyButton>
+      </div>
     </Wrapper>
   );
 }

@@ -39,14 +39,14 @@ export const getTimeGraph = createAsyncThunk(
       } = getState();
       const { data } = await api.post(
         "/graph",
-        { subject },
+        {},
         {
           headers: {
             tokenu: userInfo.Token,
             Id: userInfo.Id,
             server_key: serverKey,
           },
-          params: { id: userInfo.Id },
+          params: { id: userInfo.Id, subject },
         }
       );
       console.log(data.data);
@@ -68,7 +68,7 @@ export const getSummaryGraph = createAsyncThunk(
       } = getState();
       const { data } = await api.post(
         "/summaryGraph",
-        { studentId: userInfo.Id },
+        { studentId: userInfo.Id, subject },
         {
           headers: {
             tokenu: userInfo.Token,
@@ -96,7 +96,7 @@ export const getPerformanceGraph = createAsyncThunk(
       } = getState();
       const { data } = await api.post(
         "/getGraphData",
-        { studentId: userInfo.Id },
+        { studentId: userInfo.Id, subject, diff },
         {
           headers: {
             tokenu: userInfo.Token,

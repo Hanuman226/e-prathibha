@@ -12,14 +12,16 @@ import bookmark from "../../Icons/bookmark.png";
 import { finishExam } from "../../api/examThunk";
 import { FancyButton } from "../../Components/StyledComponents";
 import { useHistory } from "react-router";
+import { resetExam } from "../../api/examSlice";
 export default function FinishExamModal(props) {
-  const { show, toggle, setQues, examId, qno, resultId } = props;
+  const { show, toggle, setQues, examId, qno, resultId, examName } = props;
   const submitData = useSelector((state) => state.exam.submitExam);
   const dispatch = useDispatch();
   // const history = useHistory();
   const handleFinishExam = () => {
     dispatch(finishExam({ examId, qno }));
     toggle();
+    dispatch(resetExam());
     // history.push(`/exam_result/${resultId}`);
   };
   return (
@@ -69,7 +71,11 @@ export default function FinishExamModal(props) {
         </Legend>
       </Modal.Body>
       <Modal.Footer className="d-flex justify-content-between">
-        <FancyButton as={Link} to={`/form`} onClick={handleFinishExam}>
+        <FancyButton
+          as={Link}
+          to={`/feedback/${examName}/${resultId}`}
+          onClick={handleFinishExam}
+        >
           <FontAwesomeIcon icon={["fas", "lock"]} />
           <span className="ps-2">Finish Exam</span>
         </FancyButton>

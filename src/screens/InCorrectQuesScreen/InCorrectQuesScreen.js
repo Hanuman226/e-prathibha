@@ -1,11 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import { Col, Row, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { FancyButton, Wrapper } from "../../Components/StyledComponents";
+import {
+  FancyButton,
+  TableWrapper,
+  Wrapper,
+} from "../../Components/StyledComponents";
 import ReactPaginate from "react-paginate";
 import useToggle from "../../Hooks/useToggle";
 import { getAllIncorrectQuestions } from "../../api/InCorrectQuesThunk";
 import InCorrectQuesModal from "./InCorrectQuesModal";
+import styled from "styled-components";
 export default function InCorrectQuesScreen() {
   const [showInCorrectQuesModal, toggleInCorrectQuesModal] = useToggle();
   const [modalProps, setmodalProps] = useState({});
@@ -23,8 +28,12 @@ export default function InCorrectQuesScreen() {
     return <h1>Loading...</h1>;
   }
 
-  const setPage = ({ selected }) => {
+  const setTopPage = ({ selected }) => {
     setCurrentPage(selected + 1);
+  };
+  const setBottomPage = ({ selected }) => {
+    setCurrentPage(selected + 1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const lastIndex = currentPage * perPage;
@@ -42,6 +51,7 @@ export default function InCorrectQuesScreen() {
     entriesLastRange =
       totalInCorrectQuestions - (currentPage - 1) * perPage + firstIndex;
   }
+
   return (
     <Wrapper>
       <h3 className="pb-3">InCorrect Questions</h3>
@@ -50,7 +60,7 @@ export default function InCorrectQuesScreen() {
           <select
             value={perPage}
             className="  mb-3"
-            aria-label=".form-select-sm example"
+            aria-label="select page size"
             onChange={(e) => setPerPage(e.target.value)}
           >
             {perPageOptions
@@ -64,10 +74,11 @@ export default function InCorrectQuesScreen() {
           <ReactPaginate
             ref={pagination}
             initialPage={0}
+            forcePage={currentPage - 1}
             pageCount={Math.ceil(totalInCorrectQuestions / perPage)}
             pageRangeDisplayed={4}
             marginPagesDisplayed={1}
-            onPageChange={setPage}
+            onPageChange={setTopPage}
             containerClassName="pagination"
             activeClassName="active"
             pageLinkClassName="page-link"
@@ -89,72 +100,74 @@ export default function InCorrectQuesScreen() {
           </p>
         </Col>
       </Row>
-      <Table
-        striped
-        bordered
-        hover
-        responsive
-        className=" align-middle text-center"
-      >
-        <thead>
-          <tr>
-            <th>S.No.</th>
-            <th>Exam Name</th>
-            <th>Subject</th>
-            <th>Date</th>
-            <th>Response</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {inCorrectQues.map((question, index) => {
-            const {
-              exam_name,
-              subject_name,
-              date,
-              exam_result_id,
-              question_id,
-            } = question;
-            let response = question.response;
-            if (response === "W") {
-              response = "Wrong";
-            } else if (response === "R") {
-              response = "Right";
-            } else {
-              response = "Not Attempted";
-            }
-            return (
-              <tr>
-                <td>{firstIndex + index + 1}</td>
-                <td>{exam_name}</td>
-                <td>{subject_name}</td>
-                <td>{date}</td>
-                <td>{response}</td>
-                <td className="d-flex justify-content-center">
-                  <FancyButton
-                    onClick={() => {
-                      setmodalProps({
-                        id: studentId,
-                        exam_result_id,
-                        qid: question_id,
-                      });
-                      toggleInCorrectQuesModal();
-                    }}
-                  >
-                    view
-                  </FancyButton>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+      <TableWrapper>
+        <Table
+          striped
+          bordered
+          hover
+          responsive
+          className=" align-middle text-center"
+        >
+          <thead>
+            <tr>
+              <th>S.No.</th>
+              <th>Exam Name</th>
+              <th>Subject</th>
+              <th>Date</th>
+              <th>Response</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {inCorrectQues.map((question, index) => {
+              const {
+                exam_name,
+                subject_name,
+                date,
+                exam_result_id,
+                question_id,
+              } = question;
+              let response = question.response;
+              if (response === "W") {
+                response = "Wrong";
+              } else if (response === "R") {
+                response = "Right";
+              } else {
+                response = "Not Attempted";
+              }
+              return (
+                <tr>
+                  <td>{firstIndex + index + 1}</td>
+                  <td>{exam_name}</td>
+                  <td>{subject_name}</td>
+                  <td>{date}</td>
+                  <td>{response}</td>
+                  <td className="d-flex justify-content-center">
+                    <FancyButton
+                      onClick={() => {
+                        setmodalProps({
+                          id: studentId,
+                          exam_result_id,
+                          qid: question_id,
+                        });
+                        toggleInCorrectQuesModal();
+                      }}
+                    >
+                      view
+                    </FancyButton>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      </TableWrapper>
       <Row>
         <Col sm={1}>
           <select
             value={perPage}
             className="  mb-3"
-            aria-label=".form-select-sm example"
+            aria-label="select page size"
             onChange={(e) => setPerPage(e.target.value)}
           >
             {perPageOptions
@@ -168,10 +181,11 @@ export default function InCorrectQuesScreen() {
           <ReactPaginate
             ref={pagination}
             initialPage={0}
+            forcePage={currentPage - 1}
             pageCount={Math.ceil(totalInCorrectQuestions / perPage)}
             pageRangeDisplayed={4}
             marginPagesDisplayed={1}
-            onPageChange={setPage}
+            onPageChange={setBottomPage}
             containerClassName="pagination"
             activeClassName="active"
             pageLinkClassName="page-link"

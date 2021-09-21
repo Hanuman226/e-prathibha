@@ -1,16 +1,20 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Col, Row, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllBookmarks } from "../../api/allBookmarkThunk";
-import { FancyButton, Wrapper } from "../../Components/StyledComponents";
+import {
+  FancyButton,
+  TableWrapper,
+  Wrapper,
+} from "../../Components/StyledComponents";
 import ReactPaginate from "react-paginate";
 import BookmarkViewModal from "./BookmarkViewModal";
 import useToggle from "../../Hooks/useToggle";
+import styled from "styled-components";
 export default function AllBookmarkScreen() {
   const [showBookmarkViewModal, toggleBookmarkViewModal] = useToggle();
   const [modalProps, setmodalProps] = useState({});
   const dispatch = useDispatch();
-  const pagination = useRef();
   const [perPage, setPerPage] = useState(25);
   const [currentPage, setCurrentPage] = useState(1);
   const studentId = useSelector((state) => state.user.userInfo.Id);
@@ -23,8 +27,12 @@ export default function AllBookmarkScreen() {
     return <h1>Loading...</h1>;
   }
 
-  const setPage = ({ selected }) => {
+  const setTopPage = ({ selected }) => {
     setCurrentPage(selected + 1);
+  };
+  const setBottomPage = ({ selected }) => {
+    setCurrentPage(selected + 1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const lastIndex = currentPage * perPage;
@@ -50,7 +58,7 @@ export default function AllBookmarkScreen() {
           <select
             value={perPage}
             className="  mb-3"
-            aria-label=".form-select-sm example"
+            aria-label="select page size"
             onChange={(e) => setPerPage(e.target.value)}
           >
             {perPageOptions
@@ -62,12 +70,12 @@ export default function AllBookmarkScreen() {
         </Col>
         <Col sm={8} className="d-flex justify-content-center">
           <ReactPaginate
-            ref={pagination}
             initialPage={0}
+            forcePage={currentPage - 1}
             pageCount={Math.ceil(totalBookmarkedQuestions / perPage)}
             pageRangeDisplayed={4}
             marginPagesDisplayed={1}
-            onPageChange={setPage}
+            onPageChange={setTopPage}
             containerClassName="pagination"
             activeClassName="active"
             pageLinkClassName="page-link"
@@ -89,77 +97,79 @@ export default function AllBookmarkScreen() {
           </p>
         </Col>
       </Row>
-      <Table
-        striped
-        bordered
-        hover
-        responsive
-        className=" align-middle text-center"
-      >
-        <thead>
-          <tr>
-            <th>S.No.</th>
-            <th>Exam Name</th>
-            <th>Subject</th>
-            <th>Bookmark Date</th>
-            <th>Bookmark Priority</th>
-            <th>Response</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {bookmarks.map((bookmark, index) => {
-            const {
-              exam_name,
-              subject_name,
-              date,
-              priority,
-              exam_result_id,
-              question_id,
-            } = bookmark;
-            let response = bookmark.response;
-            if (response === "W") {
-              response = "Wrong";
-            } else if (response === "R") {
-              response = "Right";
-            } else {
-              response = "Not Attempted";
-            }
-            return (
-              <tr>
-                <td>{firstIndex + index + 1}</td>
-                <td>{exam_name}</td>
-                <td>{subject_name}</td>
-                <td>{date}</td>
-                <td>{priority} </td>
-                <td>{response}</td>
-                <td className="d-flex justify-content-center">
-                  <FancyButton
-                    onClick={() => {
-                      setmodalProps({
-                        id: studentId,
-                        exam_result_id,
-                        qid: question_id,
-                        priority: priority,
-                        rowIndex: firstIndex + index,
-                      });
-                      toggleBookmarkViewModal();
-                    }}
-                  >
-                    view
-                  </FancyButton>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+      <TableWrapper>
+        <Table
+          striped
+          bordered
+          hover
+          responsive
+          className=" align-middle text-center"
+        >
+          <thead>
+            <tr>
+              <th>S.No.</th>
+              <th>Exam Name</th>
+              <th>Subject</th>
+              <th>Bookmark Date</th>
+              <th>Bookmark Priority</th>
+              <th>Response</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bookmarks.map((bookmark, index) => {
+              const {
+                exam_name,
+                subject_name,
+                date,
+                priority,
+                exam_result_id,
+                question_id,
+              } = bookmark;
+              let response = bookmark.response;
+              if (response === "W") {
+                response = "Wrong";
+              } else if (response === "R") {
+                response = "Right";
+              } else {
+                response = "Not Attempted";
+              }
+              return (
+                <tr>
+                  <td>{firstIndex + index + 1}</td>
+                  <td>{exam_name}</td>
+                  <td>{subject_name}</td>
+                  <td>{date}</td>
+                  <td>{priority} </td>
+                  <td>{response}</td>
+                  <td className="d-flex justify-content-center">
+                    <FancyButton
+                      onClick={() => {
+                        setmodalProps({
+                          id: studentId,
+                          exam_result_id,
+                          qid: question_id,
+                          priority: priority,
+                          rowIndex: firstIndex + index,
+                        });
+                        toggleBookmarkViewModal();
+                      }}
+                    >
+                      view
+                    </FancyButton>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      </TableWrapper>
       <Row>
         <Col sm={1}>
           <select
             value={perPage}
             className="  mb-3"
-            aria-label=".form-select-sm example"
+            aria-label="select page size"
             onChange={(e) => setPerPage(e.target.value)}
           >
             {perPageOptions
@@ -171,12 +181,12 @@ export default function AllBookmarkScreen() {
         </Col>
         <Col sm={8} className="d-flex justify-content-center">
           <ReactPaginate
-            ref={pagination}
             initialPage={0}
+            forcePage={currentPage - 1}
             pageCount={Math.ceil(totalBookmarkedQuestions / perPage)}
             pageRangeDisplayed={4}
             marginPagesDisplayed={1}
-            onPageChange={setPage}
+            onPageChange={setBottomPage}
             containerClassName="pagination"
             activeClassName="active"
             pageLinkClassName="page-link"

@@ -363,3 +363,57 @@ export const examResult = createAsyncThunk(
     }
   }
 );
+
+export const getPracticeSessionSubjects = createAsyncThunk(
+  "exam/getPracticeSessionSubjects",
+  async ({ type, packageId }, { getState, rejectWithValue }) => {
+    try {
+      let serverKey = process.env.REACT_APP_SERVER_KEY;
+      const {
+        user: { userInfo },
+      } = getState();
+      const { data } = await api.post(
+        "/practise_session",
+        { type, packageId, id: userInfo.Id },
+        {
+          headers: {
+            tokenu: userInfo.Token,
+            Id: userInfo.Id,
+            server_key: serverKey,
+          },
+        }
+      );
+      return data.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const createPracticeExam = createAsyncThunk(
+  "exam/createPracticeExam",
+  async ({ sub_id, packageId }, { getState, rejectWithValue }) => {
+    try {
+      let serverKey = process.env.REACT_APP_SERVER_KEY;
+      const {
+        user: { userInfo },
+      } = getState();
+      const { data } = await api.post(
+        "/practiseExamCreate",
+        { sub_id, packageId, id: userInfo.Id },
+        {
+          headers: {
+            tokenu: userInfo.Token,
+            Id: userInfo.Id,
+            server_key: serverKey,
+          },
+        }
+      );
+      return data.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);

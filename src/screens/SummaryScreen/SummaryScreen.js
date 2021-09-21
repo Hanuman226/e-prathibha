@@ -1,26 +1,38 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
+import { Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import {
-  getPerformanceGraph,
-  getSubjects,
-  getSummaryGraph,
-  getTimeGraph,
-} from "../../api/summaryThunk";
-// import { Col, Container, Form, Nav, Row, Tab } from "react-bootstrap";
+import styled from "styled-components";
+import { getSubjects } from "../../api/summaryThunk";
+import { StyledSelect } from "../../Components/StyledComponents";
 import { Wrapper, FancyButton } from "../../Components/StyledComponents";
+import PerformanceChart from "./PerformanceChart";
+import ProgressSummaryChart from "./ProgressSummaryChart";
 import TimeManangementChart from "./TimeManagementChart";
+
+const defaultOption = {
+  subjectId: "",
+  difficulty: "",
+};
 export default function SummaryScreen() {
   const [key, setKey] = useState(0);
+  const [optionSelected, setOptionSelected] = useState(defaultOption);
+  const [submitData, setSubmitData] = useState(defaultOption);
+  const { subjectId, difficulty } = submitData;
   const dispatch = useDispatch();
-  const subjects = useSelector((state) => state.summary.subjects);
+  const { subjects, loading } = useSelector((state) => state.summary);
   useEffect(() => {
     dispatch(getSubjects());
-    dispatch(getTimeGraph({ subject: 20 }));
-    dispatch(getSummaryGraph({ subject: "" }));
-    dispatch(getPerformanceGraph({ subject: "", diff: "" }));
   }, []);
+
+  const optionSelection = (e) => {
+    setOptionSelected({ ...optionSelected, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = () => {
+    setSubmitData(optionSelected);
+  };
 
   return (
     <>
@@ -30,7 +42,12 @@ export default function SummaryScreen() {
             tab
             className="mx-2"
             active={key === 0}
-            onClick={() => setKey(0)}
+            onClick={() => {
+              setKey(0);
+              // setOptionSelected(defaultOption);
+              // dispatch(resetSummaryData());
+              // setSubmitData(defaultOption);
+            }}
           >
             Time Manangement
           </FancyButton>
@@ -38,7 +55,12 @@ export default function SummaryScreen() {
             tab
             className="mx-2"
             active={key === 1}
-            onClick={() => setKey(1)}
+            onClick={() => {
+              setKey(1);
+              // setOptionSelected(defaultOption);
+              // dispatch(resetSummaryData());
+              // setSubmitData(defaultOption);
+            }}
           >
             Progress Summary
           </FancyButton>
@@ -46,38 +68,118 @@ export default function SummaryScreen() {
             tab
             className="mx-2"
             active={key === 2}
-            onClick={() => setKey(2)}
+            onClick={() => {
+              setKey(2);
+              // setOptionSelected(defaultOption);
+              // dispatch(resetSummaryData());
+              // setSubmitData(defaultOption);
+            }}
           >
             performance
           </FancyButton>
         </div>
-        <div className=" row mt-3  justify-content-center">
-          <fieldset className="col-sm-6 mb-3 d-flex  align-items-center">
-            <label htmlFor="subjects" className="fw-bold">
-              Subject:{" "}
-            </label>
-            <select
-              id="subjects"
-              className="form-select mx-3 "
-              aria-label="choose subject"
+        <Container className="d-flex justify-content-center mt-4">
+          <Row className="d-flex justify-content-center w-100  ">
+            <Form.Group
+              as={Row}
+              className=" justify-content-center g-2"
+              controlId={"subjects"}
             >
-              <option value="all">All</option>
-              {Object.entries(subjects).map((subject) => (
-                <option value={subject[0]}>{subject[1]}</option>
-              ))}
-            </select>
-            <FancyButton className="mx-2">
-              <FontAwesomeIcon icon={["fas", "plus"]} className="me-2" />
-              submit
-            </FancyButton>
-          </fieldset>
-        </div>
+              <Form.Label column lg={1} className="fw-bold">
+                Subject
+              </Form.Label>
+              <Col lg={6}>
+                <StyledSelect
+                  id="subjects"
+                  className="form-select me-3 "
+                  aria-label="choose subject"
+                  value={optionSelected.subjectId}
+                  name="subjectId"
+                  onChange={optionSelection}
+                  disabled={loading}
+                >
+                  <option value="">All</option>
+                  {Object.entries(subjects).map((subject) => (
+                    <option value={subject[0]}>{subject[1]}</option>
+                  ))}
+                </StyledSelect>
+              </Col>
+              <Col lg={2}>
+                {key !== 2 && (
+                  <FancyButton type="submit" onClick={handleSubmit}>
+                    {loading ? (
+                      <Spinner animation="border" variant="light" />
+                    ) : (
+                      <>
+                        <FontAwesomeIcon
+                          icon={["fas", "plus"]}
+                          className="me-2"
+                        />
+                        <span>submit</span>
+                      </>
+                    )}
+                  </FancyButton>
+                )}
+              </Col>
+            </Form.Group>
+            {key === 2 && (
+              <Form.Group
+                as={Row}
+                className=" justify-content-center g-2"
+                controlId={"difficulty"}
+              >
+                <Form.Label column lg={1} className="fw-bold">
+                  Difficulty
+                </Form.Label>
+                <Col lg={6}>
+                  <StyledSelect
+                    id="difficulty"
+                    className="form-select me-3 "
+                    aria-label="choose difficulty level"
+                    name="difficulty"
+                    onChange={optionSelection}
+                    value={optionSelected.difficulty}
+                    disabled={loading}
+                  >
+                    <option value="">All</option>
+                    <option value="1">Easy</option>
+                    <option value="2">Medium</option>
+                    <option value="3">Hard</option>
+                  </StyledSelect>
+                </Col>
+                <Col lg={2}>
+                  <FancyButton type="submit" onClick={handleSubmit}>
+                    {loading ? (
+                      <Spinner animation="border" variant="light" />
+                    ) : (
+                      <>
+                        <FontAwesomeIcon
+                          icon={["fas", "plus"]}
+                          className="me-2"
+                        />
+                        <span>submit</span>
+                      </>
+                    )}
+                  </FancyButton>
+                </Col>
+              </Form.Group>
+            )}
+          </Row>
+        </Container>
       </Wrapper>
-      <Wrapper className="mt-5 d-flex justify-content-center">
-        {key === 0 && <TimeManangementChart />}
-        {key === 1 && <div style={{ height: "400px" }}>tab2</div>}
-        {key === 2 && <div style={{ height: "400px" }}>tab3</div>}
+      <Wrapper className="mt-4 d-flex justify-content-center">
+        {key === 0 && <TimeManangementChart subjectId={subjectId} />}
+        {key === 1 && <ProgressSummaryChart subjectId={subjectId} />}
+        {key === 2 && (
+          <PerformanceChart subjectId={subjectId} difficulty={difficulty} />
+        )}
       </Wrapper>
     </>
   );
 }
+
+const gridLayout = styled.div`
+  display: grid;
+  grid-template-areas: "label" "select" "button";
+  grid-template-columns: 2rem 1fr 2rem;
+`;

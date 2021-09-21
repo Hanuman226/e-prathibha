@@ -17,6 +17,10 @@ import ExamResult from "./screens/ExamScreen/ExamResult";
 import AllBookmarkScreen from "./screens/AllBookmarkScreen/AllBookmarkScreen";
 import InCorrectQuesScreen from "./screens/InCorrectQuesScreen/InCorrectQuesScreen";
 import SummaryScreen from "./screens/SummaryScreen/SummaryScreen";
+import PracticeSession from "./screens/ExamScreen/PracticeSession/PracticeSession";
+import ExamCategory from "./screens/ExamScreen/PracticeSession/ExamCategory";
+import SubjectsList from "./screens/ExamScreen/PracticeSession/SubjectsList";
+import PracticeExamRules from "./screens/ExamScreen/PracticeSession/PracticeExamRules";
 function App() {
   return (
     <Router>
@@ -48,8 +52,37 @@ function App() {
                 path="/premium_previous_papers"
                 component={PremiumExamsList}
               />
-              <Route exact path="/form" component={ExamFeedbackForm} />
-              <Route exact path="/exam_result" component={ExamResult} />
+              <Route
+                exact
+                path="/practice_session"
+                component={PracticeSession}
+              />
+              <Route
+                exact
+                path="/practice_session/:packageId"
+                component={ExamCategory}
+              />
+              <Route
+                exact
+                path="/practice_session/:packageId/:category"
+                component={SubjectsList}
+              />
+              <Route
+                exact
+                path="/practice_session/:packageId/instruction/:examname/:subjectId"
+                component={PracticeExamRules}
+              />
+
+              <Route
+                exact
+                path="/feedback/:exam_name/:exam_result_id"
+                component={ExamFeedbackForm}
+              />
+              <Route
+                exact
+                path="/exam_result/:exam_name/:exam_result_id"
+                component={ExamResult}
+              />
               <Route
                 exact
                 path="/all_bookmarks"

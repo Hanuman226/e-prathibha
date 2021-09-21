@@ -41,6 +41,7 @@ import examReducer from "./examSlice";
 import allbookmarkReducer from "./allBookmarkSlice";
 import InCorrectQuesReducer from "./InCorrectQuesSlice";
 import summaryReducer from "./summarySlice";
+import { createPracticeExam, startExam } from "./examThunk";
 const store = configureStore({
   reducer: {
     user: userReducer,
@@ -57,4 +58,5 @@ if (store.getState().user.userInfo === null) {
   store.dispatch(fetchUser());
 }
 
-// store.dispatch(premiumExamList());
+// store.dispatch(createPracticeExam({ sub_id: 29, packageId: 7 }));
+// store.dispatch(startExam(2122));
