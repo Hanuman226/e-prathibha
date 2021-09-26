@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import styled from "styled-components";
 import { getSubjects } from "../../api/summaryThunk";
 import { StyledSelect } from "../../Components/StyledComponents";
 import { Wrapper, FancyButton } from "../../Components/StyledComponents";
@@ -177,9 +176,3 @@ export default function SummaryScreen() {
     </>
   );
 }
-
-const gridLayout = styled.div`
-  display: grid;
-  grid-template-areas: "label" "select" "button";
-  grid-template-columns: 2rem 1fr 2rem;
-`;

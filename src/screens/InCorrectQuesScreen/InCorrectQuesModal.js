@@ -55,7 +55,7 @@ export default function InCorrectQuesModal(props) {
     <CustomModal
       show={show}
       toggle={toggle}
-      title={"Bookmark View"}
+      title={"InCorrect Question"}
       size="xl"
       onExit={onModalExit}
       backdrop="static"

@@ -25,14 +25,12 @@ import { questionOpened } from "../../api/examSlice";
 import ProfileModal from "./ProfileModal";
 import InstructionsModal from "./InstructionsModal";
 import useToggle from "../../Hooks/useToggle";
-import CustomToast from "../../Components/CustomToast";
-
+import { ToastContainer, toast } from "react-toastify";
 export default function ExamScreen() {
   const [showQuestionPaper, toggleQuestionPaper] = useToggle();
   const [showInstructions, toggleInstructions] = useToggle();
   const [showProfile, toggleProfile] = useToggle();
   const [showFinishExam, toggleFinishExam] = useToggle();
-  const [showAlert, toggleAlert] = useToggle();
   const [quesNo, setQuesNo] = useState(0);
   const currQuesNo = useRef(1);
   const [filterOption, setFilterOption] = useState("all");
@@ -45,14 +43,18 @@ export default function ExamScreen() {
   );
 
   useEffect(() => {
-    dispatch(startExam(examid));
-    dispatch(
-      attemptTime({
-        examId: examid,
-        qId: 1,
-        currQues: 1,
-      })
-    );
+    dispatch(startExam(examid))
+      .unwrap()
+      .then((res) => {
+        dispatch(questionOpened({ qId: 1 }));
+        dispatch(
+          attemptTime({
+            examId: examid,
+            qId: 1,
+            currQues: 1,
+          })
+        );
+      });
   }, [examid]);
 
   if (!payload.exam.length) {
@@ -60,8 +62,7 @@ export default function ExamScreen() {
   }
 
   const { ExamStat, Question, Exam } = payload.exam[quesNo];
-  const { ques_no, exam_id, exam_result_id, student_id, review, answered } =
-    ExamStat;
+  const { ques_no, exam_id, exam_result_id, review, answered } = ExamStat;
   let { option_selected } = ExamStat;
   const {
     question: { above, table, below },
@@ -117,10 +118,9 @@ export default function ExamScreen() {
     };
 
     option_selected !== null && dispatch(saveQuestion(qdata));
-    option_selected === null && dispatch(questionOpened({ qId: ques_no }));
-
+    !isLastQuestion && dispatch(questionOpened({ qId: Number(ques_no) + 1 }));
     !isLastQuestion && setQuesNo((prev) => prev + 1);
-    isLastQuestion && toggleAlert();
+    isLastQuestion && toast.info("You have reached the last question of test.");
   };
 
   const saveAndNext = () => {
@@ -269,6 +269,8 @@ export default function ExamScreen() {
             examId={exam_id}
             examresultId={exam_result_id}
             qno={payload.exam.length}
+            resultId={exam_result_id}
+            examName={Exam.name}
           />
           <QuestionPalette
             setQues={changeQues}
@@ -323,11 +325,7 @@ export default function ExamScreen() {
           toggle={toggleInstructions}
           examName={Exam.name}
         />
-        <ProfileModal
-          show={showProfile}
-          toggle={toggleProfile}
-          id={student_id}
-        />
+        <ProfileModal show={showProfile} toggle={toggleProfile} />
         <FinishExamModal
           setQues={changeQues}
           show={showFinishExam}
@@ -337,10 +335,17 @@ export default function ExamScreen() {
           examName={Exam.name}
           qno={payload.exam.length}
         />
-        <CustomToast
-          show={showAlert}
-          toggle={toggleAlert}
-          message={"You have reached the last question of test."}
+
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
         />
       </Wrapper>
     )

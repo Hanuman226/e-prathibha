@@ -1,14 +1,28 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useHistory } from "react-router";
 import styled from "styled-components";
 import logo from "../Icons/logo.png";
+import auth from "../utils/auth";
+import { FancyButton } from "./StyledComponents";
 export default function Header() {
+  const history = useHistory();
   return (
     <Wrapper>
       <Logo src={logo} alt="brand-logo" />
-      <Profile>
-        <FontAwesomeIcon icon={["fas", "user"]}  />
-        <FontAwesomeIcon icon={["fas", "caret-down"]}  />
-      </Profile>
+      {/* <Profile>
+        <FontAwesomeIcon icon={["fas", "user"]} />
+        <FontAwesomeIcon icon={["fas", "caret-down"]} />
+      </Profile> */}
+      <FancyButton
+        bgColor="red"
+        onClick={() => {
+          auth.logout(() => {
+            return history.push("/user/login");
+          });
+        }}
+      >
+        Logout
+      </FancyButton>
     </Wrapper>
   );
 }
@@ -30,7 +44,7 @@ const Logo = styled.img`
 `;
 
 const Profile = styled.div`
-font-size: 1.25rem;
-cursor: pointer;
-/* padding-right: 3rem; */
+  font-size: 1.25rem;
+  cursor: pointer;
+  /* padding-right: 3rem; */
 `;

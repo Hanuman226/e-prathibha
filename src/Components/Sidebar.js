@@ -18,7 +18,7 @@ export default function Sidebar() {
           </NavLink>
         </IconWrapper>
         <IconWrapper>
-          <NavLink to="/my-result">
+          <NavLink to="/my_result">
             <FontAwesomeIcon icon={["fas", "trophy"]} />
             <span>My Result</span>
           </NavLink>
@@ -48,7 +48,7 @@ export default function Sidebar() {
           </NavLink>
         </IconWrapper>
         <IconWrapper>
-          <NavLink to="/over-all-report">
+          <NavLink to="/over_all_report">
             <FontAwesomeIcon icon={["fas", "compass"]} />
             <span>Over All Report</span>
           </NavLink>

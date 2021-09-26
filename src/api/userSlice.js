@@ -1,25 +1,14 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { getUserProfile } from "./userThunk";
-
-export const fetchUser = createAsyncThunk(
-  "user/fetchUser",
-  async (appdata, { rejectWithValue }) => {
-    let formData = new FormData();
-    formData.append("email", "scientificfacts226@gmail.com");
-    formData.append("password", "scientific123");
-    try {
-      const { data } = await axios.post(
-        "https://e-prathibha.com/apis/login",
-        formData
-      );
-      localStorage.setItem("userInfo", JSON.stringify(data.data));
-      return data.data;
-    } catch (err) {
-      return rejectWithValue(err.msg);
-    }
-  }
-);
+import { createSlice } from "@reduxjs/toolkit";
+import {
+  forgotPassword,
+  getUserProfile,
+  login,
+  logout,
+  register,
+  reSendEmailVerifyCode,
+  resetPassword,
+  verifyEmail,
+} from "./userThunk";
 
 var userInfo = null;
 if (localStorage.getItem("userInfo")) {
@@ -27,6 +16,12 @@ if (localStorage.getItem("userInfo")) {
 }
 const initialState = {
   userInfo: userInfo,
+  register: "",
+  logout: "",
+  forgotPassword:"",
+  resetPassword:"",
+  verifyEmail: "",
+  reSendEmailVerifyCode: "",
   profile: "",
   loading: false,
   error: null,
@@ -41,20 +36,63 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchUser.pending, (state) => {
+    builder.addCase(login.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(fetchUser.fulfilled, (state, action) => {
+    builder.addCase(login.fulfilled, (state, action) => {
       state.loading = false;
-      state.userInfo = action.payload;
+      state.userInfo = action.payload.data;
     });
-    builder.addCase(fetchUser.rejected, (state, action) => {
+
+    builder.addCase(register.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(register.fulfilled, (state, action) => {
       state.loading = false;
-      state.error = action.error;
+      state.register = action.payload;
+    });
+    builder.addCase(forgotPassword.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(forgotPassword.fulfilled, (state, action) => {
+      state.loading = false;
+      state.forgotPassword = action.payload;
+    });
+    builder.addCase(resetPassword.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(resetPassword.fulfilled, (state, action) => {
+      state.loading = false;
+      state.resetPassword = action.payload;
+    });
+    builder.addCase(logout.fulfilled, (state, action) => {
+      state.logout = action.payload;
+    });
+    builder.addCase(verifyEmail.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(verifyEmail.fulfilled, (state, action) => {
+      state.loading = false;
+      state.verifyEmail = action.payload;
+    });
+
+    builder.addCase(reSendEmailVerifyCode.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(reSendEmailVerifyCode.fulfilled, (state, action) => {
+      state.loading = false;
+      state.reSendEmailVerifyCode = action.payload;
     });
     builder.addCase(getUserProfile.fulfilled, (state, action) => {
       state.profile = action.payload;
     });
+    builder.addMatcher(
+      (action) => action.type.endsWith("rejected"),
+      (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+      }
+    );
   },
 });
 

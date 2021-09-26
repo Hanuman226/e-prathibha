@@ -50,7 +50,7 @@ function padWithZeros(number, minLength) {
 }
 
 export default function CountDownTimer(props) {
-  const { examTime, examId, examresultId, qno } = props;
+  const { examTime, examId, qno, resultId, examName } = props;
   const [remainingTime, setRemainingTime] = useState(defaultRemainingTime);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -62,7 +62,7 @@ export default function CountDownTimer(props) {
     ) {
       // dispatch(submitExam({ examId, examresultId }));
       dispatch(finishExam({ examId, qno }));
-      history.push("/");
+      history.push(`/feedback/${examName}/${resultId}`);
     }
   }, [remainingTime]);
 

@@ -36,12 +36,13 @@
 // setTimeout(()=>store.dispatch(freeExamList()),3000);
 
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer, { fetchUser } from "./userSlice";
+import userReducer from "./userSlice";
 import examReducer from "./examSlice";
 import allbookmarkReducer from "./allBookmarkSlice";
 import InCorrectQuesReducer from "./InCorrectQuesSlice";
 import summaryReducer from "./summarySlice";
-import { createPracticeExam, startExam } from "./examThunk";
+import myResultReducer from "./myResutSlice";
+import { login } from "./userThunk";
 const store = configureStore({
   reducer: {
     user: userReducer,
@@ -49,14 +50,12 @@ const store = configureStore({
     allBookmarks: allbookmarkReducer,
     inCorrectQues: InCorrectQuesReducer,
     summary: summaryReducer,
+    myResult: myResultReducer,
   },
 });
 
 export default store;
 
-if (store.getState().user.userInfo === null) {
-  store.dispatch(fetchUser());
-}
-
-// store.dispatch(createPracticeExam({ sub_id: 29, packageId: 7 }));
-// store.dispatch(startExam(2122));
+// if (store.getState().user.userInfo === null) {
+//   store.dispatch(login());
+// }

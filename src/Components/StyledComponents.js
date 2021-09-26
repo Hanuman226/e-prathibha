@@ -29,6 +29,7 @@ export const FancyButton = styled.button`
   background-color: ${(props) => (props.disabled ? "gray" : "black")};
   background-color: ${(props) => (props.tab ? "white" : "")};
   background-color: ${(props) => (props.active ? "black" : "")};
+  background-color: ${(props) => (props.bgColor ? props.bgColor : "")};
   color: ${(props) => (props.tab ? "black" : "")};
   border: ${(props) => (props.tab ? "solid 0.5px black" : "")};
   color: ${(props) => (props.active ? "white" : "")};

@@ -4,10 +4,10 @@ import { getUserProfile } from "../../api/userThunk";
 import CustomModal from "../../Components/CustomModal";
 
 export default function ProfileModal(props) {
-  const { show, toggle, id } = props;
+  const { show, toggle } = props;
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getUserProfile({ id }));
+    dispatch(getUserProfile());
   }, []);
   const { name, email } = useSelector((state) => state.user.profile);
   return (
