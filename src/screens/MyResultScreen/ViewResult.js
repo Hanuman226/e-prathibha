@@ -1,23 +1,31 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Tab, Tabs } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
 import { examResult } from "../../api/examThunk";
 import { FancyButton, Wrapper } from "../../Components/StyledComponents";
 import ScoreCard from "./ScoreCard";
+import Solution from "./Solution";
 import SubjectReport from "./SubjectReport";
 import TimeManagement from "./TimeManagement";
 
 export default function ViewResult() {
+  // const { loading } = useSelector((state) => state.exam);
+  const [loading, setLoading] = useState(true);
   const history = useHistory();
   const { resultId } = useParams();
   const dispatch = useDispatch();
-
   useEffect(() => {
-    dispatch(examResult({ id: resultId }));
+    dispatch(examResult({ id: resultId }))
+      .unwrap()
+      .then((res) => setLoading(false))
+      .catch((err) => setLoading(false));
   }, [resultId]);
 
+  if (loading) {
+    return <h2>Loading...</h2>;
+  }
   return (
     <>
       <FancyButton className="mb-3" onClick={() => history.goBack()}>
@@ -36,7 +44,7 @@ export default function ViewResult() {
             <TimeManagement />
           </Tab>
           <Tab eventKey="solution" title="SOLUTION">
-            <h4>solution</h4>
+            <Solution />
           </Tab>
         </Tabs>
       </Wrapper>

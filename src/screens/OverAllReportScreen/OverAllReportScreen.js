@@ -1,88 +1,103 @@
+import { useEffect, useState } from "react";
 import { Container, ListGroup, Row, Col } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import MarksWiseChart from "./MarksWiseChart";
-import PerformanceChart from "./PerformanceChart";
+import { getOverAllReport } from "../../api/overAllReportSlice";
+import { Wrapper } from "../../Components/StyledComponents";
+import BarGraph from "./BarGraph";
+import PieChart from "./PieChart";
 
-export default function ScoreCard() {
-  const { examResult } = useSelector((state) => state.exam);
- 
+export default function OverAllReportScreen() {
+  const dispatch = useDispatch();
+  const { overAllReport } = useSelector((state) => state.overAllReport);
 
-  const {
-    examDetails: { Exam, Result },
-  } = examResult;
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    dispatch(getOverAllReport())
+      .unwrap()
+      .then((res) => setLoading(false))
+      .catch((err) => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
-    <>
-      <Container>
-        <p className="fs-5">
-          <span className="fw-bold">Score Card For </span>
-          {Exam.name}
-        </p>
+    <Wrapper>
+      <Container flush>
+        <h3>Over All Report</h3>
         <Row className="d-flex  justify-content-between flex-wrap mb-5" flush>
           <List>
             <List.Item className="d-flex justify-content-between">
               My Marks{" "}
               <span className="text-primary fw-bold">
-                {Result.obtained_marks}
+                {overAllReport.my_marks}
               </span>
             </List.Item>
             <List.Item className="d-flex justify-content-between">
               Total Marks of Test{" "}
               <span className="text-primary fw-bold">
-                {Result.total_marks}{" "}
+                {overAllReport.total_mrks}{" "}
               </span>
             </List.Item>
             <List.Item className="d-flex justify-content-between">
               Total Questions in Test{" "}
               <span className="text-primary fw-bold">
-                {Result.total_question}
+                {overAllReport.total_question}
               </span>
             </List.Item>
             <List.Item className="d-flex justify-content-between">
               Total Time of Test{" "}
-              <span className="text-primary fw-bold">{Exam.duration} Mins</span>
+              <span className="text-primary fw-bold">
+                {overAllReport.Total_time}{" "}
+              </span>
             </List.Item>
           </List>
           <List>
             <List.Item className="d-flex justify-content-between">
               Correct Question{" "}
               <span className="text-primary fw-bold">
-                {examResult.correctQuestion}
+                {overAllReport.correctQuestion}
               </span>
             </List.Item>
             <List.Item className="d-flex justify-content-between">
               My Percentile{" "}
-              <span className="text-primary fw-bold">{Result.percentile}</span>
+              <span className="text-primary fw-bold">
+                {overAllReport.percentile}
+              </span>
             </List.Item>
             <List.Item className="d-flex justify-content-between">
               Total Answered Question in Test{" "}
               <span className="text-primary fw-bold">
-                {Result.total_answered}
+                {overAllReport.total_answered}
               </span>
             </List.Item>
             <List.Item className="d-flex justify-content-between">
               My Time{" "}
-              <span className="text-primary fw-bold">{Result.myTime}</span>
+              <span className="text-primary fw-bold">
+                {overAllReport.myTime}
+              </span>
             </List.Item>
           </List>
           <List>
             <List.Item className="d-flex justify-content-between">
               InCorrect Question{" "}
               <span className="text-primary fw-bold">
-                {examResult.incorrectQuestion}
+                {overAllReport.incorrectQuestion}
               </span>
             </List.Item>
             <List.Item className="d-flex justify-content-between">
               Right Marks{" "}
               <span className="text-primary fw-bold">
-                {examResult.rightMarksArr.ExamStat.total_marks}
+                {overAllReport.rightMarks}
               </span>
             </List.Item>
             <List.Item className="d-flex justify-content-between">
               Left Question{" "}
               <span className="text-primary fw-bold">
-                {examResult.leftQuestion}
+                {overAllReport.leftQuestion}
               </span>
             </List.Item>
           </List>
@@ -90,27 +105,27 @@ export default function ScoreCard() {
             <List.Item className="d-flex justify-content-between">
               Negative Marks{" "}
               <span className="text-primary fw-bold">
-                {examResult.negativeMarksArr.ExamStat.total_marks}
+                {overAllReport.negativeMarks}
               </span>
             </List.Item>
             <List.Item className="d-flex justify-content-between">
               Left Question Marks{" "}
               <span className="text-primary fw-bold">
-                {examResult.leftQuestionArr.ExamStat.left_marks}
+                {overAllReport.leftQuestionMarks}
               </span>
             </List.Item>
           </List>
         </Row>
         <Row>
           <Col sm={12} lg={6}>
-            <PerformanceChart />
+            <BarGraph />
           </Col>
           <Col sm={12} lg={6}>
-            <MarksWiseChart />
+            <PieChart />
           </Col>
         </Row>
       </Container>
-    </>
+    </Wrapper>
   );
 }
 

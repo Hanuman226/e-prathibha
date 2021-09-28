@@ -4,23 +4,19 @@ import { TableWrapper } from "../../Components/StyledComponents";
 import convertToHMS from "../../utils/convertToHMS";
 import TimeManagementChart from "./TimeManagementChart";
 export default function TimeManagement() {
-  const payload = useSelector((state) => state.exam.examResult);
+  const { examResult } = useSelector((state) => state.exam);
 
-  if (!payload) {
-    return <h3>Loading... </h3>;
-  }
-
-  const { userMarksheet } = payload;
+  const { userMarksheet } = examResult;
   const {
     examDetails: { Exam },
-  } = payload;
+  } = examResult;
 
   return (
     <Container>
       <p className="fs-5">
         <span className="fw-bold">Time Management For</span> {Exam.name}
       </p>
-      <TableWrapper>
+      <TableWrapper className="mb-5">
         <Table
           striped
           bordered

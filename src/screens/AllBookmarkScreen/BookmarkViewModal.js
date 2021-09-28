@@ -17,7 +17,7 @@ import { FancyButton } from "../../Components/StyledComponents";
 
 export default function BookmarkViewModal(props) {
   const { show, toggle, data } = props;
-  const { id, exam_result_id, qid, rowIndex, priority } = data;
+  const { exam_result_id, qid, rowIndex, priority } = data;
   const dispatch = useDispatch();
   const payload = useSelector((state) => state.allBookmarks.bookmarkedQuestion);
   const selectedPriority = useRef(priority);
@@ -26,7 +26,7 @@ export default function BookmarkViewModal(props) {
     selectedPriority.current = priority;
     if (data.exam_result_id)
       dispatch(
-        getBookmarkedQuestion({ id, exam_result_id, type: "bookmark", qid })
+        getBookmarkedQuestion({ exam_result_id, type: "bookmark", qid })
       );
   }, [data]);
 
@@ -60,7 +60,6 @@ export default function BookmarkViewModal(props) {
     selectedPriority.current = e.target.value;
     dispatch(
       setBookmarkedQuesPriority({
-        id,
         ques_no,
         exam_result_id,
         priority: selectedPriority.current,
@@ -71,7 +70,7 @@ export default function BookmarkViewModal(props) {
 
   const unBookmark = () => {
     setIsBookmarked(!isBookmarked);
-    dispatch(unBookmarkQues({ id, exam_result_id, ques_no }));
+    dispatch(unBookmarkQues({ exam_result_id, ques_no }));
   };
   const onModalExit = () => {
     !isBookmarked && dispatch(removeUnBookmarkedQues(rowIndex));

@@ -3,7 +3,7 @@ import api from "../axios.config";
 
 export const getAllBookmarks = createAsyncThunk(
   "allbookmarks/getAllBookmarks",
-  async ({ id }, { getState, rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
     try {
       let serverKey = process.env.REACT_APP_SERVER_KEY;
       const {
@@ -11,7 +11,7 @@ export const getAllBookmarks = createAsyncThunk(
       } = getState();
       const { data } = await api.post(
         "/bookmark_api",
-        { id },
+        { id: userInfo.Id },
         {
           headers: {
             tokenu: userInfo.Token,
@@ -31,7 +31,7 @@ export const getAllBookmarks = createAsyncThunk(
 
 export const getBookmarkedQuestion = createAsyncThunk(
   "allbookmarks/getBookmarkedQuestion",
-  async ({ id, exam_result_id, type, qid }, { getState, rejectWithValue }) => {
+  async ({ exam_result_id, type, qid }, { getState, rejectWithValue }) => {
     try {
       let serverKey = process.env.REACT_APP_SERVER_KEY;
       const {
@@ -39,7 +39,7 @@ export const getBookmarkedQuestion = createAsyncThunk(
       } = getState();
       const { data } = await api.post(
         "/question_view",
-        { id, exam_result_id, type, qid },
+        { id: userInfo.Id, exam_result_id, type, qid },
         {
           headers: {
             tokenu: userInfo.Token,
@@ -59,7 +59,7 @@ export const getBookmarkedQuestion = createAsyncThunk(
 
 export const unBookmarkQues = createAsyncThunk(
   "allbookmarks/unBookmarkQues",
-  async ({ id, exam_result_id, ques_no }, { getState, rejectWithValue }) => {
+  async ({ exam_result_id, ques_no }, { getState, rejectWithValue }) => {
     try {
       let serverKey = process.env.REACT_APP_SERVER_KEY;
       const {
@@ -67,7 +67,7 @@ export const unBookmarkQues = createAsyncThunk(
       } = getState();
       const { data } = await api.post(
         "/unbookmark",
-        { id, exam_result_id, ques_no },
+        { id: userInfo.Id, exam_result_id, ques_no },
         {
           headers: {
             tokenu: userInfo.Token,
@@ -77,7 +77,7 @@ export const unBookmarkQues = createAsyncThunk(
         }
       );
       console.log(data.data);
-      return data.data;
+      return data;
     } catch (error) {
       console.log(error);
       return rejectWithValue(error);
@@ -88,7 +88,7 @@ export const unBookmarkQues = createAsyncThunk(
 export const setBookmarkedQuesPriority = createAsyncThunk(
   "allbookmarks/setBookmarkedQuesPriority",
   async (
-    { id, ques_no, exam_result_id, priority, index },
+    { ques_no, exam_result_id, priority, index },
     { getState, rejectWithValue }
   ) => {
     try {
@@ -98,7 +98,7 @@ export const setBookmarkedQuesPriority = createAsyncThunk(
       } = getState();
       const { data } = await api.post(
         "/add_priority ",
-        { id, ques_no, exam_result_id, priority },
+        { id: userInfo.Id, ques_no, exam_result_id, priority },
         {
           headers: {
             tokenu: userInfo.Token,

@@ -31,6 +31,7 @@ import DashboardLayout from "./Layouts/DashboardLayout";
 import ResetPassword from "./screens/LoginRegisterScreen/ResetPassword";
 import ForgotPassword from "./screens/LoginRegisterScreen/ForgotPassword";
 import ViewResult from "./screens/MyResultScreen/ViewResult";
+import OverAllReportScreen from "./screens/OverAllReportScreen/OverAllReportScreen";
 function App() {
   return (
     <Router>
@@ -97,6 +98,7 @@ function App() {
             "/summary",
             "/my_result",
             "/my_result/view/:resultId",
+            "/over_all_report",
           ]}
         >
           <DashboardLayout>
@@ -178,6 +180,11 @@ function App() {
                   exact
                   path="/my_result/view/:resultId"
                   component={ViewResult}
+                />
+                <ProtectedRoute
+                  exact
+                  path="/over_all_report"
+                  component={OverAllReportScreen}
                 />
               </ErrorBoundary>
             </Switch>

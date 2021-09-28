@@ -1,19 +1,15 @@
-import { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 export default function GraphicalReportChart() {
-  const payload = useSelector((state) => state.exam.examResult);
-  if (!payload) {
-    return <h3>Loading... </h3>;
-  }
+  const { examResult } = useSelector((state) => state.exam);
 
-  const { userMarksheet } = payload;
+  const { userMarksheet } = examResult;
 
   const {
     examDetails: { Exam },
-  } = payload;
+  } = examResult;
 
   const total_marks_arr = userMarksheet
     .map((item, index) => {

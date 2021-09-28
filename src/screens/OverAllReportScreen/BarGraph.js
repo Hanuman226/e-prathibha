@@ -1,15 +1,17 @@
 import Chart from "react-apexcharts";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-export default function PerformanceChart() {
+export default function BarGraph() {
+  const { overAllReport } = useSelector((state) => state.overAllReport);
+
   const {
-    examDetails: { Exam, Result },
-  } = useSelector((state) => state.exam.examResult);
+    barGraph: { total_marks, my_marks },
+  } = overAllReport;
 
   const series = [
     {
       name: "Score",
-      data: [Number(Result.total_marks), Number(Result.obtained_marks)],
+      data: [Number(total_marks), Number(my_marks)],
     },
   ];
 
@@ -43,7 +45,7 @@ export default function PerformanceChart() {
       curve: "straight",
     },
     title: {
-      text: `Performance Report for ${Exam.name}`,
+      text: `Performance Report `,
       align: "left",
     },
     grid: {

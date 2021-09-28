@@ -32,7 +32,7 @@ const allBookmarkSlice = createSlice({
       state.bookmarkedQuestion = action.payload;
     });
     builder.addCase(unBookmarkQues.fulfilled, (state, action) => {
-      state.unbookmarkQuestion = action.payload;
+      state.unbookmarkQuestion = action.payload.data;
     });
     builder.addCase(setBookmarkedQuesPriority.fulfilled, (state, action) => {
       const { data, index, priority } = action.payload;

@@ -3,16 +3,12 @@ import { useSelector } from "react-redux";
 import { TableWrapper } from "../../Components/StyledComponents";
 import GraphicalReportChart from "./GraphicalReportChart";
 export default function SubjectReport() {
-  const payload = useSelector((state) => state.exam.examResult);
+  const { examResult } = useSelector((state) => state.exam);
 
-  if (!payload) {
-    return <h3>Loading... </h3>;
-  }
-
-  const { userMarksheet } = payload;
+  const { userMarksheet } = examResult;
   const {
     examDetails: { Exam },
-  } = payload;
+  } = examResult;
 
   return (
     <Container>

@@ -1,18 +1,12 @@
 import Chart from "react-apexcharts";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-export default function MarksWiseChart() {
+export default function PieChart() {
+  const { overAllReport } = useSelector((state) => state.overAllReport);
+
   const {
-    examDetails: { Exam },
-    correctQuestion,
-    incorrectQuestion,
-    rightMarksArr: {
-      ExamStat: { total_marks: rightMarks },
-    },
-    negativeMarksArr: {
-      ExamStat: { total_marks: negativeMarks },
-    },
-  } = useSelector((state) => state.exam.examResult);
+    pieGraph: { correctQuestion, incorrectQuestion, rightMarks, negativeMarks },
+  } = overAllReport;
 
   const series = [
     Number(correctQuestion),
@@ -25,12 +19,16 @@ export default function MarksWiseChart() {
       width: "100%",
       type: "pie",
     },
+    fill: {
+      colors: ["#F44336", "#E91E63", "#9C27B0", "red", "yellow", "orange"],
+    },
     labels: [
       "Correct Question",
       "InCorrect Question",
       "Right Marks",
       "InCorrect Marks",
     ],
+
     theme: {
       monochrome: {
         enabled: true,
@@ -44,7 +42,7 @@ export default function MarksWiseChart() {
       },
     },
     title: {
-      text: `Question & Marks Wise Report for ${Exam.name}`,
+      text: `Question & Marks Wise Report`,
     },
     dataLabels: {
       formatter(val, opts) {
@@ -54,6 +52,20 @@ export default function MarksWiseChart() {
     },
     legend: {
       show: true,
+      labels: {
+        useSeriesColors: true,
+      },
+      position: "bottom",
+      markers: {
+        fillColors: [
+          "#F44336",
+          "#E91E63",
+          "#9C27B0",
+          "red",
+          "yellow",
+          "orange",
+        ],
+      },
     },
   };
 

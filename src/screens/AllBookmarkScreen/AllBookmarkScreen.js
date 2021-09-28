@@ -10,17 +10,15 @@ import {
 import ReactPaginate from "react-paginate";
 import BookmarkViewModal from "./BookmarkViewModal";
 import useToggle from "../../Hooks/useToggle";
-import styled from "styled-components";
 export default function AllBookmarkScreen() {
   const [showBookmarkViewModal, toggleBookmarkViewModal] = useToggle();
   const [modalProps, setmodalProps] = useState({});
   const dispatch = useDispatch();
   const [perPage, setPerPage] = useState(25);
   const [currentPage, setCurrentPage] = useState(1);
-  const studentId = useSelector((state) => state.user.userInfo.Id);
   const { allBookmarks } = useSelector((state) => state.allBookmarks);
   useEffect(() => {
-    dispatch(getAllBookmarks({ id: studentId }));
+    dispatch(getAllBookmarks());
   }, []);
 
   if (!allBookmarks.length) {
@@ -146,7 +144,6 @@ export default function AllBookmarkScreen() {
                     <FancyButton
                       onClick={() => {
                         setmodalProps({
-                          id: studentId,
                           exam_result_id,
                           qid: question_id,
                           priority: priority,

@@ -28,7 +28,9 @@ const initialState = {
   attemptTime: "",
   submitExam: "",
   finishExam: "",
-  examResult: "",
+  examResult: {
+    post: [],
+  },
   practiceSessionSubjects: [],
   createPracticeExam: {},
 };
@@ -40,6 +42,11 @@ const examSlice = createSlice({
     questionOpened: (state, action) => {
       const { qId } = action.payload;
       state.examsData.exam[qId - 1].ExamStat.opened = "1";
+    },
+    bookmarkQues: (state, action) => {
+      const { ques_no } = action.payload;
+      state.examResult.post[ques_no - 1].ExamStat.bookmark =
+        !state.examResult.post[ques_no - 1].ExamStat.bookmark;
     },
     resetExam: (state) => {
       return initialState;
@@ -104,6 +111,6 @@ const examSlice = createSlice({
   },
 });
 
-export const { questionOpened, resetExam } = examSlice.actions;
+export const { questionOpened, resetExam, bookmarkQues } = examSlice.actions;
 
 export default examSlice.reducer;
