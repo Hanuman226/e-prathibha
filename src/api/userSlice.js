@@ -14,12 +14,13 @@ var userInfo = null;
 if (localStorage.getItem("userInfo")) {
   userInfo = JSON.parse(localStorage.getItem("userInfo"));
 }
+
 const initialState = {
   userInfo: userInfo,
   register: "",
   logout: "",
-  forgotPassword:"",
-  resetPassword:"",
+  forgotPassword: "",
+  resetPassword: "",
   verifyEmail: "",
   reSendEmailVerifyCode: "",
   profile: "",

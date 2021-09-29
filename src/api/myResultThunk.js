@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../axios.config";
 
 export const getMyResult = createAsyncThunk(
-  "summary/getMyResult",
+  "myResult/getMyResult",
   async (_, { getState, rejectWithValue }) => {
     try {
       let serverKey = process.env.REACT_APP_SERVER_KEY;

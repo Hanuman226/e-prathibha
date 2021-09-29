@@ -42,7 +42,7 @@ export default function Sidebar() {
           </NavLink>
         </IconWrapper>
         <IconWrapper>
-          <NavLink to="/search">
+          <NavLink to="/search_question">
             <FontAwesomeIcon icon={["fas", "search"]} />
             <span>Search</span>
           </NavLink>

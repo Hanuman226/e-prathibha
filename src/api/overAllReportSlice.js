@@ -41,7 +41,6 @@ const overAllReportSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getOverAllReport.fulfilled, (state, action) => {
       state.overAllReport = action.payload;
-      state.loading = false;
     });
   },
 });

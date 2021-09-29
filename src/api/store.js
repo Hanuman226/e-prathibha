@@ -6,6 +6,7 @@ import InCorrectQuesReducer from "./InCorrectQuesSlice";
 import summaryReducer from "./summarySlice";
 import myResultReducer from "./myResutSlice";
 import overAllReportReducer from "./overAllReportSlice";
+import searchQuesReducer from "./searchQuesSlice";
 const store = configureStore({
   reducer: {
     user: userReducer,
@@ -15,6 +16,7 @@ const store = configureStore({
     summary: summaryReducer,
     myResult: myResultReducer,
     overAllReport: overAllReportReducer,
+    searchQues: searchQuesReducer,
   },
 });
 

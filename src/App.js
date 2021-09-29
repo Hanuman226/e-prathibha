@@ -32,6 +32,7 @@ import ResetPassword from "./screens/LoginRegisterScreen/ResetPassword";
 import ForgotPassword from "./screens/LoginRegisterScreen/ForgotPassword";
 import ViewResult from "./screens/MyResultScreen/ViewResult";
 import OverAllReportScreen from "./screens/OverAllReportScreen/OverAllReportScreen";
+import SearchQuesScreen from "./screens/SearchQuesScreen/SearchQuesScreen";
 function App() {
   return (
     <Router>
@@ -99,6 +100,7 @@ function App() {
             "/my_result",
             "/my_result/view/:resultId",
             "/over_all_report",
+            "/search_question",
           ]}
         >
           <DashboardLayout>
@@ -185,6 +187,11 @@ function App() {
                   exact
                   path="/over_all_report"
                   component={OverAllReportScreen}
+                />
+                <ProtectedRoute
+                  exact
+                  path="/search_question"
+                  component={SearchQuesScreen}
                 />
               </ErrorBoundary>
             </Switch>

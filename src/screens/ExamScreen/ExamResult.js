@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
@@ -7,14 +7,18 @@ import { examResult } from "../../api/examThunk";
 import ColumnChart from "../../Components/charts/ColumnChart";
 import { FancyButton, Wrapper } from "../../Components/StyledComponents";
 export default function ExamResult() {
+  const [loading, setLoading] = useState(true);
   const { exam_result_id } = useParams();
   const dispatch = useDispatch();
   const payload = useSelector((state) => state.exam.examResult);
   useEffect(() => {
-    dispatch(examResult({ id: exam_result_id }));
+    dispatch(examResult({ id: exam_result_id }))
+      .unwrap()
+      .then((res) => setLoading(false))
+      .catch((err) => setLoading(false));
   }, []);
 
-  if (payload === "") {
+  if (loading) {
     return <h1>Loading...</h1>;
   }
 
