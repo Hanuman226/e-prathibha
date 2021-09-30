@@ -1,29 +1,29 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useHistory } from "react-router";
 import styled from "styled-components";
 import logo from "../Icons/logo.png";
-import auth from "../utils/auth";
-import { FancyButton } from "./StyledComponents";
+import { Dropdown } from "react-bootstrap";
+import UserDropDown from "../screens/UserProfileScreen/UserDropDown";
 export default function Header() {
-  const history = useHistory();
   return (
-    <Wrapper>
-      <Logo src={logo} alt="brand-logo" />
-      {/* <Profile>
-        <FontAwesomeIcon icon={["fas", "user"]} />
-        <FontAwesomeIcon icon={["fas", "caret-down"]} />
-      </Profile> */}
-      <FancyButton
-        bgColor="red"
-        onClick={() => {
-          auth.logout(() => {
-            return history.push("/user/login");
-          });
-        }}
-      >
-        Logout
-      </FancyButton>
-    </Wrapper>
+    <>
+      <Wrapper>
+        <Logo src={logo} alt="brand-logo" />
+
+        <Dropdown className="me-4">
+          <Dropdown.Toggle
+            variant="danger"
+            id="dropdown-basic"
+            className="shadow-none"
+          >
+            <FontAwesomeIcon icon={["fas", "user"]} />
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu className=" shadow shadow-lg bg-white">
+            <UserDropDown />
+          </Dropdown.Menu>
+        </Dropdown>
+      </Wrapper>
+    </>
   );
 }
 
@@ -41,10 +41,4 @@ const Wrapper = styled.nav`
 const Logo = styled.img`
   height: 3.125rem;
   width: 10.9375rem;
-`;
-
-const Profile = styled.div`
-  font-size: 1.25rem;
-  cursor: pointer;
-  /* padding-right: 3rem; */
 `;

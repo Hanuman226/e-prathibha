@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Col, Form, Row, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -20,6 +20,12 @@ export default function SearchQuesScreen() {
     },
     [keyword]
   );
+
+  // improvement required
+  useEffect(() => {
+    return dispatch(resetSearchedQuesData());
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(resetSearchedQuesData());

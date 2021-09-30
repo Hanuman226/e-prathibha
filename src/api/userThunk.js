@@ -54,6 +54,7 @@ export const forgotPassword = createAsyncThunk(
     }
   }
 );
+
 export const resetPassword = createAsyncThunk(
   "user/resetPassword",
   async ({ password, confirmPassword }, { rejectWithValue }) => {
@@ -64,6 +65,33 @@ export const resetPassword = createAsyncThunk(
       return data;
     } catch (err) {
       return rejectWithValue(err.msg);
+    }
+  }
+);
+
+export const changePassword = createAsyncThunk(
+  "user/changePassword",
+  async ({ password }, { rejectWithValue, getState }) => {
+    try {
+      let serverKey = process.env.REACT_APP_SERVER_KEY;
+      const {
+        user: { userInfo },
+      } = getState();
+      const { data } = await api.post(
+        "/change_password",
+        { id: userInfo.Id, password },
+        {
+          headers: {
+            tokenu: userInfo.Token,
+            Id: userInfo.Id,
+            server_key: serverKey,
+          },
+        }
+      );
+      return data.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.msg);
     }
   }
 );
@@ -121,6 +149,36 @@ export const getUserProfile = createAsyncThunk(
       const { data } = await api.post(
         "/profile",
         { id: userInfo.Id },
+        {
+          headers: {
+            tokenu: userInfo.Token,
+            Id: userInfo.Id,
+            server_key: serverKey,
+          },
+        }
+      );
+      return data.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.msg);
+    }
+  }
+);
+
+export const updateProfile = createAsyncThunk(
+  "user/updateProfile",
+  async (
+    { enroll, phone, alternate_phone, address },
+    { getState, rejectWithValue }
+  ) => {
+    try {
+      let serverKey = process.env.REACT_APP_SERVER_KEY;
+      const {
+        user: { userInfo },
+      } = getState();
+      const { data } = await api.post(
+        "/edit_profile",
+        { id: userInfo.Id, enroll, phone, alternate_phone, address },
         {
           headers: {
             tokenu: userInfo.Token,

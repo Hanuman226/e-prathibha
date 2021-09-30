@@ -12,7 +12,7 @@ export default function Sidebar() {
           </NavLink>
         </IconWrapper>
         <IconWrapper>
-          <NavLink to="/buy-packages">
+          <NavLink to="/buy_package">
             <FontAwesomeIcon icon={["fas", "shopping-cart"]} />
             <span>Buy Packages</span>
           </NavLink>
@@ -54,9 +54,9 @@ export default function Sidebar() {
           </NavLink>
         </IconWrapper>
         <IconWrapper>
-          <NavLink to="/payment">
+          <NavLink to="/payment_details">
             <FontAwesomeIcon icon={["fas", "credit-card"]} />
-            <span>Payment</span>
+            <span>Payment Details</span>
           </NavLink>
         </IconWrapper>
         <IconWrapper>

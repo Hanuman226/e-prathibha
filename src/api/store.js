@@ -7,6 +7,7 @@ import summaryReducer from "./summarySlice";
 import myResultReducer from "./myResutSlice";
 import overAllReportReducer from "./overAllReportSlice";
 import searchQuesReducer from "./searchQuesSlice";
+import packagesReducer from "./packagesSlice";
 const store = configureStore({
   reducer: {
     user: userReducer,
@@ -17,6 +18,7 @@ const store = configureStore({
     myResult: myResultReducer,
     overAllReport: overAllReportReducer,
     searchQues: searchQuesReducer,
+    packages: packagesReducer,
   },
 });
 

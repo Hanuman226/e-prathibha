@@ -7,6 +7,7 @@ import {
   register,
   reSendEmailVerifyCode,
   resetPassword,
+  updateProfile,
   verifyEmail,
 } from "./userThunk";
 
@@ -24,6 +25,7 @@ const initialState = {
   verifyEmail: "",
   reSendEmailVerifyCode: "",
   profile: "",
+  updatedProfile: "",
   loading: false,
   error: null,
 };
@@ -86,6 +88,9 @@ const userSlice = createSlice({
     });
     builder.addCase(getUserProfile.fulfilled, (state, action) => {
       state.profile = action.payload;
+    });
+    builder.addCase(updateProfile.fulfilled, (state, action) => {
+      state.updatedProfile = action.payload;
     });
     builder.addMatcher(
       (action) => action.type.endsWith("rejected"),

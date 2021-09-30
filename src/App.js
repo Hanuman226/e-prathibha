@@ -33,6 +33,11 @@ import ForgotPassword from "./screens/LoginRegisterScreen/ForgotPassword";
 import ViewResult from "./screens/MyResultScreen/ViewResult";
 import OverAllReportScreen from "./screens/OverAllReportScreen/OverAllReportScreen";
 import SearchQuesScreen from "./screens/SearchQuesScreen/SearchQuesScreen";
+import PackagesScreen from "./screens/PackagesScreen/PackagesScreen";
+import Checkout from "./screens/PackagesScreen/Checkout";
+import PaymentDetailsScreen from "./screens/PaymentDetailsScreen/PaymentDetailsScreen";
+import HelpScreen from "./screens/HelpScreen/HelpScreen";
+import UserProfileScreen from "./screens/UserProfileScreen/UserProfileScreen";
 function App() {
   return (
     <Router>
@@ -101,6 +106,11 @@ function App() {
             "/my_result/view/:resultId",
             "/over_all_report",
             "/search_question",
+            "/buy_package",
+            "/checkout/:duration",
+            "/payment_details",
+            "/help",
+            "/profile",
           ]}
         >
           <DashboardLayout>
@@ -193,6 +203,27 @@ function App() {
                   path="/search_question"
                   component={SearchQuesScreen}
                 />
+                <ProtectedRoute
+                  exact
+                  path="/buy_package"
+                  component={PackagesScreen}
+                />
+                <ProtectedRoute
+                  exact
+                  path="/checkout/:duration"
+                  component={Checkout}
+                />
+                <ProtectedRoute
+                  exact
+                  path="/payment_details"
+                  component={PaymentDetailsScreen}
+                />
+                <ProtectedRoute
+                  exact
+                  path="/profile"
+                  component={UserProfileScreen}
+                />
+                <ProtectedRoute exact path="/help" component={HelpScreen} />
               </ErrorBoundary>
             </Switch>
           </DashboardLayout>

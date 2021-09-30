@@ -18,13 +18,13 @@ export default function SearchedQuestions({ keyword }) {
     searchedQuestions: { search, count },
   } = useSelector((state) => state.searchQues);
 
+  // improvement required for selected questions logic
   const selectQuestions = search.map(({ questions: { id } }) => ({
     key: id,
     value: id,
     checked: false,
   }));
   const [selectedQuestions, setSelectedQuestions] = useState(selectQuestions);
-
   const handleAllChecked = (e) => {
     let questions = selectedQuestions;
     questions.map((item) => (item.checked = e.target.checked));

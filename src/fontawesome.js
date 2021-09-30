@@ -19,6 +19,11 @@ import {
   faBell,
   faPlus,
   faArrowRight,
+  faRupeeSign,
+  faPlay,
+  faCog,
+  faSignOutAlt,
+  faSyncAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faRegularStar } from "@fortawesome/free-regular-svg-icons";
 
@@ -44,5 +49,10 @@ library.add(
   faBell,
   faPlus,
   faStar,
-  faRegularStar
+  faRegularStar,
+  faRupeeSign,
+  faPlay,
+  faCog,
+  faSignOutAlt,
+  faSyncAlt
 );

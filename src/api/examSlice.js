@@ -114,3 +114,56 @@ const examSlice = createSlice({
 export const { questionOpened, resetExam, bookmarkQues } = examSlice.actions;
 
 export default examSlice.reducer;
+
+export const getPremiumExamNames = (state) => {
+  if (!state.exam.premiumExamsList.exams.length) {
+    return;
+  }
+
+  const [section1, section2, section3] = state.exam.premiumExamsList.exams;
+  const { "26 Years Old": civils } = section1;
+  const { "2014-2020 UPSC": upsc } = section2;
+  const { "Comprehensive NCERT": ncert } = section3;
+
+  const sections = [
+    {
+      section: civils,
+    },
+    {
+      section: upsc,
+    },
+    {
+      section: ncert,
+    },
+  ];
+
+  return sections
+    .map(({ section }) => section.map(({ Exam }) => Exam.name))
+    .flat();
+};
+
+export const getFreeExamNames = (state) => {
+  if (!state.exam.freeExamsList.exams.length) {
+    return;
+  }
+
+  const [section1, section2, section3] = state.exam.freeExamsList.exams;
+  const { "Old question papers UPSC Civils (Pre)": civils } = section1;
+  const { "Limited UPSC other than Civils": upsc } = section2;
+  const { "Limited NCERT": ncert } = section3;
+  const sections = [
+    {
+      section: civils,
+    },
+    {
+      section: upsc,
+    },
+    {
+      section: ncert,
+    },
+  ];
+
+  return sections
+    .map(({ section }) => section.map(({ Exam }) => Exam.name))
+    .flat();
+};
