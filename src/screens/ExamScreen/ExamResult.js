@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { examResult } from "../../api/examThunk";
 import ColumnChart from "../../Components/charts/ColumnChart";
+import PreLoader from "../../Components/PreLoader";
 import { FancyButton, Wrapper } from "../../Components/StyledComponents";
 export default function ExamResult() {
   const [loading, setLoading] = useState(true);
@@ -14,12 +15,13 @@ export default function ExamResult() {
   useEffect(() => {
     dispatch(examResult({ id: exam_result_id }))
       .unwrap()
-      .then((res) => setLoading(false))
-      .catch((err) => setLoading(false));
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err))
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) {
-    return <h1>Loading...</h1>;
+    return <PreLoader />;
   }
 
   const {

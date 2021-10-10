@@ -6,7 +6,8 @@ import { getOverAllReport } from "../../api/overAllReportSlice";
 import { Wrapper } from "../../Components/StyledComponents";
 import BarGraph from "./BarGraph";
 import PieChart from "./PieChart";
-
+import { toast, ToastContainer } from "react-toastify";
+import PreLoader from "../../Components/PreLoader";
 export default function OverAllReportScreen() {
   const dispatch = useDispatch();
   const { overAllReport } = useSelector((state) => state.overAllReport);
@@ -16,12 +17,18 @@ export default function OverAllReportScreen() {
   useEffect(() => {
     dispatch(getOverAllReport())
       .unwrap()
-      .then((res) => setLoading(false))
-      .catch((err) => setLoading(false));
+      .then((res) => {
+        if (res.status !== 200) {
+          toast.error(res.data);
+          return;
+        }
+      })
+      .catch((err) => console.log(err))
+      .fianally(() => setLoading(false));
   }, []);
 
   if (loading) {
-    return <h1>Loading...</h1>;
+    return <PreLoader />;
   }
 
   return (
@@ -125,6 +132,17 @@ export default function OverAllReportScreen() {
           </Col>
         </Row>
       </Container>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </Wrapper>
   );
 }

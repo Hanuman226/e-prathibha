@@ -1,23 +1,27 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { getPracticeSessionSubjects } from "../../../api/examThunk";
+import PreLoader from "../../../Components/PreLoader";
 import { FancyButton } from "../../../Components/StyledComponents";
 export default function SubjectsList() {
+  const [loading, setLoading] = useState(true);
   const { category, packageId } = useParams();
   const dispatch = useDispatch();
   const history = useHistory();
   const payload = useSelector((state) => state.exam.practiceSessionSubjects);
   console.log({ payload });
   useEffect(() => {
-    dispatch(getPracticeSessionSubjects({ type: category, packageId }));
+    dispatch(getPracticeSessionSubjects({ type: category, packageId }))
+      .unwrap()
+      .then(() => setLoading(false));
   }, []);
 
-  if (!payload.length) {
-    return <h1>Loading...</h1>;
+  if (loading) {
+    return <PreLoader />;
   }
 
   return (

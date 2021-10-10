@@ -25,11 +25,14 @@ export default function SearchedQuestions({ keyword }) {
     checked: false,
   }));
   const [selectedQuestions, setSelectedQuestions] = useState(selectQuestions);
+  
   const handleAllChecked = (e) => {
     let questions = selectedQuestions;
     questions.map((item) => (item.checked = e.target.checked));
     setSelectedQuestions([...questions]);
   };
+
+
   const handleCheckBoxChange = (e) => {
     let questions = selectedQuestions;
     questions.map((item) => {

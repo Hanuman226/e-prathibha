@@ -22,7 +22,7 @@ export const getOverAllReport = createAsyncThunk(
         }
       );
       console.log(data.data);
-      return data.data;
+      return data;
     } catch (error) {
       console.log(error);
       return rejectWithValue(error);
@@ -40,7 +40,7 @@ const overAllReportSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getOverAllReport.fulfilled, (state, action) => {
-      state.overAllReport = action.payload;
+      state.overAllReport = action.payload.data;
     });
   },
 });

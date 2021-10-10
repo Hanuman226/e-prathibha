@@ -10,7 +10,9 @@ import {
 import ReactPaginate from "react-paginate";
 import BookmarkViewModal from "./BookmarkViewModal";
 import useToggle from "../../Hooks/useToggle";
+import PreLoader from "../../Components/PreLoader";
 export default function AllBookmarkScreen() {
+  const [loading, setLoading] = useState(false);
   const [showBookmarkViewModal, toggleBookmarkViewModal] = useToggle();
   const [modalProps, setmodalProps] = useState({});
   const dispatch = useDispatch();
@@ -18,11 +20,18 @@ export default function AllBookmarkScreen() {
   const [currentPage, setCurrentPage] = useState(1);
   const { allBookmarks } = useSelector((state) => state.allBookmarks);
   useEffect(() => {
-    dispatch(getAllBookmarks());
+    setLoading(true);
+    dispatch(getAllBookmarks())
+      .unwrap()
+      .then((res) => {})
+      .catch((err) => console.log(err))
+      .finally(() => setLoading(false));
   }, []);
 
-  if (!allBookmarks.length) {
-    return <h1>Loading...</h1>;
+  if (loading) {
+    return <PreLoader />;
+  } else if (!allBookmarks.length) {
+    return <h1>No Bookmarks Found</h1>;
   }
 
   const setTopPage = ({ selected }) => {

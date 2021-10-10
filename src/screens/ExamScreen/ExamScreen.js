@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo, useRef } from "react";
-import { Col, Form, Row } from "react-bootstrap";
+import { Col, Form, Row, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -26,7 +26,11 @@ import ProfileModal from "./ProfileModal";
 import InstructionsModal from "./InstructionsModal";
 import useToggle from "../../Hooks/useToggle";
 import { ToastContainer, toast } from "react-toastify";
+import PreLoader from "../../Components/PreLoader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function ExamScreen() {
+  const [loading, setLoading] = useState(true);
+  const [submitInProgress, setSubmitInProgress] = useState(false);
   const [showQuestionPaper, toggleQuestionPaper] = useToggle();
   const [showInstructions, toggleInstructions] = useToggle();
   const [showProfile, toggleProfile] = useToggle();
@@ -54,11 +58,13 @@ export default function ExamScreen() {
             currQues: 1,
           })
         );
-      });
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setLoading(false));
   }, [examid]);
 
-  if (!payload.exam.length) {
-    return <h1>Loading...</h1>;
+  if (loading) {
+    return <PreLoader />;
   }
 
   const { ExamStat, Question, Exam } = payload.exam[quesNo];
@@ -172,6 +178,16 @@ export default function ExamScreen() {
 
   const filterSelected = (e) => {
     setFilterOption(e.target.value);
+  };
+
+  const handleSubmitExam = () => {
+    setSubmitInProgress(true);
+    dispatch(submitExam({ examId: exam_id, examresultId: exam_result_id }))
+      .unwrap()
+      .then(() => {
+        setSubmitInProgress(false);
+        toggleFinishExam();
+      });
   };
 
   return (
@@ -302,16 +318,17 @@ export default function ExamScreen() {
               Profile
             </Button>
             <Button
+              disabled={submitInProgress}
               bgColor="hsl(0 0% 0%)"
               bgHoverColor="hsl(0 0% 25%)"
-              onClick={() => {
-                dispatch(
-                  submitExam({ examId: exam_id, examresultId: exam_result_id })
-                );
-                toggleFinishExam();
-              }}
+              onClick={handleSubmitExam}
+              className="d-flex justify-content-center align-items-center"
             >
-              Submit
+              {submitInProgress ? (
+                <Spinner animation="border" variant="light" />
+              ) : (
+                <span>submit</span>
+              )}
             </Button>
           </div>
         </RightPanel>

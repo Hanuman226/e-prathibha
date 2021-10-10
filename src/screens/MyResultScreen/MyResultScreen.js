@@ -10,8 +10,9 @@ import ReactPaginate from "react-paginate";
 import { getMyResult } from "../../api/myResultThunk";
 import { Link, useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import PreLoader from "../../Components/PreLoader";
 export default function MyResultScreen() {
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
   const pagination = useRef();
@@ -19,13 +20,19 @@ export default function MyResultScreen() {
   const [currentPage, setCurrentPage] = useState(1);
   const { myResult } = useSelector((state) => state.myResult);
   useEffect(() => {
-    dispatch(getMyResult());
+    setLoading(true);
+    dispatch(getMyResult())
+      .unwrap()
+      .then((res) => {
+        setLoading(false);
+      });
   }, []);
 
-  if (!myResult.length) {
-    return <h1>Loading...</h1>;
+  if (loading) {
+    return <PreLoader />;
+  } else if (!myResult.length) {
+    return <h1>No Data Found</h1>;
   }
-
   const setTopPage = ({ selected }) => {
     setCurrentPage(selected + 1);
   };

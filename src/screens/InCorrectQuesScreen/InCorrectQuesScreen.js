@@ -11,7 +11,9 @@ import useToggle from "../../Hooks/useToggle";
 import { getAllIncorrectQuestions } from "../../api/InCorrectQuesThunk";
 import InCorrectQuesModal from "./InCorrectQuesModal";
 import styled from "styled-components";
+import PreLoader from "../../Components/PreLoader";
 export default function InCorrectQuesScreen() {
+  const [loading, setLoading] = useState(false);
   const [showInCorrectQuesModal, toggleInCorrectQuesModal] = useToggle();
   const [modalProps, setmodalProps] = useState({});
   const dispatch = useDispatch();
@@ -21,11 +23,16 @@ export default function InCorrectQuesScreen() {
   const studentId = useSelector((state) => state.user.userInfo.Id);
   const { inCorrectQuestions } = useSelector((state) => state.inCorrectQues);
   useEffect(() => {
-    dispatch(getAllIncorrectQuestions({ id: studentId }));
+    setLoading(true);
+    dispatch(getAllIncorrectQuestions({ id: studentId }))
+      .unwrap()
+      .then(() => setLoading(false));
   }, []);
 
-  if (!inCorrectQuestions.length) {
-    return <h1>Loading...</h1>;
+  if (loading) {
+    return <PreLoader />;
+  } else if (!inCorrectQuestions.length) {
+    return <h1>No Incorrect Question Found</h1>;
   }
 
   const setTopPage = ({ selected }) => {

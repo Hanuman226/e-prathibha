@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, Spinner } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import answered from "../../Icons/answered.png";
 import not_visited from "../../Icons/not_visited.png";
@@ -11,18 +11,22 @@ import review_question from "../../Icons/review.png";
 import bookmark from "../../Icons/bookmark.png";
 import { finishExam } from "../../api/examThunk";
 import { FancyButton } from "../../Components/StyledComponents";
-import { useHistory } from "react-router";
-import { resetExam } from "../../api/examSlice";
+import { useState } from "react";
 export default function FinishExamModal(props) {
+  const [finishExamInProgress, setFinishExamInProgess] = useState(false);
   const { show, toggle, setQues, examId, qno, resultId, examName } = props;
   const submitData = useSelector((state) => state.exam.submitExam);
   const dispatch = useDispatch();
-  // const history = useHistory();
+  const history = useHistory();
   const handleFinishExam = () => {
-    dispatch(finishExam({ examId, qno }));
-    toggle();
-    dispatch(resetExam());
-    // history.push(`/exam_result/${resultId}`);
+    setFinishExamInProgess(true);
+    dispatch(finishExam({ examId, qno }))
+      .unwrap()
+      .then(() => {
+        setFinishExamInProgess(false);
+        toggle();
+        history.push(`/feedback/${examName}/${resultId}`);
+      });
   };
   return (
     <Modal show={show} onHide={toggle} centered>
@@ -71,13 +75,15 @@ export default function FinishExamModal(props) {
         </Legend>
       </Modal.Body>
       <Modal.Footer className="d-flex justify-content-between">
-        <FancyButton
-          as={Link}
-          to={`/feedback/${examName}/${resultId}`}
-          onClick={handleFinishExam}
-        >
-          <FontAwesomeIcon icon={["fas", "lock"]} />
-          <span className="ps-2">Finish Exam</span>
+        <FancyButton onClick={handleFinishExam} disabled={finishExamInProgress}>
+          {finishExamInProgress ? (
+            <Spinner animation="border" variant="light" />
+          ) : (
+            <>
+              <FontAwesomeIcon icon={["fas", "lock"]} />
+              <span className="ps-2">Finish Exam</span>
+            </>
+          )}
         </FancyButton>
         <FancyButton
           value={1}

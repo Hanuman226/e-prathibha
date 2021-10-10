@@ -18,6 +18,7 @@ import {
   updateProfile,
 } from "../../api/userThunk";
 import { FancyButton, Wrapper } from "../../Components/StyledComponents";
+import PreLoader from "../../Components/PreLoader";
 export default function UserProfileScreen() {
   return (
     <Container fluid>
@@ -79,7 +80,7 @@ const MyProfile = () => {
     <Container>
       <h3>My Profile</h3>
       {!profile ? (
-        <h2>Loading...</h2>
+        <PreLoader />
       ) : (
         <Row>
           <Col>
@@ -144,7 +145,7 @@ const EditProfile = () => {
   }, [profile]);
 
   if (!profile) {
-    return <h2>Loading...</h2>;
+    return <PreLoader />;
   }
 
   const { enroll, phone, alternate_phone, address } = formData;
@@ -297,7 +298,6 @@ const ChangePassword = () => {
     dispatch(changePassword({ password: formData.newPassword }))
       .unwrap()
       .then((res) => {
-        setLoading(false);
         toast.success(res);
         setFormData({
           oldPassword: "",
@@ -305,7 +305,8 @@ const ChangePassword = () => {
           confirmPassword: "",
         });
       })
-      .catch((err) => setLoading(false));
+      .catch((err) => console.log(err))
+      .finally(() => setLoading(false));
   };
   return (
     <>

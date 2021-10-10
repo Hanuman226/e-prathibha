@@ -9,9 +9,8 @@ import ScoreCard from "./ScoreCard";
 import Solution from "./Solution";
 import SubjectReport from "./SubjectReport";
 import TimeManagement from "./TimeManagement";
-
+import PreLoader from "../../Components/PreLoader";
 export default function ViewResult() {
-  // const { loading } = useSelector((state) => state.exam);
   const [loading, setLoading] = useState(true);
   const history = useHistory();
   const { resultId } = useParams();
@@ -19,13 +18,13 @@ export default function ViewResult() {
   useEffect(() => {
     dispatch(examResult({ id: resultId }))
       .unwrap()
-      .then((res) => setLoading(false))
-      .catch((err) => setLoading(false));
+      .then(() => setLoading(false));
   }, [resultId]);
 
   if (loading) {
-    return <h2>Loading...</h2>;
+    return <PreLoader />;
   }
+
   return (
     <>
       <FancyButton className="mb-3" onClick={() => history.goBack()}>

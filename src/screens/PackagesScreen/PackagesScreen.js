@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getPackageDetails } from "../../api/packagesSlice";
 import data from "../../data";
 import PremiumCard from "./PremiumCard";
+import PreLoader from "../../Components/PreLoader";
 export default function PackagesScreen() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
@@ -16,12 +17,11 @@ export default function PackagesScreen() {
   useEffect(() => {
     dispatch(getPackageDetails())
       .unwrap()
-      .then((_) => setLoading(false))
-      .catch((_) => setLoading(false));
+      .then(() => setLoading(false));
   }, []);
 
   if (loading) {
-    return <h2>Loading...</h2>;
+    return <PreLoader />;
   }
 
   const { amount, show_amount, amount_year, show_amount_year, expiry_days } =

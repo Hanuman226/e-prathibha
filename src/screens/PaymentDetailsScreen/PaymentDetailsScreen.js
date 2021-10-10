@@ -10,7 +10,9 @@ import ReactPaginate from "react-paginate";
 import useToggle from "../../Hooks/useToggle";
 import { getAllTransactions } from "../../api/packagesSlice";
 import TransactionDetailModal from "./TransactionDetailModal";
+import PreLoader from "../../Components/PreLoader";
 export default function PaymentDetailsScreen() {
+  const [loading, setLoading] = useState(true);
   const [showTransactionModal, toggleTransactionModal] = useToggle();
   const [modalProps, setmodalProps] = useState({});
   const dispatch = useDispatch();
@@ -21,11 +23,11 @@ export default function PaymentDetailsScreen() {
     (state) => state.packages.allTransactions
   );
   useEffect(() => {
-    dispatch(getAllTransactions());
+    dispatch(getAllTransactions()).then(() => setLoading(false));
   }, []);
 
-  if (!allTransactions.length) {
-    return <h1>Loading...</h1>;
+  if (loading) {
+    return <PreLoader />;
   }
 
   const setTopPage = ({ selected }) => {

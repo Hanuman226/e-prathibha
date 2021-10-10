@@ -23,7 +23,7 @@ export default function SearchQuesScreen() {
 
   // improvement required
   useEffect(() => {
-    return dispatch(resetSearchedQuesData());
+    return () => dispatch(resetSearchedQuesData());
   }, []);
 
   const handleSubmit = (e) => {
@@ -65,8 +65,9 @@ export default function SearchQuesScreen() {
               <Form.Control
                 type="search"
                 value={keyword}
-                placeholder="Question based search"
+                placeholder="Question based search "
                 disabled={loading}
+                className="shadow-none"
               />
             </Col>
             <Col>

@@ -1,19 +1,25 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { premiumExamList } from "../../api/examThunk";
+import PreLoader from "../../Components/PreLoader";
 import cup from "../../Icons/cup.png";
 export default function FreeExamsList() {
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const { exams } = useSelector((state) => state.exam.premiumExamsList);
   useEffect(() => {
-    dispatch(premiumExamList());
+    dispatch(premiumExamList())
+      .unwrap()
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err))
+      .finally(() => setLoading(false));
   }, []);
 
-  if (!exams.length) {
-    return <h1>Loading...</h1>;
+  if (loading) {
+    return <PreLoader />;
   }
 
   const [section1, section2, section3] = exams;

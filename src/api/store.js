@@ -8,8 +8,10 @@ import myResultReducer from "./myResutSlice";
 import overAllReportReducer from "./overAllReportSlice";
 import searchQuesReducer from "./searchQuesSlice";
 import packagesReducer from "./packagesSlice";
+import loadingReducer from "./loadingSlice";
 const store = configureStore({
   reducer: {
+    loading: loadingReducer,
     user: userReducer,
     exam: examReducer,
     allBookmarks: allbookmarkReducer,

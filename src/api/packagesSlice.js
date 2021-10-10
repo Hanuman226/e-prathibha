@@ -50,7 +50,7 @@ export const paymentGateway = createAsyncThunk(
         }
       );
       console.log(data.data);
-      return data.data;
+      return data;
     } catch (error) {
       console.log(error);
       return rejectWithValue(error);
@@ -78,7 +78,7 @@ export const paymentResponse = createAsyncThunk(
         }
       );
       console.log(data.data);
-      return data.data;
+      return data;
     } catch (error) {
       console.log(error);
       return rejectWithValue(error);

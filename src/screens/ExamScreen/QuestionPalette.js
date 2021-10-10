@@ -14,9 +14,9 @@ export default function QuestionPalette(props) {
   const { setQues, filterOption, examId, qno } = props;
   const dispatch = useDispatch();
   const payload = useSelector((state) => state.exam.examsData);
-  if (!payload.exam.length) {
-    return <h1>Loading...</h1>;
-  }
+  // if (!payload.exam.length) {
+  //   return <h1>Loading...</h1>;
+  // }
   const handleClick = (e) => {
     setQues(e);
     filterOption !== "not_visited" &&

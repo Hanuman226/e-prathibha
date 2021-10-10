@@ -1,19 +1,27 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { getSummaryGraph } from "../../api/summaryThunk";
 import { StyledScrollBar } from "../../Components/StyledComponents";
+import PreLoader from "../../Components/PreLoader";
 
 export default function ProgressSummaryChart({ subjectId = "" }) {
+  const [loading, setLoading] = useState(true);
   const summaryGraph = useSelector((state) => state.summary.summaryGraph);
   const dispatch = useDispatch();
-  const chartRef = useRef();
   useEffect(() => {
-    dispatch(getSummaryGraph({ subject: subjectId }));
+    dispatch(getSummaryGraph({ subject: subjectId }))
+      .unwrap()
+      .then(() => {
+        setLoading(false);
+      });
   }, [subjectId]);
-  if (!summaryGraph.length) {
-    return <h3>Loading...</h3>;
+
+  if (loading) {
+    return <PreLoader />;
+  } else if (!summaryGraph[0].length) {
+    return <h3>No Data Found</h3>;
   }
 
   const series = [
@@ -117,14 +125,12 @@ export default function ProgressSummaryChart({ subjectId = "" }) {
       },
     },
   };
-  let graphWidth = summaryGraph[1].length * 100;
-  if (chartRef.current !== undefined) {
-    if (graphWidth < chartRef.current.clientWidth) {
-      graphWidth = "100%";
-    }
-  }
+
+  const graphWidth =
+    summaryGraph[1].length < 15 ? "100%" : summaryGraph[1].length * 100;
+
   return (
-    <ChartWrapper ref={chartRef}>
+    <ChartWrapper>
       <Chart
         options={options}
         series={series}

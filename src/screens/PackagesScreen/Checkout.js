@@ -3,11 +3,31 @@ import { useEffect, useState } from "react";
 import { Accordion, Col, Form, Image, ListGroup, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { getPackageDetails, paymentGateway } from "../../api/packagesSlice";
+import {
+  getPackageDetails,
+  paymentGateway,
+  paymentResponse,
+} from "../../api/packagesSlice";
 import { FancyButton, Wrapper } from "../../Components/StyledComponents";
 import data from "../../data";
 import useToggle from "../../Hooks/useToggle";
 import premium_exam_package_img from "../../Icons/premium_package.png";
+import { ToastContainer, toast } from "react-toastify";
+import PreLoader from "../../Components/PreLoader";
+function loadScript(src) {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.onload = () => {
+      resolve(true);
+    };
+    script.onerror = () => {
+      resolve(false);
+    };
+    document.body.appendChild(script);
+  });
+}
+
 export default function Checkout() {
   const dispatch = useDispatch();
   const { duration } = useParams();
@@ -18,17 +38,79 @@ export default function Checkout() {
   useEffect(() => {
     dispatch(getPackageDetails())
       .unwrap()
-      .then((_) => setLoading(false))
-      .catch((_) => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    const year = Number(duration) === 1 ? 1 : "";
-    dispatch(paymentGateway({ year }));
+      .then(() => setLoading(false));
   }, []);
 
   if (loading) {
-    return <h2>Loading...</h2>;
+    return <PreLoader />;
+  }
+
+  async function displayRazorpay() {
+    const res = await loadScript(
+      "https://checkout.razorpay.com/v1/checkout.js"
+    );
+
+    if (!res) {
+      toast.error("Razorpay SDK failed to load. Are you online?");
+      return;
+    }
+
+    var result;
+    const year = Number(duration) === 1 ? 1 : "";
+    await dispatch(paymentGateway({ year }))
+      .unwrap()
+      .then((res) => {
+        return (result = res);
+      });
+
+    if (!result) {
+      toast.error("Server error. Are you online?");
+      return;
+    }
+    const {
+      key,
+      amount,
+      display_currency,
+      name,
+      description,
+      image,
+      order_id,
+      prefill,
+      notes,
+      theme,
+    } = result;
+
+    const options = {
+      key: key,
+      amount: amount.toString(),
+      currency: display_currency,
+      name: name,
+      description: description,
+      image: image,
+      order_id: order_id,
+      handler: async function (response) {
+        const data = {
+          orderCreationId: order_id,
+          razorpayPaymentId: response.razorpay_payment_id,
+          razorpayOrderId: response.razorpay_order_id,
+          razorpaySignature: response.razorpay_signature,
+        };
+
+        await paymentResponse({
+          orderId: data.razorpayOrderId,
+          razorpay_payment_id: data.razorpay_payment_id,
+        })
+          .unwrap()
+          .then((res) => toast.info(res.data))
+          .catch((err) => toast.error(err));
+      },
+      prefill: prefill,
+      notes: notes,
+      theme: theme,
+    };
+
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
   }
 
   const { amount, show_amount, amount_year, show_amount_year, expiry_days } =
@@ -44,7 +126,7 @@ export default function Checkout() {
           <Accordion defaultActiveKey="0" flush>
             <Accordion.Item eventKey="0">
               <Accordion.Header>
-                <span className="text-uppercase fw-bold fs-6">
+                <span className="text-uppercase fw-bold fs-6  ">
                   Review Order
                 </span>
               </Accordion.Header>
@@ -110,7 +192,9 @@ export default function Checkout() {
                 </span>
               </Accordion.Header>
               <Accordion.Body className="d-flex justify-content-center">
-                <FancyButton>Make Payment</FancyButton>
+                <FancyButton onClick={displayRazorpay}>
+                  Make Payment
+                </FancyButton>
               </Accordion.Body>
             </Accordion.Item>
           </Accordion>
@@ -148,6 +232,17 @@ export default function Checkout() {
           </ListGroup>
         </Col>
       </Row>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </Wrapper>
   );
 }

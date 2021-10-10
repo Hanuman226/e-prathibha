@@ -1,23 +1,27 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { getPerformanceGraph } from "../../api/summaryThunk";
 import { StyledScrollBar } from "../../Components/StyledComponents";
-
+import PreLoader from "../../Components/PreLoader";
 export default function PerformanceChart({ subjectId = "", difficulty = "" }) {
+  const [loading, setLoading] = useState(true);
   const { exams = [], counts = [] } = useSelector(
     (state) => state.summary.performanceGraph
   );
   const dispatch = useDispatch();
 
-  const chartRef = useRef();
   useEffect(() => {
-    dispatch(getPerformanceGraph({ subject: subjectId, diff: difficulty }));
+    dispatch(getPerformanceGraph({ subject: subjectId, diff: difficulty }))
+      .unwrap()
+      .then((res) => setLoading(false));
   }, [subjectId, difficulty]);
 
-  if (!exams.length) {
-    return <h3>Loading...</h3>;
+  if (loading) {
+    return <PreLoader />;
+  } else if (!exams.length) {
+    return <h3>No Data Found</h3>;
   }
 
   const series = [
@@ -107,15 +111,10 @@ export default function PerformanceChart({ subjectId = "", difficulty = "" }) {
       },
     },
   };
-  let graphWidth = exams.length * 100;
 
-  if (chartRef.current !== undefined) {
-    if (graphWidth < chartRef.current.clientWidth) {
-      graphWidth = "100%";
-    }
-  }
+  const graphWidth = exams.length < 15 ? "100%" : exams.length * 100;
   return (
-    <ChartWrapper ref={chartRef}>
+    <ChartWrapper>
       <Chart
         options={options}
         series={series}

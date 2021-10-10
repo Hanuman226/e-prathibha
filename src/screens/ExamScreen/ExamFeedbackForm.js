@@ -1,11 +1,16 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import { FancyButton, Wrapper } from "../../Components/StyledComponents";
-
+import { resetExam } from "../../api/examSlice";
+import { useDispatch } from "react-redux";
 export default function ExamFeedbackForm() {
   const { exam_name, exam_result_id } = useParams();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(resetExam());
+  }, []);
   const feedbackQuestions = [
     {
       ques: "1.The test instructions were",
