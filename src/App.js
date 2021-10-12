@@ -38,6 +38,7 @@ import Checkout from "./screens/PackagesScreen/Checkout";
 import PaymentDetailsScreen from "./screens/PaymentDetailsScreen/PaymentDetailsScreen";
 import HelpScreen from "./screens/HelpScreen/HelpScreen";
 import UserProfileScreen from "./screens/UserProfileScreen/UserProfileScreen";
+import ExamLayout from "./Layouts/ExamLayout";
 function App() {
   return (
     <Router>
@@ -84,21 +85,62 @@ function App() {
             </Switch>
           </AuthLayout>
         </Route>
+
+        <Route
+          exact
+          path={[
+            "/:package/instruction/:examname/:examid",
+            "/start_exam/:examname/:examid",
+            "/practice_session/:packageId/instruction/:examname/:subjectId",
+            "/feedback/:exam_name/:exam_result_id",
+            "/exam_result/:exam_name/:exam_result_id",
+          ]}
+        >
+          <ExamLayout>
+            <Switch>
+              <ProtectedRoute
+                exact
+                path="/:package/instruction/:examname/:examid"
+                component={ExamRules}
+              />
+              <ProtectedRoute
+                exact
+                path="/start_exam/:examname/:examid"
+                component={ExamScreen}
+              />
+              <ProtectedRoute
+                exact
+                path="/practice_session/:packageId/instruction/:examname/:subjectId"
+                component={PracticeExamRules}
+              />
+              <ProtectedRoute
+                exact
+                path="/feedback/:exam_name/:exam_result_id"
+                component={ExamFeedbackForm}
+              />
+              <ProtectedRoute
+                exact
+                path="/exam_result/:exam_name/:exam_result_id"
+                component={ExamResult}
+              />
+            </Switch>
+          </ExamLayout>
+        </Route>
+
         <Route
           exact
           path={[
             "/",
             "/free_previous_papers",
-            "/:package/instruction/:examname/:examid",
-            "/start_exam/:examname/:examid",
-            "/start_exam/:examname/:examid",
+            // "/:package/instruction/:examname/:examid",
+            // "/start_exam/:examname/:examid",
             "/premium_previous_papers",
             "/practice_session",
             "/practice_session/:packageId",
             "/practice_session/:packageId/:category",
-            "/practice_session/:packageId/instruction/:examname/:subjectId",
-            "/feedback/:exam_name/:exam_result_id",
-            "/exam_result/:exam_name/:exam_result_id",
+            // "/practice_session/:packageId/instruction/:examname/:subjectId",
+            // "/feedback/:exam_name/:exam_result_id",
+            // "/exam_result/:exam_name/:exam_result_id",
             "/all_bookmarks",
             "/incorrect_questions",
             "/summary",
@@ -122,16 +164,16 @@ function App() {
                   path="/free_previous_papers"
                   component={FreeExamsList}
                 />
-                <ProtectedRoute
+                {/* <ProtectedRoute
                   exact
                   path="/:package/instruction/:examname/:examid"
                   component={ExamRules}
-                />
-                <ProtectedRoute
+                /> */}
+                {/* <ProtectedRoute
                   exact
                   path="/start_exam/:examname/:examid"
                   component={ExamScreen}
-                />
+                /> */}
                 <ProtectedRoute
                   exact
                   path="/premium_previous_papers"
@@ -152,13 +194,13 @@ function App() {
                   path="/practice_session/:packageId/:category"
                   component={SubjectsList}
                 />
-                <ProtectedRoute
+                {/* <ProtectedRoute
                   exact
                   path="/practice_session/:packageId/instruction/:examname/:subjectId"
                   component={PracticeExamRules}
-                />
+                /> */}
 
-                <ProtectedRoute
+                {/* <ProtectedRoute
                   exact
                   path="/feedback/:exam_name/:exam_result_id"
                   component={ExamFeedbackForm}
@@ -167,7 +209,7 @@ function App() {
                   exact
                   path="/exam_result/:exam_name/:exam_result_id"
                   component={ExamResult}
-                />
+                /> */}
                 <ProtectedRoute
                   exact
                   path="/all_bookmarks"

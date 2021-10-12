@@ -80,7 +80,7 @@ export default function ResetPassword() {
         </Form>
         <Link to="/user/login">Click here to login</Link>
       </Wrapper>
-      <ToastContainer
+      {/* <ToastContainer
         position="bottom-right"
         autoClose={false}
         hideProgressBar={false}
@@ -90,7 +90,7 @@ export default function ResetPassword() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-      />
+      /> */}
     </>
   );
 }

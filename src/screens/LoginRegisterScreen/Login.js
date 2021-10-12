@@ -91,7 +91,7 @@ export default function Login() {
           <Link to="/user/register">New User? Create Account</Link>
         </p>
       </Wrapper>
-      <ToastContainer
+      {/* <ToastContainer
         position="bottom-right"
         autoClose={false}
         hideProgressBar={false}
@@ -101,7 +101,7 @@ export default function Login() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-      />
+      /> */}
     </>
   );
 }

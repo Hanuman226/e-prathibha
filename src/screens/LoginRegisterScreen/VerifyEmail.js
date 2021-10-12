@@ -22,7 +22,7 @@ export default function VerifyEmail() {
         const { status, data } = payload;
         status === 200 ? toast.success(data.message) : toast.warn(data);
         status === 200 && setFormData({ reg_code: "" });
-        status === 200 && setTimeout(() => history.push("/user/login"), 3000);
+        status === 200 && history.push("/user/login");
       })
       .catch((err) => toast.error(err));
     console.log(formData);
@@ -52,7 +52,7 @@ export default function VerifyEmail() {
       <Link to="/user/resend_email_verification_code">
         Re-Send Email Verification
       </Link>
-      <ToastContainer
+      {/* <ToastContainer
         position="bottom-right"
         autoClose={false}
         hideProgressBar={false}
@@ -62,7 +62,7 @@ export default function VerifyEmail() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-      />
+      /> */}
     </Container>
   );
 }

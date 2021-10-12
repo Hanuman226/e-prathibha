@@ -36,12 +36,15 @@ export default function Register() {
       .then((payload) => {
         const { status, data } = payload;
         console.log({ payload });
-        status === 200 ? toast.success(data) : toast.warn(data);
+        status === 200
+          ? toast.success(data, { autoClose: false })
+          : toast.warn(data, { autoClose: false });
         status === 200 && setFormData(defaultFormData);
-        status === 200 &&
-          setTimeout(() => history.push("/user/verify_email"), 2000);
+        // status === 200 &&
+        //   setTimeout(() => history.push("/user/verify_email"), 2000);
+        status === 200 && history.push("/user/verify_email");
       })
-      .catch((err) => toast.error(err));
+      .catch((err) => toast.error(err, { autoClose: false }));
     console.log(formData);
   };
 
@@ -135,7 +138,7 @@ export default function Register() {
           </FancyButton>
         </div>
       </Form>
-      <ToastContainer
+      {/* <ToastContainer
         position="bottom-right"
         autoClose={false}
         hideProgressBar={false}
@@ -145,7 +148,7 @@ export default function Register() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-      />
+      /> */}
     </Container>
   );
 }

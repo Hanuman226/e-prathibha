@@ -47,7 +47,7 @@ export default function ForgotPassword() {
         </FancyButton>
       </Form>
       <Link to="/user/login">Click here to login</Link>
-      <ToastContainer
+      {/* <ToastContainer
         position="bottom-right"
         autoClose={false}
         hideProgressBar={false}
@@ -57,7 +57,7 @@ export default function ForgotPassword() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-      />
+      /> */}
     </Container>
   );
 }

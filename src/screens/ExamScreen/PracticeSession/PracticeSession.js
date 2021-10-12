@@ -7,8 +7,8 @@ export default function PracticeSession() {
     <Container fluid className="text-muted text-center">
       <h2 className="text-dark text-uppercase">Practice Exams</h2>
       <p className="my-4 fs-4">Please select the package</p>
-      <section className="text-muted d-flex justify-content-center">
-        <StyledLink as={Link} to="/practice_session/7" className="me-5">
+      <section className="text-muted d-flex justify-content-center flex-wrap gap-3">
+        <StyledLink as={Link} to="/practice_session/7">
           Free
         </StyledLink>
         <StyledLink as={Link} to="/practice_session/8">

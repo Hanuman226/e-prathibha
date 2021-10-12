@@ -24,7 +24,7 @@ export default function OverAllReportScreen() {
         }
       })
       .catch((err) => console.log(err))
-      .fianally(() => setLoading(false));
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) {
